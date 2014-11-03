@@ -1,0 +1,25 @@
+var classEditor =
+[
+    [ "Editor", "classEditor.html#a2918aceeffbc123a96e201b0934b9b16", null ],
+    [ "exportHtml", "classEditor.html#a1851ddf134ad2bb035d21956be861671", null ],
+    [ "exportPdf", "classEditor.html#a92bb919e4afcbda900113091f462278e", null ],
+    [ "find", "classEditor.html#a9f3692c1569fab7d981a5af976e28d61", null ],
+    [ "lineNumberAreaPaintEvent", "classEditor.html#a8d1719be5ed1e99d8b3a2f40cc363970", null ],
+    [ "lineNumberAreaWidth", "classEditor.html#aa3d3de7a27594d22eb14f9078d56aae4", null ],
+    [ "maybeSave", "classEditor.html#aca0b999084ffe8aca389245bd4b7520f", null ],
+    [ "print", "classEditor.html#a05f769717c1a9faef29e7257b0a21302", null ],
+    [ "readFile", "classEditor.html#a03bb42025099ed22b353e3bdd01ab48c", null ],
+    [ "replace", "classEditor.html#a1bd50043c2b49cc0f4feabc24b754812", null ],
+    [ "replaceAll", "classEditor.html#afa10867c31e15e0063e9a734b6430931", null ],
+    [ "resizeEvent", "classEditor.html#a82bd456c283650da69228ec1e4a79974", null ],
+    [ "save", "classEditor.html#a7e6a4240cfb8e28c4517d55de45818a3", null ],
+    [ "saveAs", "classEditor.html#a99693409082d12c48c42b1d52c87cc62", null ],
+    [ "selectFonts", "classEditor.html#a2fe5ee557f80f70558848ad65dda363b", null ],
+    [ "setReadOnly", "classEditor.html#a54f87ea609413236f2b316f7f62c6d9e", null ],
+    [ "setSyntaxLanguage", "classEditor.html#ae858a393d7bd46ee10d72d061d2de36d", null ],
+    [ "settingsChanged", "classEditor.html#abe78327d48c9a58f420a9dd1489e339c", null ],
+    [ "setWordWrap", "classEditor.html#a3117dee3426452ba7e35df487f27ef20", null ],
+    [ "updateSettings", "classEditor.html#af45f4616cff34614bba025199560fb8b", null ],
+    [ "updateTitle", "classEditor.html#ad77655f59614f0ee88087dce383e55a7", null ],
+    [ "writeFile", "classEditor.html#a11cc53f4c9a6cacfa34099f899aa9777", null ]
+];

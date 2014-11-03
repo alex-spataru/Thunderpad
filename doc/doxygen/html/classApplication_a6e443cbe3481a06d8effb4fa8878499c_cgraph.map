@@ -1,0 +1,13 @@
+<map id="Application::Application" name="Application::Application">
+<area shape="rect" id="node2" href="$classWindow.html#a946e542c93ca762019fe5630b0031340" title="Window::openFile. " alt="" coords="214,153,341,178"/>
+<area shape="rect" id="node3" href="$classEditor.html#a03bb42025099ed22b353e3bdd01ab48c" title="Editor::readFile. " alt="" coords="423,78,535,103"/>
+<area shape="rect" id="node4" href="$classWindow.html#a74e6087da23d3c24e9fac0245e5ec92c" title="Window::Window. " alt="" coords="417,127,540,153"/>
+<area shape="rect" id="node6" href="$classWindow.html#ad3d9d20ac4d2b6b52bf2caf2138dfa2c" title="Window::editor. " alt="" coords="851,127,960,153"/>
+<area shape="rect" id="node12" href="$classWindow.html#a2fded5d6cd03e3f1474237c0c0d1b691" title="Window::configureWindow. " alt="" coords="389,229,568,254"/>
+<area shape="rect" id="node5" href="$classMenuBar.html#a60420940f7e52b5e98612d3c69af09b5" title="MenuBar::connectSlots. " alt="" coords="616,127,776,153"/>
+<area shape="rect" id="node7" href="$classToolBar.html#ab5d66ba1ea5a3ec4d96d57d3c1723b77" title="ToolBar::connectSlots. " alt="" coords="621,78,771,103"/>
+<area shape="rect" id="node8" href="$classToolBar.html#a101aa98ffba7b302a36a1de21d09a283" title="ToolBar::setReadOnly. " alt="" coords="830,78,981,103"/>
+<area shape="rect" id="node9" href="$classToolBar.html#a0301fb4c7ed32f73a1b0e065e14d9f02" title="ToolBar::updateSettings. " alt="" coords="824,29,987,54"/>
+<area shape="rect" id="node10" href="$classToolBar.html#ab4cf30886e09074f62d26fc5002d15f0" title="ToolBar::update_theme. " alt="" coords="1035,5,1194,30"/>
+<area shape="rect" id="node11" href="$classToolBar.html#ab34feb580ce3cc0295bc5cb7f9f968d0" title="ToolBar::setToolbarText. " alt="" coords="1035,54,1195,79"/>
+</map>

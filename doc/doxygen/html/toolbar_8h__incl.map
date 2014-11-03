@@ -1,0 +1,10 @@
+<map id="toolbar.h" name="toolbar.h">
+<area shape="rect" id="node2" href="$window_8h.html" title="window.h" alt="" coords="1089,81,1164,106"/>
+<area shape="rect" id="node9" href="$about_8h.html" title="about.h" alt="" coords="295,155,360,181"/>
+<area shape="rect" id="node15" href="$editor_8h.html" title="editor.h" alt="" coords="1147,155,1212,181"/>
+<area shape="rect" id="node34" href="$updater_8h.html" title="updater.h" alt="" coords="2102,155,2177,181"/>
+<area shape="rect" id="node14" href="$platform_8h.html" title="platform.h" alt="" coords="384,230,464,255"/>
+<area shape="rect" id="node22" href="$theme_8h.html" title="theme.h" alt="" coords="837,305,907,330"/>
+<area shape="rect" id="node26" href="$line-numbers_8h.html" title="line&#45;numbers.h" alt="" coords="616,230,725,255"/>
+<area shape="rect" id="node28" href="$syntax-highlighter_8h.html" title="syntax&#45;highlighter.h" alt="" coords="1164,230,1300,255"/>
+</map>

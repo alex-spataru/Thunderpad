@@ -1,0 +1,11 @@
+<map id="Window::newFile" name="Window::newFile">
+<area shape="rect" id="node2" href="$classWindow.html#a2fded5d6cd03e3f1474237c0c0d1b691" title="Window::configureWindow. " alt="" coords="176,5,355,30"/>
+<area shape="rect" id="node3" href="$classWindow.html#a74e6087da23d3c24e9fac0245e5ec92c" title="Window::Window. " alt="" coords="204,54,327,79"/>
+<area shape="rect" id="node4" href="$classToolBar.html#ab5d66ba1ea5a3ec4d96d57d3c1723b77" title="ToolBar::connectSlots. " alt="" coords="408,78,558,103"/>
+<area shape="rect" id="node10" href="$classMenuBar.html#a60420940f7e52b5e98612d3c69af09b5" title="MenuBar::connectSlots. " alt="" coords="403,29,562,54"/>
+<area shape="rect" id="node5" href="$classWindow.html#ad3d9d20ac4d2b6b52bf2caf2138dfa2c" title="Window::editor. " alt="" coords="637,29,747,54"/>
+<area shape="rect" id="node6" href="$classToolBar.html#a101aa98ffba7b302a36a1de21d09a283" title="ToolBar::setReadOnly. " alt="" coords="616,78,768,103"/>
+<area shape="rect" id="node7" href="$classToolBar.html#a0301fb4c7ed32f73a1b0e065e14d9f02" title="ToolBar::updateSettings. " alt="" coords="611,127,773,153"/>
+<area shape="rect" id="node8" href="$classToolBar.html#ab34feb580ce3cc0295bc5cb7f9f968d0" title="ToolBar::setToolbarText. " alt="" coords="821,102,981,127"/>
+<area shape="rect" id="node9" href="$classToolBar.html#ab4cf30886e09074f62d26fc5002d15f0" title="ToolBar::update_theme. " alt="" coords="822,151,981,177"/>
+</map>

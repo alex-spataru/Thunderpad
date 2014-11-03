@@ -1,0 +1,4 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node2" href="$classTheme.html" title="The Theme class is in charge of reading the specified colors of an inputed XML theme and returning th..." alt="" coords="129,5,191,30"/>
+<area shape="rect" id="node3" href="$classUpdater.html" title="This class is in charge of checking for new updates and (if necessary) notify the user about a new ve..." alt="" coords="126,54,194,79"/>
+</map>

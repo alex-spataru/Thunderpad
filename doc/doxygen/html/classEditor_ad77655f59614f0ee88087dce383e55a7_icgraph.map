@@ -1,0 +1,12 @@
+<map id="Editor::updateTitle" name="Editor::updateTitle">
+<area shape="rect" id="node2" href="$classEditor.html#a03bb42025099ed22b353e3bdd01ab48c" title="Editor::readFile. " alt="" coords="185,55,297,81"/>
+<area shape="rect" id="node7" href="$classEditor.html#a11cc53f4c9a6cacfa34099f899aa9777" title="Editor::writeFile. " alt="" coords="185,105,298,130"/>
+<area shape="rect" id="node3" href="$classWindow.html#a946e542c93ca762019fe5630b0031340" title="Window::openFile. " alt="" coords="347,54,474,79"/>
+<area shape="rect" id="node4" href="$classApplication.html#a6e443cbe3481a06d8effb4fa8878499c" title="Application::Application. " alt="" coords="523,5,682,30"/>
+<area shape="rect" id="node5" href="$classApplication.html#af0289769324660549390e89d8d29ef61" title="Application::event" alt="" coords="539,54,666,79"/>
+<area shape="rect" id="node6" href="$classWindow.html#a3e3e46896600bcb0edcbc604babfefea" title="Window::open. " alt="" coords="550,103,656,129"/>
+<area shape="rect" id="node8" href="$classEditor.html#a7e6a4240cfb8e28c4517d55de45818a3" title="Editor::save. " alt="" coords="557,154,649,179"/>
+<area shape="rect" id="node11" href="$classEditor.html#a99693409082d12c48c42b1d52c87cc62" title="Editor::saveAs. " alt="" coords="357,155,464,181"/>
+<area shape="rect" id="node9" href="$classEditor.html#aca0b999084ffe8aca389245bd4b7520f" title="Editor::maybeSave. " alt="" coords="730,154,864,179"/>
+<area shape="rect" id="node10" href="$classWindow.html#a45ee5a1dc49aa1847cc190fa99f618ae" title="Window::closeEvent. " alt="" coords="912,154,1053,179"/>
+</map>

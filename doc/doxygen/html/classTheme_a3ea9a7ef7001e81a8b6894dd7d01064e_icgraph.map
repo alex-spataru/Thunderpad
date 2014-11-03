@@ -1,0 +1,4 @@
+<map id="Theme::lineNumbersBackground" name="Theme::lineNumbersBackground">
+<area shape="rect" id="node2" href="$classEditor.html#a8d1719be5ed1e99d8b3a2f40cc363970" title="Editor::lineNumberAreaPaintEvent. " alt="" coords="270,5,460,43"/>
+<area shape="rect" id="node3" href="$classLineNumberArea.html#a56400934bfe272427deb3ffd975b3a7f" title="LineNumberArea::paintEvent. " alt="" coords="509,11,702,37"/>
+</map>

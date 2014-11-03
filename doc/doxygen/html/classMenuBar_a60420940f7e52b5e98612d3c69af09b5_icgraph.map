@@ -1,0 +1,8 @@
+<map id="MenuBar::connectSlots" name="MenuBar::connectSlots">
+<area shape="rect" id="node2" href="$classWindow.html#a74e6087da23d3c24e9fac0245e5ec92c" title="Window::Window. " alt="" coords="214,79,338,105"/>
+<area shape="rect" id="node3" href="$classWindow.html#a946e542c93ca762019fe5630b0031340" title="Window::openFile. " alt="" coords="387,54,514,79"/>
+<area shape="rect" id="node7" href="$classWindow.html#a70b8fcc4d60cb384ad5ea0603fe3a3a9" title="Window::newFile. " alt="" coords="390,103,512,129"/>
+<area shape="rect" id="node4" href="$classApplication.html#a6e443cbe3481a06d8effb4fa8878499c" title="Application::Application. " alt="" coords="563,5,722,30"/>
+<area shape="rect" id="node5" href="$classApplication.html#af0289769324660549390e89d8d29ef61" title="Application::event" alt="" coords="579,54,706,79"/>
+<area shape="rect" id="node6" href="$classWindow.html#a3e3e46896600bcb0edcbc604babfefea" title="Window::open. " alt="" coords="590,103,696,129"/>
+</map>
