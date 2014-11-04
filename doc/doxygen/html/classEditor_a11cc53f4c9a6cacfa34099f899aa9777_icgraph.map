@@ -1,6 +1,0 @@
-<map id="Editor::writeFile" name="Editor::writeFile">
-<area shape="rect" id="node2" href="$classEditor.html#a7e6a4240cfb8e28c4517d55de45818a3" title="Editor::save. " alt="" coords="323,5,415,30"/>
-<area shape="rect" id="node5" href="$classEditor.html#a99693409082d12c48c42b1d52c87cc62" title="Editor::saveAs. " alt="" coords="168,30,275,55"/>
-<area shape="rect" id="node3" href="$classEditor.html#aca0b999084ffe8aca389245bd4b7520f" title="Editor::maybeSave. " alt="" coords="464,5,598,30"/>
-<area shape="rect" id="node4" href="$classWindow.html#a45ee5a1dc49aa1847cc190fa99f618ae" title="Window::closeEvent. " alt="" coords="645,5,787,30"/>
-</map>
