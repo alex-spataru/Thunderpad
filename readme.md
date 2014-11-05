@@ -42,7 +42,7 @@ Thunderpad is released with the GNU 3.0 license, you can read a copy of it [here
 
         cd ~/Downloads
         unzip thunderpad-master.zip -d thunderpad-master
-        cd thudnerpad-master
+        cd thunderpad-master
 	
 4. Make a directory to build the software
     

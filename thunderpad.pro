@@ -18,6 +18,7 @@ QT += network
 QT += widgets
 QT += printsupport
 
+include($$PWD/src/3rd-party/Hunspell/Hunspell.pri)
 include($$PWD/src/3rd-party/QSimpleUpdater/QSimpleUpdater.pri)
 
 INCLUDEPATH += \

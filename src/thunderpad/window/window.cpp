@@ -296,6 +296,7 @@ void Window::showLatestVersion()
     _message.setStandardButtons (QMessageBox::Ok);
     _message.setWindowIcon (QIcon (":/icons/dummy.png"));
     _message.setIconPixmap (QPixmap (":/icons/logo.png"));
+    _message.setWindowTitle (tr ("No updates available"));
     _message.setInformativeText (
         tr ("The latest public release of Thunderpad is version %1")
         .arg (qApp->applicationVersion()));
@@ -314,6 +315,7 @@ void Window::showUpdateAvailable()
     _message.setDetailedText (m_updater->changeLog());
     _message.setWindowIcon (QIcon (":/icons/dummy.png"));
     _message.setIconPixmap (QPixmap (":/icons/logo.png"));
+    _message.setWindowTitle (tr ("New updates available"));
     _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No);
     _message.setText ("<b>" + tr ("There's a new version of Thunderpad!") +
                       " (" + m_updater->latestVersion() + ")</b>");
