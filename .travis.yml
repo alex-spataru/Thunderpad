@@ -1,0 +1,10 @@
+language: cpp
+
+before_install:
+    - sudo apt-get install -qq qt4-default libssl-dev
+script:
+    - mkdir build
+    - cd build
+    - qmake ../*.pro
+    - make
+    - sudo make install
