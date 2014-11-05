@@ -8,7 +8,10 @@
 
 #include "qsimpleupdater.h"
 
-QSimpleUpdater::QSimpleUpdater (QObject *parent) : QObject (parent) {}
+QSimpleUpdater::QSimpleUpdater (QObject *parent) : QObject (parent)
+{
+    m_new_version_available = false;
+}
 
 QString QSimpleUpdater::changeLog()
 {
