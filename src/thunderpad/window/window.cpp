@@ -55,9 +55,23 @@ Window::Window()
     else
         showNormal();
 
+    QString _download_url;
+    QString _url_base = "https://raw.githubusercontent.com/alex-97/thunderpad/updater/files/";
+
+    // Get the download URL based on the OS
+#if defined(Q_OS_MAC)
+    _download_url = _url_base + "thunderpad-latest.dmg";
+#elif defined(Q_OS_WIN32)
+    _download_url = _url_base + "thunderpad-latest.exe";
+#elif defined(Q_OS_ANDROID)
+    _download_url = _url_base + "thunderpad-latest.apk";
+#elif defined(Q_OS_LINUX)
+    _download_url = _url_base + "thunderpad-latest.tar.gz";
+#endif
+
     // Configure the updater
     m_updater->setApplicationVersion (APP_VERSION);
-    m_updater->setDownloadUrl ("http://thunderpad.sourceforge.net/download");
+    m_updater->setDownloadUrl  (_download_url);
     m_updater->setReferenceUrl ("https://raw.githubusercontent.com/alex-97/thunderpad/updater/latest.txt");
     m_updater->setChangelogUrl ("https://raw.githubusercontent.com/alex-97/thunderpad/updater/changelog.txt");
 
@@ -92,6 +106,8 @@ void Window::closeEvent (QCloseEvent *event)
 
 void Window::openFile (const QString &file_name)
 {
+    Q_ASSERT (!file_name.isEmpty());
+
     // Open the file in the same window
     if (m_editor->documentTitle().isEmpty() &&
             !m_editor->document()->isModified())
@@ -168,13 +184,10 @@ void Window::setLineNumbersEnabled (bool ln)
 
 void Window::setColorscheme (const QString &colorscheme)
 {
+    Q_ASSERT (!colorscheme.isEmpty());
+
     m_settings->setValue ("color-scheme", colorscheme);
     syncSettings();
-}
-
-void Window::showFindDialog()
-{
-
 }
 
 void Window::showFindReplaceDialog()
@@ -184,6 +197,8 @@ void Window::showFindReplaceDialog()
 
 void Window::setIconTheme (const QString &theme)
 {
+    Q_ASSERT (!theme.isEmpty());
+
     m_settings->setValue ("icon-theme", theme);
     syncSettings();
 }
@@ -320,7 +335,7 @@ void Window::showUpdateAvailable()
     _message.setText ("<b>" + tr ("There's a new version of Thunderpad!") +
                       " (" + m_updater->latestVersion() + ")</b>");
     _message.setInformativeText (
-        tr ("Do you want to open a web browser to download it?"));
+        tr ("Do you want to download the newest version?"));
 
     if (_message.exec() == QMessageBox::Yes)
         m_updater->downloadLatestVersion();
@@ -334,6 +349,8 @@ void Window::onCheckingFinished()
 
 void Window::configureWindow (Window *window)
 {
+    Q_ASSERT (window != NULL);
+
     window->saveWindowState();
 
     // Ensure that all windows are connected together and synced together
@@ -355,5 +372,6 @@ void Window::configureWindow (Window *window)
 
 QString Window::shortFileName (const QString &file)
 {
+    Q_ASSERT (!file.isEmpty());
     return QFileInfo (file).fileName();
 }

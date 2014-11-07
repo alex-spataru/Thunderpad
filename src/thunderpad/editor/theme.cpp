@@ -26,6 +26,8 @@ void Theme::useFallbackColors()
 
 void Theme::readTheme (const QString &theme)
 {
+    Q_ASSERT (!theme.isEmpty());
+
     QFile _file (":/color-schemes/" + theme + ".xml");
 
     if (!_file.open (QFile::ReadOnly))

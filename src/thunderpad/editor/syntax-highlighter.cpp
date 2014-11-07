@@ -29,6 +29,7 @@ SyntaxHighlighter::SyntaxHighlighter (QTextDocument *parent)
 
 void SyntaxHighlighter::setLanguage (const QString &lang)
 {
+    Q_ASSERT (!lang.isEmpty());
     Q_UNUSED (lang);
 }
 
@@ -41,6 +42,8 @@ void SyntaxHighlighter::setLanguage (const QString &lang)
 
 void SyntaxHighlighter::updateColor (Theme *theme)
 {
+    Q_ASSERT (!theme == NULL);
+
     m_othersColor = theme->others();
     m_functionsColor = theme->functions();
     m_commentsColor = theme->comments();

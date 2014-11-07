@@ -24,7 +24,6 @@ ToolBar::ToolBar (QWidget *parent) : QToolBar (parent)
     m_cut = new QAction (tr ("Cut"), this);
     m_copy = new QAction (tr ("Copy"), this);
     m_paste = new QAction (tr ("Paste"), this);
-    m_find = new QAction (tr ("Find"), this);
     m_replace = new QAction (tr ("Replace"), this);
     m_readonly = new QAction (tr ("Read only"), this);
 
@@ -55,9 +54,7 @@ ToolBar::ToolBar (QWidget *parent) : QToolBar (parent)
     addAction (m_copy);
     addAction (m_paste);
     addSeparator();
-    addAction (m_find);
     addAction (m_replace);
-    addSeparator();
     addAction (m_readonly);
 }
 
@@ -103,6 +100,8 @@ void ToolBar::setToolbarText (bool enabled)
 
 void ToolBar::connectSlots (Window *window)
 {
+    Q_ASSERT (window != NULL);
+
     window->addToolBar (this);
     window->setUnifiedTitleAndToolBarOnMac (true);
 
@@ -116,8 +115,6 @@ void ToolBar::connectSlots (Window *window)
     connect (m_cut, SIGNAL (triggered()), window->editor(), SLOT (cut()));
     connect (m_copy, SIGNAL (triggered()), window->editor(), SLOT (copy()));
     connect (m_paste, SIGNAL (triggered()), window->editor(), SLOT (paste()));
-    connect (m_find, SIGNAL (triggered()), window->editor(), SLOT (find()));
-    connect (m_replace, SIGNAL (triggered()), window->editor(), SLOT (replace()));
     connect (m_readonly, SIGNAL (triggered (bool)), window, SLOT (setReadOnly (bool)));
 
     // Change the icon theme when the settings are synced
@@ -146,6 +143,8 @@ void ToolBar::updateSettings()
 
 void ToolBar::update_theme (const QString &theme)
 {
+    Q_ASSERT (!theme.isEmpty());
+
     // Load the icon theme in the resources folder
     QString path = ":/icons/themes/" + theme + "/";
 
@@ -159,7 +158,6 @@ void ToolBar::update_theme (const QString &theme)
     m_cut->setIcon (QIcon (path + "cut.png"));
     m_copy->setIcon (QIcon (path + "copy.png"));
     m_paste->setIcon (QIcon (path + "paste.png"));
-    m_find->setIcon (QIcon (path + "find.png"));
     m_replace->setIcon (QIcon (path + "replace.png"));
     m_readonly->setIcon (QIcon (path + "lock.png"));
 }

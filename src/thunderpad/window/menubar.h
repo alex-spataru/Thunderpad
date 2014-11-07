@@ -80,7 +80,6 @@ class MenuBar : public QMenuBar
         QAction *e_copy;
         QAction *e_paste;
         QAction *e_select_all;
-        QAction *e_find;
         QAction *e_find_replace;
         QAction *e_read_only;
 
@@ -101,7 +100,6 @@ class MenuBar : public QMenuBar
 
         QAction *t_sort_selection;
         QAction *t_goto_line;
-        QAction *t_hexdump;
         QAction *t_insert_date_time;
 
         QAction *h_about_thunderpad;

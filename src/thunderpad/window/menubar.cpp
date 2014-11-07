@@ -24,6 +24,8 @@ void MenuBar::setSaveEnabled (bool enabled)
 
 void MenuBar::connectSlots (Window *window)
 {
+    Q_ASSERT (window != NULL);
+
     window->setMenuBar (this);
 
     // Connect slots for the file menu
@@ -46,7 +48,6 @@ void MenuBar::connectSlots (Window *window)
     connect (e_paste, SIGNAL (triggered()), window->editor(), SLOT (paste()));
     connect (e_select_all, SIGNAL (triggered()), window->editor(),
              SLOT (selectAll()));
-    connect (e_find, SIGNAL (triggered (bool)), window, SLOT (showFindDialog()));
     connect (e_find_replace, SIGNAL (triggered()), window, SLOT (showFindReplaceDialog()));
     connect (e_read_only, SIGNAL (triggered (bool)), window,
              SLOT (setReadOnly (bool)));
@@ -110,7 +111,6 @@ void MenuBar::updateSettings()
 
 void MenuBar::createActions()
 {
-
     // Create the file menu actions
     f_new = new QAction (tr ("New"), this);
     f_open = new QAction (tr ("Open") + "...", this);
@@ -129,7 +129,6 @@ void MenuBar::createActions()
     e_copy = new QAction (tr ("Copy"), this);
     e_paste = new QAction (tr ("Paste"), this);
     e_select_all = new QAction (tr ("Select all"), this);
-    e_find = new QAction (tr ("Find"), this);
     e_find_replace = new QAction (tr ("Find and replace"), this);
     e_read_only = new QAction (tr ("Read only"), this);
 
@@ -147,7 +146,6 @@ void MenuBar::createActions()
     // Create the tools menu actions
     t_sort_selection = new QAction (tr ("Sort selection"), this);
     t_goto_line = new QAction (tr ("Go to line") + "...", this);
-    t_hexdump = new QAction (tr ("Hexadecimal dump") + "...", this);
     t_insert_date_time = new QAction (tr ("Insert date/time"), this);
 
     // Create the help menu actions
@@ -184,8 +182,7 @@ void MenuBar::configureActions()
     e_copy->setShortcut (QKeySequence::Copy);
     e_paste->setShortcut (QKeySequence::Paste);
     e_select_all->setShortcut (QKeySequence::SelectAll);
-    e_find->setShortcut (QKeySequence::Find);
-    e_find_replace->setShortcut (QKeySequence (Qt::CTRL + Qt::ALT + Qt::Key_F));
+    e_find_replace->setShortcut (QKeySequence::Find);
     e_read_only->setShortcut (QKeySequence (Qt::CTRL + Qt::ALT + Qt::Key_R));
     format_font->setShortcut (QKeySequence (Qt::CTRL + Qt::Key_T));
     format_word_wrap->setShortcut (QKeySequence (Qt::CTRL + Qt::ALT + Qt::Key_W));
@@ -194,12 +191,10 @@ void MenuBar::configureActions()
     h_v_help->setShortcut (QKeySequence::HelpContents);
 
     // Configure checkable actions
-    e_find->setCheckable (true);
     v_toolbar->setCheckable (true);
     v_statusbar->setCheckable (true);
     e_read_only->setCheckable (true);
     format_word_wrap->setCheckable (true);
-    e_find_replace->setCheckable (true);
     v_line_numbers->setCheckable (true);
     v_toolbar_text->setCheckable (true);
     v_highlight_current_line->setCheckable (true);
@@ -207,7 +202,6 @@ void MenuBar::configureActions()
 
 void MenuBar::createMenubar()
 {
-
     // Create the main menus we are adding the "&" before
     // each menu to inhibit the OS to add aditional items
     // to the menubar (such as in the Edit menu in Mac).
@@ -248,7 +242,6 @@ void MenuBar::createMenubar()
     m_edit->addSeparator();
     m_edit->addAction (e_select_all);
     m_edit->addSeparator();
-    m_edit->addAction (e_find);
     m_edit->addAction (e_find_replace);
     m_edit->addSeparator();
     m_edit->addAction (e_read_only);
@@ -371,8 +364,6 @@ void MenuBar::createMenubar()
     // Create the tools menu
     m_tools->addAction (t_sort_selection);
     m_tools->addAction (t_goto_line);
-    m_tools->addSeparator();
-    m_tools->addAction (t_hexdump);
     m_tools->addSeparator();
     m_tools->addAction (t_insert_date_time);
 

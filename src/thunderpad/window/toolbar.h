@@ -51,7 +51,6 @@ class ToolBar : public QToolBar
         QAction *m_cut;
         QAction *m_copy;
         QAction *m_paste;
-        QAction *m_find;
         QAction *m_replace;
         QAction *m_readonly;
 

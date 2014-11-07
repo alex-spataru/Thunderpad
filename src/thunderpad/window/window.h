@@ -72,7 +72,6 @@ class Window : public QMainWindow
         void setIconTheme (const QString &theme);
         void setColorscheme (const QString &colorscheme);
 
-        void showFindDialog();
         void showFindReplaceDialog();
 
         void aboutThunderpad();

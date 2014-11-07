@@ -3,6 +3,7 @@
 
 #include <QSsl>
 #include <QUrl>
+#include <QDebug>
 #include <QString>
 #include <QSslError>
 #include <QByteArray>
@@ -13,49 +14,53 @@
 #include <QSslConfiguration>
 #include <QNetworkAccessManager>
 
-class QSimpleUpdater : public QObject
-{
-        Q_OBJECT
+#include "dialogs/download_dialog.h"
 
-    public:
-        QSimpleUpdater (QObject *parent = 0);
+class QSimpleUpdater : public QObject {
+    Q_OBJECT
 
-        QString changeLog();
-        void checkForUpdates();
-        QString latestVersion();
-        QString installedVersion();
-        void downloadLatestVersion();
-        bool newerVersionAvailable();
+public:
+    QSimpleUpdater(QObject *parent = 0);
 
-    public slots:
-        void setDownloadUrl (const QString url);
-        void setReferenceUrl (const QString url);
-        void setChangelogUrl (const QString url);
-        void setApplicationVersion (const QString version);
+    QString changeLog() const;
+    void checkForUpdates();
+    void openDownloadLink();
+    QString latestVersion() const;
+    QString installedVersion() const;
+    void downloadLatestVersion();
+    bool newerVersionAvailable() const;
 
-    private slots:
-        void checkDownloadedVersion (QNetworkReply *reply);
-        void processDownloadedChangelog (QNetworkReply *reply);
-        void ignoreSslErrors (QNetworkReply *reply, QList<QSslError> error);
+public slots:
+    void setDownloadUrl(const QString &url);
+    void setReferenceUrl(const QString &url);
+    void setChangelogUrl(const QString &url);
+    void setApplicationVersion(const QString &version);
 
-    signals:
-        void checkingFinished();
-        void versionCheckFinished();
-        void changelogDownloadFinished();
+private slots:
+    void checkDownloadedVersion(QNetworkReply *reply);
+    void processDownloadedChangelog(QNetworkReply *reply);
+    void ignoreSslErrors(QNetworkReply *reply, const QList<QSslError> &error);
 
-    private:
-        QString m_changelog;
-        QString m_latest_version;
-        QString m_installed_version;
+signals:
+    void checkingFinished();
+    void versionCheckFinished();
+    void changelogDownloadFinished();
 
-        QUrl m_download_url;
-        QUrl m_reference_url;
-        QUrl m_changelog_url;
+private:    
+    QString m_changelog;
+    QString m_latest_version;
+    QString m_installed_version;
 
-        bool m_changelog_downloaded;
-        bool m_version_check_finished;
+    QUrl m_download_url;
+    QUrl m_reference_url;
+    QUrl m_changelog_url;
 
-        bool m_new_version_available;
+    bool m_changelog_downloaded;
+    bool m_version_check_finished;
+
+    bool m_new_version_available;
+
+    DownloadDialog *m_downloadDialog;
 };
 
 #endif
