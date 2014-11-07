@@ -1,6 +1,6 @@
 ## Thunderpad
 
-[![Build Status](https://travis-ci.org/alex-97/Thunderpad.svg)](https://travis-ci.org/alex-97/Thunderpad.svg)
+[![Build Status](https://travis-ci.org/alex-97/Thunderpad.svg)](https://travis-ci.org/alex-97/Thunderpad)
 
 Thunderpad is a simple and lightweight text editor designed for general-purpose usage and casual programming. Thunderpad uses XML files for theming the text editor and loading the syntax definitions for a programming language, making it easier for anyone to contribute with a new theme or syntax definition.
 
