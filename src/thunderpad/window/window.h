@@ -52,6 +52,7 @@ class Window : public QMainWindow
     signals:
         void updateSettings();
         void settingsChanged();
+        void checkForUpdates();
         void readOnlyChanged (bool ro);
 
     protected:
@@ -81,7 +82,6 @@ class Window : public QMainWindow
         void reportBug();
         void sendFeedback();
         void makeContribution();
-        void checkForUpdates();
         void officialWebsite();
 
         private
@@ -89,9 +89,6 @@ class Window : public QMainWindow
         void updateTitle();
         void syncSettings();
         void saveWindowState();
-        void showLatestVersion();
-        void onCheckingFinished();
-        void showUpdateAvailable();
 
     private:
         MenuBar *m_menu;

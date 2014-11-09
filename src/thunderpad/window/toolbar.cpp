@@ -132,7 +132,7 @@ void ToolBar::updateSettings()
 
     // Update the toolbar style, we use the "if" condition to avoid
     // resizing and redrawing the toolbar each time that the user changes
-    bool _new_value = m_settings->value ("toolbar-text", MAC_OS_X).toBool();
+    bool _new_value = m_settings->value ("toolbar-text", false).toBool();
 
     if (_new_value != m_old_value)
     {

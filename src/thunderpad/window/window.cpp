@@ -36,47 +36,19 @@ Window::Window()
     connect (m_editor, SIGNAL (settingsChanged()), this, SIGNAL (settingsChanged()));
     connect (qApp, SIGNAL (aboutToQuit()), this, SLOT (close()));
 
-    // Connect slots between the updater and the window
-    connect (m_updater, SIGNAL (checkingFinished()), this, SLOT (onCheckingFinished()));
-
     // Create a new QSettings instance
     m_settings = new QSettings ("Alex Spataru", "Thunderpad");
     updateSettings();
 
-    // Load the saved geometry
     setMinimumSize (420, 420);
     resize (m_settings->value ("size", QSize (640, 420)).toSize());
     move (m_settings->value ("position", QPoint (200, 200)).toPoint());
 
-    // Show the window
     if (m_settings->value ("maximized", false).toBool())
         showMaximized();
 
     else
         showNormal();
-
-    QString _download_url;
-    QString _url_base = "https://raw.githubusercontent.com/alex-97/thunderpad/updater/files/";
-
-    // Get the download URL based on the OS
-#if defined(Q_OS_MAC)
-    _download_url = _url_base + "thunderpad-latest.dmg";
-#elif defined(Q_OS_WIN32)
-    _download_url = _url_base + "thunderpad-latest.exe";
-#elif defined(Q_OS_ANDROID)
-    _download_url = _url_base + "thunderpad-latest.apk";
-#elif defined(Q_OS_LINUX)
-    _download_url = _url_base + "thunderpad-latest.tar.gz";
-#endif
-
-    // Configure the updater
-    m_updater->setApplicationVersion (APP_VERSION);
-    m_updater->setDownloadUrl  (_download_url);
-    m_updater->setReferenceUrl ("https://raw.githubusercontent.com/alex-97/thunderpad/updater/latest.txt");
-    m_updater->setChangelogUrl ("https://raw.githubusercontent.com/alex-97/thunderpad/updater/changelog.txt");
-
-    // Check for updates
-    m_updater->checkForUpdates();
 }
 
 Editor *Window::editor() const
@@ -239,15 +211,6 @@ void Window::makeContribution()
     QDesktopServices::openUrl (QUrl ("http://thunderpad.sf.net/contribute"));
 }
 
-void Window::checkForUpdates()
-{
-    if (m_updater->newerVersionAvailable())
-        showUpdateAvailable();
-
-    else
-        showLatestVersion();
-}
-
 void Window::officialWebsite()
 {
     QDesktopServices::openUrl (QUrl ("http://thunderpad.sf.net"));
@@ -303,55 +266,13 @@ void Window::saveWindowState()
     }
 }
 
-void Window::showLatestVersion()
-{
-    QMessageBox _message;
-    _message.setParent (this);
-    _message.setWindowModality (Qt::WindowModal);
-    _message.setStandardButtons (QMessageBox::Ok);
-    _message.setWindowIcon (QIcon (":/icons/dummy.png"));
-    _message.setIconPixmap (QPixmap (":/icons/logo.png"));
-    _message.setWindowTitle (tr ("No updates available"));
-    _message.setInformativeText (
-        tr ("The latest public release of Thunderpad is version %1")
-        .arg (qApp->applicationVersion()));
-    _message.setText ("<b>" + tr ("Congratulations! You are running the latest "
-                                  "version of Thunderpad!") +
-                      "</b>");
-
-    _message.exec();
-}
-
-void Window::showUpdateAvailable()
-{
-    QMessageBox _message;
-    _message.setParent (this);
-    _message.setWindowModality (Qt::WindowModal);
-    _message.setDetailedText (m_updater->changeLog());
-    _message.setWindowIcon (QIcon (":/icons/dummy.png"));
-    _message.setIconPixmap (QPixmap (":/icons/logo.png"));
-    _message.setWindowTitle (tr ("New updates available"));
-    _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No);
-    _message.setText ("<b>" + tr ("There's a new version of Thunderpad!") +
-                      " (" + m_updater->latestVersion() + ")</b>");
-    _message.setInformativeText (
-        tr ("Do you want to download the newest version?"));
-
-    if (_message.exec() == QMessageBox::Yes)
-        m_updater->downloadLatestVersion();
-}
-
-void Window::onCheckingFinished()
-{
-    if (m_updater->newerVersionAvailable())
-        showUpdateAvailable();
-}
-
 void Window::configureWindow (Window *window)
 {
     Q_ASSERT (window != NULL);
 
     window->saveWindowState();
+    connect (window, SIGNAL (checkForUpdates()), this,
+             SIGNAL (checkForUpdates()));
 
     // Ensure that all windows are connected together and synced together
     foreach (QWidget * _widget, QApplication::topLevelWidgets())

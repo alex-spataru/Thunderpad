@@ -90,7 +90,7 @@ void MenuBar::connectSlots (Window *window)
     connect (h_make_donation, SIGNAL (triggered()), window,
              SLOT (makeContribution()));
     connect (h_check_for_updates, SIGNAL (triggered()), window,
-             SLOT (checkForUpdates()));
+             SIGNAL (checkForUpdates()));
     connect (h_official_website, SIGNAL (triggered()), window,
              SLOT (officialWebsite()));
 }

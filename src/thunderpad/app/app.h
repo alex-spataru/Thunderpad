@@ -10,9 +10,11 @@
 
 #include "window.h"
 
-#include <qmessagebox.h>
+#include <QMessageBox>
+#include <QApplication>
 #include <QFileOpenEvent>
-#include <qapplication.h>
+
+#include <QSimpleUpdater>
 
 /*!
  * \class Application
@@ -31,11 +33,20 @@ class Application : public QApplication
         Application (int &argc, char **argv);
         int showInitError();
 
+    public slots:
+        void checkForUpdates();
+
+    private slots:
+        void showLatestVersion();
+        void onCheckingFinished();
+        void showUpdateAvailable();
+
     protected:
         bool event (QEvent *_event);
 
     private:
         Window *m_window;
+        QSimpleUpdater *m_updater;
 };
 
 #endif
