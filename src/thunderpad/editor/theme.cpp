@@ -87,72 +87,72 @@ void Theme::readTheme (const QString &theme)
     }
 }
 
-QColor Theme::background()
+QColor Theme::background() const
 {
     return QColor (m_background);
 }
 
-QColor Theme::foreground()
+QColor Theme::foreground() const
 {
     return QColor (m_foreground);
 }
 
-QColor Theme::highlightBackground()
+QColor Theme::highlightBackground() const
 {
     return QColor (m_highlight_background);
 }
 
-QColor Theme::highlightForeground()
+QColor Theme::highlightForeground() const
 {
     return QColor (m_highlight_foreground);
 }
 
-QColor Theme::currentLineBackground()
+QColor Theme::currentLineBackground() const
 {
     return QColor (m_current_line_background);
 }
 
-QColor Theme::lineNumbersBackground()
+QColor Theme::lineNumbersBackground() const
 {
     return QColor (m_line_numbers_background);
 }
 
-QColor Theme::lineNumbersForeground()
+QColor Theme::lineNumbersForeground() const
 {
     return QColor (m_line_numbers_foreground);
 }
 
-QColor Theme::others()
+QColor Theme::others() const
 {
     return QColor (m_others);
 }
 
-QColor Theme::numbers()
+QColor Theme::numbers() const
 {
     return QColor (m_numbers);
 }
 
-QColor Theme::strings()
+QColor Theme::strings() const
 {
     return QColor (m_strings);
 }
 
-QColor Theme::keywords()
+QColor Theme::keywords() const
 {
     return QColor (m_keywords);
 }
 
-QColor Theme::comments()
+QColor Theme::comments() const
 {
     return QColor (m_comments);
 }
 
-QColor Theme::functions()
+QColor Theme::functions() const
 {
     return QColor (m_functions);
 }
 
-QColor Theme::data_types()
+QColor Theme::data_types() const
 {
     return QColor (m_data_types);
 }

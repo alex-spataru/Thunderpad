@@ -30,25 +30,25 @@ class Theme : public QObject
     public:
         explicit Theme (QObject *parent = 0);
 
+    QColor background() const;
+    QColor foreground() const;
+    QColor highlightBackground() const;
+    QColor highlightForeground() const;
+    QColor currentLineBackground() const;
+    QColor lineNumbersBackground() const;
+    QColor lineNumbersForeground() const;
+
+    QColor others() const;
+    QColor numbers() const;
+    QColor strings() const;
+    QColor keywords() const;
+    QColor comments() const;
+    QColor functions() const;
+    QColor data_types() const;
+
         public
     slots:
         void readTheme (const QString &theme);
-
-        QColor background();
-        QColor foreground();
-        QColor highlightBackground();
-        QColor highlightForeground();
-        QColor currentLineBackground();
-        QColor lineNumbersBackground();
-        QColor lineNumbersForeground();
-
-        QColor others();
-        QColor numbers();
-        QColor strings();
-        QColor keywords();
-        QColor comments();
-        QColor functions();
-        QColor data_types();
 
     private:
         QString m_background;
@@ -70,4 +70,4 @@ class Theme : public QObject
         void useFallbackColors();
 };
 
-#endif  // THEME_H
+#endif
