@@ -7,14 +7,17 @@
 
 #include "app.h"
 
-Application::Application (int &argc, char **argv) : QApplication (argc, argv)
+Application::Application (int &argc, char **argv) :
+    QApplication (argc, argv)
+    , m_show_all_updater_messages (false)
 {
-    setApplicationVersion ("1.0.0");
-    setApplicationName ("Thunderpad");
-    setOrganizationName ("Alex Spataru");
+    setApplicationName (APP_NAME);
+    setOrganizationName (APP_COMPANY);
+    setApplicationVersion (APP_VERSION);
 
     m_window = new Window();
     m_updater = new QSimpleUpdater();
+    m_settings = new QSettings (APP_COMPANY, APP_NAME);
 
     if (argc != 1)
     {
@@ -31,42 +34,62 @@ Application::Application (int &argc, char **argv) : QApplication (argc, argv)
              this,      SLOT   (onCheckingFinished()));
 
     QString _download_url;
-    QString _url_base = "https://raw.githubusercontent.com/alex-97/thunderpad/updater/files/";
+    QString _url_base = "https://raw.githubusercontent.com/"
+                        "alex-97/thunderpad/updater/";
 
-#if defined(Q_OS_MAC)
-    _download_url = _url_base + "thunderpad-latest.dmg";
-#elif defined(Q_OS_WIN32)
-    _download_url = _url_base + "thunderpad-latest.exe";
-#elif defined(Q_OS_ANDROID)
-    _download_url = _url_base + "thunderpad-latest.apk";
-#elif defined(Q_OS_LINUX)
-    _download_url = _url_base + "thunderpad-latest.tar.gz";
-#endif
+    if (MAC_OS_X)
+        _download_url = _url_base + "files/thunderpad-latest.dmg";
 
+    else if (WINDOWS)
+        _download_url = _url_base + "files/thunderpad-latest.exe";
+
+    else if (LINUX)
+        _download_url = _url_base + "files/thunderpad-latest.tar.gz";
+
+    m_updater->setDownloadUrl (_download_url);
     m_updater->setApplicationVersion (APP_VERSION);
-    m_updater->setDownloadUrl  (_download_url);
-    m_updater->setReferenceUrl ("https://raw.githubusercontent.com/alex-97/thunderpad/updater/latest.txt");
-    m_updater->setChangelogUrl ("https://raw.githubusercontent.com/alex-97/thunderpad/updater/changelog.txt");
+    m_updater->setReferenceUrl (_url_base + "latest.txt");
+    m_updater->setChangelogUrl (_url_base + "changelog.txt");
 
-    m_updater->checkForUpdates();
+
+    if (m_settings->value ("first-launch", true).toBool())
+    {
+        QMessageBox _message;
+        _message.setWindowTitle (tr ("Thunderpad"));
+        _message.setDefaultButton (QMessageBox::Yes);
+        _message.setWindowIcon (QIcon (":/icons/dummy.png"));
+        _message.setIconPixmap (QPixmap (":/icons/logo.png"));
+        _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No);
+        _message.setText (tr ("Do you want to check for updates automatically?"));
+        _message.setInformativeText (tr ("You can always check for updates from the "
+                                         "Help menu"));
+
+        if (_message.exec() == QMessageBox::Yes)
+            m_settings->setValue ("check-for-updates", true);
+
+        else
+            m_settings->setValue ("check-for-updates", false);
+
+        m_settings->setValue ("first-launch", false);
+    }
+
+    if (m_settings->value ("check-for-updates", true).toBool())
+        m_updater->checkForUpdates();
 }
 
 int Application::showInitError()
 {
-    QMessageBox::warning (
-        NULL, tr ("Application error"),
-        tr ("There's already a running instance of %1").arg (applicationName()));
+    QMessageBox::warning (NULL, tr ("Application error"),
+                          tr ("There's already a running instance of %1")
+                          .arg (applicationName()));
 
     return -1;
 }
 
 void Application::checkForUpdates()
 {
-    if (m_updater->newerVersionAvailable())
-        showUpdateAvailable();
-
-    else
-        showLatestVersion();
+    m_updater->checkForUpdates();
+    m_show_all_updater_messages = true;
 }
 
 void Application::showLatestVersion()
@@ -107,6 +130,12 @@ void Application::onCheckingFinished()
 {
     if (m_updater->newerVersionAvailable())
         showUpdateAvailable();
+
+    else if (m_show_all_updater_messages)
+    {
+        showLatestVersion();
+        m_show_all_updater_messages = false;
+    }
 }
 
 bool Application::event (QEvent *_event)

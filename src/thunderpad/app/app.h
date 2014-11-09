@@ -10,20 +10,12 @@
 
 #include "window.h"
 
+#include <QSettings>
 #include <QMessageBox>
 #include <QApplication>
 #include <QFileOpenEvent>
 
 #include <QSimpleUpdater>
-
-/*!
- * \class Application
- *
- * The \c Application class is in charge of loading and configuring
- * a new \c Window when Thunderpad is launched or when the system
- * requests Thunderpad to open a file (for example, when the user selects
- * "Thunderpad" from the Open with... menu in the file manager).
- */
 
 class Application : public QApplication
 {
@@ -46,7 +38,10 @@ class Application : public QApplication
 
     private:
         Window *m_window;
+        QSettings *m_settings;
         QSimpleUpdater *m_updater;
+
+        bool m_show_all_updater_messages;
 };
 
 #endif
