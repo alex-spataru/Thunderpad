@@ -77,7 +77,7 @@ void Application::showLatestVersion()
     _message.setIconPixmap (QPixmap (":/icons/logo.png"));
     _message.setWindowTitle (tr ("No updates available"));
     _message.setInformativeText (
-        tr ("The latest public release of Thunderpad is version %1")
+        tr ("The latest release of Thunderpad is version %1")
         .arg (qApp->applicationVersion()));
     _message.setText ("<b>" + tr ("Congratulations! You are running the latest "
                                   "version of Thunderpad!") +

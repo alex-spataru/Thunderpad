@@ -30,21 +30,21 @@ class Theme : public QObject
     public:
         explicit Theme (QObject *parent = 0);
 
-    QColor background() const;
-    QColor foreground() const;
-    QColor highlightBackground() const;
-    QColor highlightForeground() const;
-    QColor currentLineBackground() const;
-    QColor lineNumbersBackground() const;
-    QColor lineNumbersForeground() const;
+        QColor background() const;
+        QColor foreground() const;
+        QColor highlightBackground() const;
+        QColor highlightForeground() const;
+        QColor currentLineBackground() const;
+        QColor lineNumbersBackground() const;
+        QColor lineNumbersForeground() const;
 
-    QColor others() const;
-    QColor numbers() const;
-    QColor strings() const;
-    QColor keywords() const;
-    QColor comments() const;
-    QColor functions() const;
-    QColor data_types() const;
+        QColor others() const;
+        QColor numbers() const;
+        QColor strings() const;
+        QColor keywords() const;
+        QColor comments() const;
+        QColor functions() const;
+        QColor data_types() const;
 
         public
     slots:
