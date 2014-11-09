@@ -9,7 +9,7 @@
 
 Application::Application (int &argc, char **argv) :
     QApplication (argc, argv)
-    , m_show_all_updater_messages (false)
+  , m_show_all_updater_messages (false)
 {
     setApplicationName (APP_NAME);
     setOrganizationName (APP_COMPANY);
@@ -51,14 +51,26 @@ Application::Application (int &argc, char **argv) :
     m_updater->setReferenceUrl (_url_base + "latest.txt");
     m_updater->setChangelogUrl (_url_base + "changelog.txt");
 
-
     if (m_settings->value ("first-launch", true).toBool())
     {
         QMessageBox _message;
+        _message.setParent(m_window);
+        _message.setWindowModality(Qt::WindowModal);
         _message.setWindowTitle (tr ("Thunderpad"));
-        _message.setDefaultButton (QMessageBox::Yes);
         _message.setWindowIcon (QIcon (":/icons/dummy.png"));
         _message.setIconPixmap (QPixmap (":/icons/logo.png"));
+
+        _message.setStandardButtons (QMessageBox::Close);
+        _message.setText (tr ("Thank you for downloading Thunderpad!") + "                       ");
+        _message.setInformativeText (tr ("If you find this program useful and would like to help "
+                                         "contribute to future development, please consider "
+                                         "a small donation. You can  use the Donate item in the "
+                                         "Help menu to send your much needed assistance via BitCoins.\n\n"
+                                         "Please share Thunderpad with your friends and colleagues, "
+                                         "and feel free to send me feedback!"));
+        _message.exec();
+
+        _message.setDefaultButton (QMessageBox::Yes);
         _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No);
         _message.setText (tr ("Do you want to check for updates automatically?"));
         _message.setInformativeText (tr ("You can always check for updates from the "
@@ -100,8 +112,8 @@ void Application::showLatestVersion()
     _message.setIconPixmap (QPixmap (":/icons/logo.png"));
     _message.setWindowTitle (tr ("No updates available"));
     _message.setInformativeText (
-        tr ("The latest release of Thunderpad is version %1")
-        .arg (qApp->applicationVersion()));
+                tr ("The latest release of Thunderpad is version %1")
+                .arg (qApp->applicationVersion()));
     _message.setText ("<b>" + tr ("Congratulations! You are running the latest "
                                   "version of Thunderpad!") +
                       "</b>");
@@ -120,7 +132,7 @@ void Application::showUpdateAvailable()
     _message.setText ("<b>" + tr ("There's a new version of Thunderpad!") +
                       " (" + m_updater->latestVersion() + ")</b>");
     _message.setInformativeText (
-        tr ("Do you want to download the newest version?"));
+                tr ("Do you want to download the newest version?"));
 
     if (_message.exec() == QMessageBox::Yes)
         m_updater->downloadLatestVersion();

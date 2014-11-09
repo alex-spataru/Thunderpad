@@ -104,7 +104,7 @@ void Window::open()
 {
     // Get a list of selected file
     QStringList _filenames =
-        QFileDialog::getOpenFileNames (this, tr ("Open files"), QDir::homePath());
+            QFileDialog::getOpenFileNames (this, tr ("Open files"), QDir::homePath());
 
     // Open each file
     for (int i = 0; i < _filenames.count(); ++i)
@@ -164,7 +164,7 @@ void Window::setColorscheme (const QString &colorscheme)
 
 void Window::showFindReplaceDialog()
 {
-
+    //
 }
 
 void Window::setIconTheme (const QString &theme)
@@ -203,7 +203,7 @@ void Window::sendFeedback()
 void Window::reportBug()
 {
     QDesktopServices::openUrl (
-        QUrl ("https://github.com/alex-97/thunderpad/issues/new"));
+                QUrl ("https://github.com/alex-97/thunderpad/issues/new"));
 }
 
 void Window::makeContribution()
