@@ -281,7 +281,7 @@ bool Editor::maybeSave()
     {
         QMessageBox _message;
         _message.setParent (this);
-        _message.setWindowTitle (tr ("Unsaved changes"));
+        _message.setWindowTitle (" ");
         _message.setWindowModality (Qt::WindowModal);
         _message.setWindowIcon (QIcon (":/icons/dummy.png"));
         _message.setIconPixmap (QPixmap (":/icons/logo.png"));

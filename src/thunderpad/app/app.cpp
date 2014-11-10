@@ -55,13 +55,13 @@ Application::Application (int &argc, char **argv) :
     {
         QMessageBox _message;
         _message.setParent(m_window);
+        _message.setWindowTitle (" ");
         _message.setWindowModality(Qt::WindowModal);
-        _message.setWindowTitle (tr ("Thunderpad"));
         _message.setWindowIcon (QIcon (":/icons/dummy.png"));
         _message.setIconPixmap (QPixmap (":/icons/logo.png"));
 
         _message.setStandardButtons (QMessageBox::Close);
-        _message.setText (tr ("Thank you for downloading Thunderpad!") + "                       ");
+        _message.setText ("<b>" + tr ("Thank you for downloading Thunderpad!") + "</b>           ");
         _message.setInformativeText (tr ("If you find this program useful and would like to help "
                                          "contribute to future development, please consider "
                                          "a small donation. You can  use the Donate item in the "
@@ -72,7 +72,7 @@ Application::Application (int &argc, char **argv) :
 
         _message.setDefaultButton (QMessageBox::Yes);
         _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No);
-        _message.setText (tr ("Do you want to check for updates automatically?"));
+        _message.setText ("<b>" + tr ("Do you want to check for updates automatically?") + "</b>");
         _message.setInformativeText (tr ("You can always check for updates from the "
                                          "Help menu"));
 
@@ -124,10 +124,10 @@ void Application::showLatestVersion()
 void Application::showUpdateAvailable()
 {
     QMessageBox _message;
+    _message.setWindowTitle (" ");
     _message.setDetailedText (m_updater->changeLog());
     _message.setWindowIcon (QIcon (":/icons/dummy.png"));
     _message.setIconPixmap (QPixmap (":/icons/logo.png"));
-    _message.setWindowTitle (tr ("New updates available"));
     _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No);
     _message.setText ("<b>" + tr ("There's a new version of Thunderpad!") +
                       " (" + m_updater->latestVersion() + ")</b>");
