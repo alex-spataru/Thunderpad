@@ -9,7 +9,7 @@ title WinT Autostyle
 cd /d %~dp0
 
 :: Style and format the source code recursively
-astyle --style=bsd -C -S -xG -Y -XW -w -f -F -p -xd -k3 -y -xj -c -K -L --suffix=none --recursive ../*.cpp ../*.h
+astyle --style=java -C -S -xG -Y -XW -w -f -F -p -xd -k3 -y -xj -c -K -L --suffix=none --recursive ../*.cpp ../*.h
 
 :: Notify the user that we have finished
 echo.

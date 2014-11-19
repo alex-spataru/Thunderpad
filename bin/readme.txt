@@ -1,1 +1,3 @@
-The scripts contained in this folder will require you to install the [astyle](http://astyle.sf.net) source code styler.
+Note: The scripts contained in this folder will require you to install the “astyle” utility. 
+
+Download astyle at: http://astyle.sourceforge.net/

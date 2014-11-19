@@ -7,7 +7,7 @@
 cd "$(dirname ${BASH_SOURCE[0]})"
 
 # Style and format recursively
-astyle --style=bsd -C -S -xG -Y -XW -w -f -F -p -xd -k3 -y -xj -c -K -L --suffix=none --recursive ../*.cpp ../*.h
+astyle --style=java -C -S -xG -Y -XW -w -f -F -p -xd -k3 -y -xj -c -K -L --suffix=none --recursive ../*.cpp ../*.cc ../*.h
 
 # Notify the user that we are done
 echo 

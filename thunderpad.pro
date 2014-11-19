@@ -18,15 +18,15 @@ QT += network
 QT += widgets
 QT += printsupport
 
-include($$PWD/src/3rd-party/Hunspell/Hunspell.pri)
-include($$PWD/src/3rd-party/QSimpleUpdater/QSimpleUpdater.pri)
+include($$PWD/libs/Hunspell/Hunspell.pri)
+include($$PWD/libs/QSimpleUpdater/QSimpleUpdater.pri)
 
 INCLUDEPATH += \
-    $$PWD/src/thunderpad/app \
-    $$PWD/src/thunderpad/dialogs \
-    $$PWD/src/thunderpad/editor \
-    $$PWD/src/thunderpad/shared \
-    $$PWD/src/thunderpad/window
+    $$PWD/src/app \
+    $$PWD/src/dialogs \
+    $$PWD/src/editor \
+    $$PWD/src/shared \
+    $$PWD/src/window
 
 win32* {
     TARGET  = "Thunderpad"
@@ -34,59 +34,55 @@ win32* {
 }
 
 macx* {
-    LIBS += -lcrypto -lssl
     TARGET  = "Thunderpad"
     ICON    = $$PWD/data/mac/icon.icns
     RC_FILE = $$PWD/data/mac/icon.icns
-    CONFIG += app_bundle
     QMAKE_INFO_PLIST = $$PWD/data/mac/info.plist
 }
 
 unix:!macx {
-    LIBS += -lcrypto -lssl
     target.path    = /usr/bin
     desktop.path   = /usr/share/applications
     desktop.files += $$PWD/data/linux/thunderpad.desktop
     INSTALLS      += target desktop
 }
 
-RESOURCES += \
-    $$PWD/src/resources/resources.qrc
+RESOURCES += $$PWD/resources/resources.qrc
 
 HEADERS += \
-    $$PWD/src/thunderpad/app/app.h \
-    $$PWD/src/thunderpad/dialogs/about.h \
-    $$PWD/src/thunderpad/dialogs/find.h \
-    $$PWD/src/thunderpad/editor/editor.h \
-    $$PWD/src/thunderpad/editor/line-numbers.h \
-    $$PWD/src/thunderpad/editor/spell-checker.h \
-    $$PWD/src/thunderpad/editor/syntax-highlighter.h \
-    $$PWD/src/thunderpad/window/menubar.h \
-    $$PWD/src/thunderpad/window/toolbar.h \
-    $$PWD/src/thunderpad/window/window.h \
-    $$PWD/src/thunderpad/window/statusbar.h \
-    $$PWD/src/thunderpad/shared/platform.h \
-    $$PWD/src/thunderpad/editor/theme.h \
-    $$PWD/src/thunderpad/shared/app_info.h \
-    $$PWD/src/thunderpad/dialogs/find.h \
-    $$PWD/src/thunderpad/dialogs/findreplace.h
+    $$PWD/src/app/app.h \
+    $$PWD/src/dialogs/about.h \
+    $$PWD/src/dialogs/find.h \
+    $$PWD/src/editor/editor.h \
+    $$PWD/src/editor/line-numbers.h \
+    $$PWD/src/editor/spell-checker.h \
+    $$PWD/src/editor/syntax-highlighter.h \
+    $$PWD/src/window/menubar.h \
+    $$PWD/src/window/toolbar.h \
+    $$PWD/src/window/window.h \
+    $$PWD/src/window/statusbar.h \
+    $$PWD/src/shared/platform.h \
+    $$PWD/src/editor/theme.h \
+    $$PWD/src/shared/app_info.h \
+    $$PWD/src/dialogs/find.h \
+    $$PWD/src/dialogs/findreplace.h
 
 SOURCES += \
-    $$PWD/src/thunderpad/app/app.cpp \
-    $$PWD/src/thunderpad/dialogs/about.cpp \
-    $$PWD/src/thunderpad/editor/editor.cpp \
-    $$PWD/src/thunderpad/editor/line-numbers.cpp \
-    $$PWD/src/thunderpad/editor/spell-checker.cpp \
-    $$PWD/src/thunderpad/editor/syntax-highlighter.cpp \
-    $$PWD/src/thunderpad/window/menubar.cpp \
-    $$PWD/src/thunderpad/window/toolbar.cpp \
-    $$PWD/src/thunderpad/window/window.cpp \
-    $$PWD/src/thunderpad/main.cpp \
-    $$PWD/src/thunderpad/window/statusbar.cpp \
-    $$PWD/src/thunderpad/editor/theme.cpp \
-    $$PWD/src/thunderpad/dialogs/find.cpp \
-    $$PWD/src/thunderpad/dialogs/findreplace.cpp
+    $$PWD/src/app/app.cpp \
+    $$PWD/src/dialogs/about.cpp \
+    $$PWD/src/editor/editor.cpp \
+    $$PWD/src/editor/line-numbers.cpp \
+    $$PWD/src/editor/spell-checker.cpp \
+    $$PWD/src/editor/syntax-highlighter.cpp \
+    $$PWD/src/window/menubar.cpp \
+    $$PWD/src/window/toolbar.cpp \
+    $$PWD/src/window/window.cpp \
+    $$PWD/src/main.cpp \
+    $$PWD/src/window/statusbar.cpp \
+    $$PWD/src/editor/theme.cpp \
+    $$PWD/src/dialogs/find.cpp \
+    $$PWD/src/dialogs/findreplace.cpp
 
 FORMS += \
-    $$PWD/src/thunderpad/dialogs/find.ui \
-    $$PWD/src/thunderpad/dialogs/findreplace.ui
+    $$PWD/src/dialogs/find.ui \
+    $$PWD/src/dialogs/findreplace.ui
