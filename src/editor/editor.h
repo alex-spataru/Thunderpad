@@ -8,21 +8,22 @@
 #ifndef EDITOR_H
 #define EDITOR_H
 
-#include <qicon.h>
-#include <qfile.h>
-#include <qpainter.h>
-#include <qsettings.h>
-#include <qfontdialog.h>
-#include <qmessagebox.h>
-#include <qfiledialog.h>
-#include <qapplication.h>
-#include <qplaintextedit.h>
-
+#include <QIcon>
+#include <QFile>
+#include <QPainter>
+#include <QSettings>
 #include <QTextBlock>
+#include <QFontDialog>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QApplication>
+#include <QPlainTextEdit>
 
 #include "theme.h"
+#include "app_info.h"
 #include "platform.h"
 #include "line-numbers.h"
+#include "spell-checker.h"
 #include "syntax-highlighter.h"
 
 /*!
@@ -38,60 +39,52 @@
  * files.
  */
 
-class Editor : public QPlainTextEdit
-{
-        Q_OBJECT
+class Editor : public QPlainTextEdit {
+    Q_OBJECT
 
-    public:
-        explicit Editor (QWidget *parent = 0);
-        bool maybeSave();
+public:
+    explicit Editor(QWidget *parent = 0);
 
-        void lineNumberAreaPaintEvent (QPaintEvent *event);
-        int lineNumberAreaWidth();
+    bool maybeSave();
+    int lineNumberAreaWidth();
+    void lineNumberAreaPaintEvent(QPaintEvent *event);
 
-    protected:
-        void resizeEvent (QResizeEvent *event);
+signals:
+    void updateTitle();
+    void settingsChanged();
 
-        private
-    slots:
-        void highlightCurrentLine();
-        void updateLineNumberAreaWidth (int newBlockCount);
-        void updateLineNumberArea (const QRect &, int);
+public slots:
+    void checkSpelling();
+    void updateSettings();
 
-    signals:
-        /// This signal is emitted when the title of the document changes
-        void updateTitle();
+    bool save();
+    bool saveAs();
 
-        /// This signal is emitted when the user changes a feature of the text
-        /// editor, such as the default font used for editing.
-        void settingsChanged();
+    void print();
+    void exportPdf();
+    void exportHtml();
+    void selectFonts();
+    void setReadOnly(bool ro);
+    void setWordWrap(bool ww);
+    void readFile(const QString &file);
+    bool writeFile(const QString &file);
+    void setSyntaxLanguage(const QString &language);
 
-        public
-    slots:
-        void updateSettings();
+protected:
+    void resizeEvent(QResizeEvent *event);
 
-        bool save();
-        bool saveAs();
+private slots:
+    void highlightCurrentLine();
+    void updateLineNumberAreaWidth(int newBlockCount);
+    void updateLineNumberArea(const QRect &, int);
 
-        void print();
-        void exportPdf();
-        void exportHtml();
-        void selectFonts();
-        void setReadOnly (bool ro);
-        void setWordWrap (bool ww);
-        int find (const QString &query);
-        void replace (const QString &query);
-        void replaceAll (const QString &query);
-        void readFile (const QString &file);
-        bool writeFile (const QString &file);
-        void setSyntaxLanguage (const QString &language);
+private:
+    Theme *m_theme;
+    QSettings *m_settings;
+    QWidget *m_lineNumberArea;
+    SyntaxHighlighter *m_highlighter;
 
-    private:
-        Theme *m_theme;
-        QWidget *m_lineNumberArea;
-        SyntaxHighlighter *m_highlighter;
-
-        bool _hc_line_enabled;
+    bool _hc_line_enabled;
 };
 
 #endif

@@ -5,30 +5,26 @@
 #define MAXDICTENTRYLEN 1024
 
 struct dictentry {
-  char * filename;
-  char * lang;
-  char * region;
+  char *filename;
+  char *lang;
+  char *region;
 };
 
+class DictMgr {
 
-class DictMgr
-{
-
-  int                 numdict;
-  dictentry *         pdentry;
+  int numdict;
+  dictentry *pdentry;
 
 public:
- 
-  DictMgr(const char * dictpath, const char * etype);
+  DictMgr(const char *dictpath, const char *etype);
   ~DictMgr();
-  int get_list(dictentry** ppentry);
-            
-private:
-  int  parse_file(const char * dictpath, const char * etype);
-  char * mystrsep(char ** stringp, const char delim);
-  char * mystrdup(const char * s);
-  void mychomp(char * s);
+  int get_list(dictentry **ppentry);
 
+private:
+  int parse_file(const char *dictpath, const char *etype);
+  char *mystrsep(char **stringp, const char delim);
+  char *mystrdup(const char *s);
+  void mychomp(char *s);
 };
 
 #endif

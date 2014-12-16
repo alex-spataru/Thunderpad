@@ -8,12 +8,13 @@
 #ifndef THEME_H
 #define THEME_H
 
-#include <qfile.h>
-#include <qcolor.h>
-#include <qobject.h>
-#include <qsettings.h>
-
+#include <QFile>
+#include <QColor>
+#include <QObject>
+#include <QSettings>
 #include <QXmlStreamReader>
+
+#include "app_info.h"
 
 /*!
  * \class Theme
@@ -23,51 +24,49 @@
  * each color used to theme the \c Editor widget.
  */
 
-class Theme : public QObject
-{
-        Q_OBJECT
+class Theme : public QObject {
+    Q_OBJECT
 
-    public:
-        explicit Theme (QObject *parent = 0);
+public:
+    explicit Theme(QObject *parent = 0);
 
-        QColor background() const;
-        QColor foreground() const;
-        QColor highlightBackground() const;
-        QColor highlightForeground() const;
-        QColor currentLineBackground() const;
-        QColor lineNumbersBackground() const;
-        QColor lineNumbersForeground() const;
+    QColor background() const;
+    QColor foreground() const;
+    QColor highlightBackground() const;
+    QColor highlightForeground() const;
+    QColor currentLineBackground() const;
+    QColor lineNumbersBackground() const;
+    QColor lineNumbersForeground() const;
 
-        QColor others() const;
-        QColor numbers() const;
-        QColor strings() const;
-        QColor keywords() const;
-        QColor comments() const;
-        QColor functions() const;
-        QColor data_types() const;
+    QColor others() const;
+    QColor numbers() const;
+    QColor strings() const;
+    QColor keywords() const;
+    QColor comments() const;
+    QColor functions() const;
+    QColor data_types() const;
 
-        public
-    slots:
-        void readTheme (const QString &theme);
+public slots:
+    void readTheme(const QString &theme);
 
-    private:
-        QString m_background;
-        QString m_foreground;
-        QString m_highlight_background;
-        QString m_highlight_foreground;
-        QString m_current_line_background;
-        QString m_line_numbers_background;
-        QString m_line_numbers_foreground;
+private:
+    QString m_background;
+    QString m_foreground;
+    QString m_highlight_background;
+    QString m_highlight_foreground;
+    QString m_current_line_background;
+    QString m_line_numbers_background;
+    QString m_line_numbers_foreground;
 
-        QString m_others;
-        QString m_numbers;
-        QString m_strings;
-        QString m_keywords;
-        QString m_comments;
-        QString m_functions;
-        QString m_data_types;
+    QString m_others;
+    QString m_numbers;
+    QString m_strings;
+    QString m_keywords;
+    QString m_comments;
+    QString m_functions;
+    QString m_data_types;
 
-        void useFallbackColors();
+    void useFallbackColors();
 };
 
 #endif

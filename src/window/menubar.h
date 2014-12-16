@@ -8,14 +8,14 @@
 #ifndef MENUBAR_H
 #define MENUBAR_H
 
-#include <qdir.h>
-#include <qmenu.h>
-#include <qaction.h>
-#include <qmenubar.h>
-#include <qsettings.h>
-#include <qstringlist.h>
-#include <qkeysequence.h>
-#include <qsignalmapper.h>
+#include <QDir>
+#include <QMenu>
+#include <QAction>
+#include <QMenuBar>
+#include <QSettings>
+#include <QStringList>
+#include <QKeySequence>
+#include <QSignalMapper>
 
 #include "window.h"
 
@@ -26,92 +26,124 @@
  * a new QMenuBar widget to be used with the \c Window class.
  *
  * This class creates the neccessary actions and connects the signals/slots
- * automatically with the connectSlots() function.
+ * automatically with the initialize() function.
  */
 
-class MenuBar : public QMenuBar
-{
-        Q_OBJECT
+class MenuBar : public QMenuBar {
+    Q_OBJECT
 
-    public:
-        MenuBar (QWidget *parent = 0);
-        void setSaveEnabled (bool enabled);
-        void connectSlots (Window *window);
+public:
+    MenuBar(Window *parent = 0);
 
-        public
-    slots:
-        void updateSettings();
+    /*!
+   * \brief setSaveEnabled
+   * \param enabled
+   *
+   * Disables (or enables) the save action based on
+   * the current status of the document
+   */
 
-        private
-    slots:
-        void createActions();
-        void createMenubar();
-        void configureActions();
+    void setSaveEnabled(bool enabled);
 
-    signals:
-        void change_icons (const QString &theme);
-        void change_color (const QString &theme);
-        void change_syntax (const QString &lang);
+signals:
 
-    private:
-        QMenu *m_file;
-        QMenu *m_edit;
-        QMenu *m_format;
-        QMenu *m_view;
-        QMenu *m_tools;
-        QMenu *m_help;
+    /*!
+   * \brief change_icons
+   * \param theme
+   *
+   * This signal is emitted when the user clicks
+   * any of the actions related to the "toolbar icons" section
+   */
 
-        QAction *f_new;
-        QAction *f_open;
-        QAction *f_save;
-        QAction *f_save_as;
+    void change_icons(const QString &theme);
 
-        QMenu *f_export;
-        QAction *export_html;
-        QAction *export_pdf;
+    /*!
+   * \brief change_color
+   * \param theme
+   *
+   * This signal is emitted when the user clicks
+   * any of the actions related to the "themes" section
+   */
 
-        QAction *f_print;
-        QAction *f_close;
-        QAction *f_quit;
+    void change_color(const QString &theme);
 
-        QAction *e_undo;
-        QAction *e_redo;
-        QAction *e_cut;
-        QAction *e_copy;
-        QAction *e_paste;
-        QAction *e_select_all;
-        QAction *e_find_replace;
-        QAction *e_read_only;
+    /*!
+   * \brief change_syntax
+   * \param lang
+   * This signal is emitted when the user clicks
+   * any of the actions related to the "syntax highlighter" section
+   */
 
-        QAction *format_font;
-        QAction *format_word_wrap;
+    void change_syntax(const QString &lang);
 
-        QAction *v_toolbar;
-        QAction *v_statusbar;
+private slots:
+    void createActions();
+    void createMenubar();
+    void updateSettings();
+    void configureActions();
+    void initialize(Window *window);
 
-        QMenu *v_advanced;
-        QAction *v_highlight_current_line;
-        QAction *v_line_numbers;
-        QAction *v_toolbar_text;
+private:
+    QSettings *m_settings;
 
-        QMenu *color_schemes;
-        QMenu *syntax_languages;
-        QMenu *v_icon_theme;
+    QMenu *m_file;
+    QMenu *m_edit;
+    QMenu *m_format;
+    QMenu *m_view;
+    QMenu *m_tools;
+    QMenu *m_help;
 
-        QAction *t_sort_selection;
-        QAction *t_goto_line;
-        QAction *t_insert_date_time;
+    QAction *f_new;
+    QAction *f_open;
+    QAction *f_save;
+    QAction *f_save_as;
 
-        QAction *h_about_thunderpad;
-        QAction *h_about_qt;
-        QAction *h_donate;
-        QAction *h_feedback;
-        QAction *h_license;
-        QAction *h_v_help;
-        QAction *h_report_bug;
-        QAction *h_make_donation;
-        QAction *h_check_for_updates;
-        QAction *h_official_website;
+    QMenu *f_export;
+    QAction *export_html;
+    QAction *export_pdf;
+
+    QAction *f_print;
+    QAction *f_close;
+    QAction *f_quit;
+
+    QAction *e_undo;
+    QAction *e_redo;
+    QAction *e_cut;
+    QAction *e_copy;
+    QAction *e_paste;
+    QAction *e_select_all;
+    QAction *e_find_replace;
+    QAction *e_read_only;
+
+    QAction *format_font;
+    QAction *format_word_wrap;
+
+    QAction *v_toolbar;
+    QAction *v_statusbar;
+
+    QMenu *v_advanced;
+    QAction *v_highlight_current_line;
+    QAction *v_line_numbers;
+    QAction *v_toolbar_text;
+
+    QMenu *color_schemes;
+    QMenu *syntax_languages;
+    QMenu *v_icon_theme;
+
+    QAction *t_sort_selection;
+    QAction *t_goto_line;
+    QAction *t_insert_date_time;
+
+    QAction *h_about_thunderpad;
+    QAction *h_about_qt;
+    QAction *h_donate;
+    QAction *h_feedback;
+    QAction *h_license;
+    QAction *h_v_help;
+    QAction *h_report_bug;
+    QAction *h_make_donation;
+    QAction *h_check_for_updates;
+    QAction *h_official_website;
 };
 
 #endif

@@ -17,31 +17,40 @@
 
 #include <QSimpleUpdater>
 
-class Application : public QApplication
-{
-        Q_OBJECT
+class Application : public QApplication {
+    Q_OBJECT
 
-    public:
-        Application (int &argc, char **argv);
-        int showInitError();
+public:
+    Application(int &argc, char **argv);
 
-    public slots:
-        void checkForUpdates();
+    /*!
+     * \brief showInitError
+     * \return
+     *
+     * Shows a message box informing the user
+     * that there was an error connecting to
+     * the current instance of the application.
+     */
 
-    private slots:
-        void showLatestVersion();
-        void onCheckingFinished();
-        void showUpdateAvailable();
+    int showInitError();
 
-    protected:
-        bool event (QEvent *_event);
+public slots:
+    void checkForUpdates();
 
-    private:
-        Window *m_window;
-        QSettings *m_settings;
-        QSimpleUpdater *m_updater;
+private slots:
+    void showLatestVersion();
+    void onCheckingFinished();
+    void showUpdateAvailable();
 
-        bool m_show_all_updater_messages;
+protected:
+    bool event(QEvent *_event);
+
+private:
+    Window *m_window;
+    QSettings *m_settings;
+    QSimpleUpdater *m_updater;
+
+    bool m_show_all_updater_messages;
 };
 
 #endif

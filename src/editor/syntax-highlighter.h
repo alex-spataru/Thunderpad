@@ -8,15 +8,14 @@
 #ifndef SYNTAX_HIGHLIGHTER_H
 #define SYNTAX_HIGHLIGHTER_H
 
-#include "theme.h"
-
-#include <qregexp.h>
-#include <qstringlist.h>
-#include <qtextstream.h>
-#include <qsyntaxhighlighter.h>
-
+#include <QRegExp>
+#include <QStringList>
+#include <QTextStream>
 #include <QTextCharFormat>
 #include <QXmlStreamReader>
+#include <QSyntaxHighlighter>
+
+#include "theme.h"
 
 /*!
  * \class SyntaxHighlighter
@@ -29,46 +28,43 @@
  * by the XML files found in the resources folder of Thunderpad.
  */
 
-class SyntaxHighlighter : public QSyntaxHighlighter
-{
-        Q_OBJECT
+class SyntaxHighlighter : public QSyntaxHighlighter {
+    Q_OBJECT
 
-    public:
-        explicit SyntaxHighlighter (QTextDocument *parent);
+public:
+    explicit SyntaxHighlighter(QTextDocument *parent);
 
-        public
-    slots:
-        void updateColor (Theme *theme);
-        void setLanguage (const QString &lang);
+public slots:
+    void updateColor(Theme *theme);
+    void setLanguage(const QString &lang);
 
-    protected:
-        void highlightBlock (const QString &text);
+protected:
+    void highlightBlock(const QString &text);
 
-    private:
-        struct HighlightingRule
-        {
-            QRegExp pattern;
-            QTextCharFormat format;
-        };
-        QVector<HighlightingRule> highlightingRules;
+private:
+    struct HighlightingRule {
+        QRegExp pattern;
+        QTextCharFormat format;
+    };
+    QVector<HighlightingRule> highlightingRules;
 
-        QString _others;
-        QString _functions;
-        QString _comment_end;
-        QString _comment_start;
-        QString _multiline_comment_end;
-        QString _multiline_comment_start;
+    QString _others;
+    QString _functions;
+    QString _comment_end;
+    QString _comment_start;
+    QString _multiline_comment_end;
+    QString _multiline_comment_start;
 
-        QStringList _keywords;
-        QStringList _data_types;
+    QStringList _keywords;
+    QStringList _data_types;
 
-        QColor m_othersColor;
-        QColor m_functionsColor;
-        QColor m_commentsColor;
-        QColor m_keyworsColor;
-        QColor m_numbersColor;
-        QColor m_stringColor;
-        QColor m_typesColor;
+    QColor m_othersColor;
+    QColor m_functionsColor;
+    QColor m_commentsColor;
+    QColor m_keyworsColor;
+    QColor m_numbersColor;
+    QColor m_stringColor;
+    QColor m_typesColor;
 };
 
 #endif

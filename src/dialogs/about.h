@@ -5,11 +5,11 @@
 //  Please check the license.txt file for more information.
 //
 
-#include <qicon.h>
-#include <qlabel.h>
-#include <qdialog.h>
-#include <qlayout.h>
-#include <qapplication.h>
+#include <QIcon>
+#include <QLabel>
+#include <QDialog>
+#include <QLayout>
+#include <QApplication>
 
 #include "platform.h"
 
@@ -20,18 +20,17 @@
  * current version of Thunderpad.
  */
 
-class About : public QDialog
-{
-        Q_OBJECT
+class About : public QDialog {
+    Q_OBJECT
 
-    public:
-        explicit About (QWidget *parent = 0);
+public:
+    explicit About(QWidget *parent = 0);
 
-    private:
-        QLabel *m_icon;
-        QLabel *m_name;
-        QLabel *m_version;
-        QLabel *m_copyright;
+private:
+    QLabel *m_icon;
+    QLabel *m_name;
+    QLabel *m_version;
+    QLabel *m_copyright;
 
-        QVBoxLayout *m_layout;
+    QVBoxLayout *m_layout;
 };

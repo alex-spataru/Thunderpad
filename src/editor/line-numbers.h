@@ -8,7 +8,7 @@
 #ifndef LINE_NUMBERS_H
 #define LINE_NUMBERS_H
 
-#include <qsize.h>
+#include <QSize>
 
 class Editor;
 
@@ -19,18 +19,17 @@ class Editor;
  * \c Editor uses to display line numbers.
  */
 
-class LineNumberArea : public QWidget
-{
+class LineNumberArea : public QWidget {
 
-    public:
-        LineNumberArea (Editor *editor);
-        QSize sizeHint() const;
+public:
+    LineNumberArea(Editor *editor);
+    QSize sizeHint() const;
 
-    protected:
-        void paintEvent (QPaintEvent *event);
+protected:
+    void paintEvent(QPaintEvent *event);
 
-    private:
-        Editor *m_editor;
+private:
+    Editor *m_editor;
 };
 
 #endif

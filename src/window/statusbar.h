@@ -5,23 +5,40 @@
 //  Please check the license.txt file for more information.
 //
 
-#include <qstatusbar.h>
+#include <QLabel>
+#include <QString>
+#include <QRegExp>
+#include <QSettings>
+#include <QStatusBar>
+#include <QPlainTextEdit>
+
+#include "window.h"
+#include "app_info.h"
 
 /*!
  * \class StatusBar
  *
  * The \c StatusBar class is in charge of creating and configuring
  * a new QStatusBar widget to be used with the \c Window class.
- *
- * This class creates the neccessary actions and connects the signals/slots
- * automatically with the connectSlots() function.
  */
 
+class StatusBar : public QStatusBar {
+    Q_OBJECT
 
-class StatusBar : public QStatusBar
-{
-        Q_OBJECT
+public:
+    StatusBar(Window *parent = 0);
 
-    public:
-        StatusBar (QWidget *parent = 0);
+private slots:
+    void updateSettings();
+    void updateStatusLabel();
+    void initialize(Window *window);
+
+private:
+    QLabel *m_label;
+    QSettings *m_settings;
+    QPlainTextEdit *m_text_edit;
+
+    QString fileSize();
+    QString wordCount();
+    QString lineCount();
 };

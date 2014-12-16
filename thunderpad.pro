@@ -52,7 +52,7 @@ RESOURCES += $$PWD/resources/resources.qrc
 HEADERS += \
     $$PWD/src/app/app.h \
     $$PWD/src/dialogs/about.h \
-    $$PWD/src/dialogs/find.h \
+    $$PWD/src/dialogs/searchdialog.h \
     $$PWD/src/editor/editor.h \
     $$PWD/src/editor/line-numbers.h \
     $$PWD/src/editor/spell-checker.h \
@@ -64,12 +64,11 @@ HEADERS += \
     $$PWD/src/shared/platform.h \
     $$PWD/src/editor/theme.h \
     $$PWD/src/shared/app_info.h \
-    $$PWD/src/dialogs/find.h \
-    $$PWD/src/dialogs/findreplace.h
 
 SOURCES += \
     $$PWD/src/app/app.cpp \
     $$PWD/src/dialogs/about.cpp \
+    $$PWD/src/dialogs/searchdialog.cpp \
     $$PWD/src/editor/editor.cpp \
     $$PWD/src/editor/line-numbers.cpp \
     $$PWD/src/editor/spell-checker.cpp \
@@ -79,10 +78,4 @@ SOURCES += \
     $$PWD/src/window/window.cpp \
     $$PWD/src/main.cpp \
     $$PWD/src/window/statusbar.cpp \
-    $$PWD/src/editor/theme.cpp \
-    $$PWD/src/dialogs/find.cpp \
-    $$PWD/src/dialogs/findreplace.cpp
-
-FORMS += \
-    $$PWD/src/dialogs/find.ui \
-    $$PWD/src/dialogs/findreplace.ui
+    $$PWD/src/editor/theme.cpp
