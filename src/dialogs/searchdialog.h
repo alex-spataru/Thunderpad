@@ -29,9 +29,9 @@ public:
     SearchDialog(Window *parent = 0);
 
 private slots:
-    void search();
-    void replaceAll();
-    void replaceFirstOccurrence();
+    void search(void);
+    void replaceAll(void);
+    void replaceFirstOccurrence(void);
 
 private:
     QTextCursor *m_text_cursor;

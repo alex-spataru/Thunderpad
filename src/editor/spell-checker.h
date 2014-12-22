@@ -17,16 +17,16 @@
 class SpellChecker {
 
 public:
-    SpellChecker(const QString &dictionaryPath);
-    ~SpellChecker();
+  SpellChecker(const QString &dictionaryPath);
+  ~SpellChecker(void);
 
-    bool spell(const QString &word);
-    QStringList suggest(const QString &word);
-    void ignoreWord(const QString &word);
+  bool spell(const QString &word);
+  QStringList suggest(const QString &word);
+  void ignoreWord(const QString &word);
 
 private:
-    void put_word(const QString &word);
-    Hunspell *_hunspell;
-    QString _encoding;
-    QTextCodec *_codec;
+  void put_word(const QString &word);
+  Hunspell *_hunspell;
+  QString _encoding;
+  QTextCodec *_codec;
 };

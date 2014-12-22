@@ -8,7 +8,9 @@
 #include "app.h"
 
 Application::Application(int &argc, char **argv)
-    : QApplication(argc, argv), m_show_all_updater_messages(false) {
+    : QApplication(argc, argv),
+      m_show_all_updater_messages(false) {
+
     setApplicationName(APP_NAME);
     setOrganizationName(APP_COMPANY);
     setApplicationVersion(APP_VERSION);
@@ -34,14 +36,13 @@ Application::Application(int &argc, char **argv)
     QString base_repo_url = "https://raw.githubusercontent.com/"
                             "alex-97/thunderpad/updater/";
 
-    if (MAC_OS_X)
-        download_package_url = "http://iweb.dl.sourceforge.net/project/thunderpad/Versions/0.9/Thunderpad%200.9.dmg";
-
-    else if (WINDOWS)
-        download_package_url = base_repo_url + "files/thunderpad-latest.exe";
-
-    else if (LINUX)
-        download_package_url = base_repo_url + "files/thunderpad-latest.tar.gz";
+#if MAC_OS_X
+    download_package_url = base_repo_url + "files/thunderpad-latest.dmg";
+#elif WINDOWS
+    download_package_url = base_repo_url + "files/thunderpad-latest.exe";
+#else
+    download_package_url = base_repo_url + "files/thunderpad-latest.tar.gz";
+#endif
 
     m_updater->setDownloadUrl(download_package_url);
     m_updater->setApplicationVersion(applicationVersion());
@@ -90,11 +91,14 @@ Application::Application(int &argc, char **argv)
         m_settings->setValue("second-launch", false);
     }
 
-    if (m_settings->value("check-for-updates", true).toBool())
+    if (m_settings->value("check-for-updates", true).toBool()) {
+        qDebug() << this << "Checking for updates...";
         m_updater->checkForUpdates();
+    }
 }
 
-int Application::showInitError() {
+int Application::showInitError(void) {
+    qCritical() << this << "There's a running instance of" << APP_NAME;
     QMessageBox::warning(
                 NULL, tr("Application error"),
                 tr("There's already a running instance of %1").arg(applicationName()));
@@ -102,12 +106,15 @@ int Application::showInitError() {
     return -1;
 }
 
-void Application::checkForUpdates() {
+void Application::checkForUpdates(void) {
+    qDebug() << this << "Checking for updates...";
     m_updater->checkForUpdates();
     m_show_all_updater_messages = true;
 }
 
-void Application::showLatestVersion() {
+void Application::showLatestVersion(void) {
+    qDebug() << this << "You have the latest version installed!";
+
     QMessageBox _message;
     _message.setStandardButtons(QMessageBox::Ok);
     _message.setWindowIcon(QIcon(":/icons/dummy.png"));
@@ -123,7 +130,9 @@ void Application::showLatestVersion() {
     _message.exec();
 }
 
-void Application::showUpdateAvailable() {
+void Application::showUpdateAvailable(void) {
+    qDebug() << this << "An application update was found online!";
+
     QMessageBox _message;
     _message.setWindowTitle(" ");
     _message.setDetailedText(m_updater->changeLog());
@@ -139,7 +148,7 @@ void Application::showUpdateAvailable() {
         m_updater->downloadLatestVersion();
 }
 
-void Application::onCheckingFinished() {
+void Application::onCheckingFinished(void) {
     if (m_updater->newerVersionAvailable())
         showUpdateAvailable();
 
@@ -150,6 +159,8 @@ void Application::onCheckingFinished() {
 }
 
 bool Application::event(QEvent *_event) {
+    qDebug() << this << "System event:" << _event->type();
+
     if (_event->type() == QEvent::FileOpen)
         m_window->openFile(static_cast<QFileOpenEvent *>(_event)->file());
 

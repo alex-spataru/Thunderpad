@@ -28,11 +28,10 @@ ToolBar::ToolBar(Window *parent) : QToolBar(parent) {
 
     // Load the settings
     m_settings = new QSettings(APP_COMPANY, APP_NAME);
-    updateSettings();
+    m_toolbar_text = m_settings->value("toolbar-text", false).toBool();
+    m_large_icons = m_settings->value("large-icons", MAC_OS_X).toBool();
 
-    // Show the toolbar
-    m_old_value = m_settings->value("toolbar-text", false).toBool();
-    setToolbarText(m_old_value);
+    setToolbarText(m_toolbar_text);
 
     // Setup the read only button
     m_readonly->setEnabled(false);
@@ -64,22 +63,38 @@ void ToolBar::setReadOnly(bool ro) {
     m_readonly->setChecked(ro);
     m_readonly->setEnabled(ro);
     m_readonly->setVisible(ro);
+
+    m_undo->setEnabled(!ro);
+    m_redo->setEnabled(!ro);
+    m_cut->setEnabled(!ro);
+    m_copy->setEnabled(!ro);
+    m_paste->setEnabled(!ro);
 }
 
-void ToolBar::setSaveEnabled(bool enabled) { m_save->setEnabled(enabled); }
+void ToolBar::setSaveEnabled(bool enabled) {
+    m_save->setEnabled(enabled);
+}
 
 void ToolBar::setToolbarText(bool enabled) {
     short _toolbar_size;
 
     // Show the text and set the size of the toolbar
     if (enabled) {
-        _toolbar_size = MAC_OS_X ? 36 : 48;
+        if (m_large_icons)
+            _toolbar_size = 44;
+        else
+            _toolbar_size = MAC_OS_X ? 36 : 48;
+
         setToolButtonStyle(Qt::ToolButtonTextUnderIcon);
     }
 
     // Hide the text and set the size of the toolbar
     else {
-        _toolbar_size = MAC_OS_X ? 24 : 32;
+        if (m_large_icons)
+            _toolbar_size = 32;
+        else
+            _toolbar_size = MAC_OS_X ? 24 : 32;
+
         setToolButtonStyle(Qt::ToolButtonIconOnly);
     }
 
@@ -87,8 +102,7 @@ void ToolBar::setToolbarText(bool enabled) {
     setMinimumHeight(_toolbar_size);
     setMaximumHeight(_toolbar_size);
 
-    // Re-draw the toolbar (using the update() function) hides
-    // the menubar (at least in OS X)
+    // Force a redrawing of the damm toolbar (works on everything)
     hide();
     show();
 }
@@ -117,29 +131,38 @@ void ToolBar::initialize(Window *window) {
     connect(window, SIGNAL(updateSettings()), this, SLOT(updateSettings()));
 }
 
-void ToolBar::updateSettings() {
-    // Set the icon theme
-    update_theme(m_settings->value("icon-theme", "Silk").toString());
+void ToolBar::updateSettings(void) {
+    bool _new_value = m_settings->value("toolbar-text", false).toBool();
+    bool _new_sizes = m_settings->value("large-icons", MAC_OS_X).toBool();
+
+    // Resize and redraw the toolbar if neccessary
+    if (_new_value != m_toolbar_text || m_large_icons != _new_sizes) {
+        m_large_icons = _new_sizes;
+        m_toolbar_text = _new_value;
+
+        setToolbarText(_new_value);
+    }
 
     // Hide/show the toolbar
     setVisible(m_settings->value("toolbar-enabled", true).toBool());
     setEnabled(m_settings->value("toolbar-enabled", true).toBool());
 
-    // Update the toolbar style, we use the "if" condition to avoid
-    // resizing and redrawing the toolbar each time that the user changes
-    bool _new_value = m_settings->value("toolbar-text", false).toBool();
-
-    if (_new_value != m_old_value) {
-        setToolbarText(_new_value);
-        m_old_value = _new_value;
-    }
+    // Set icon theme
+    update_theme(m_settings->value("icon-theme", "Silk").toString());
 }
 
 void ToolBar::update_theme(const QString &theme) {
     Q_ASSERT(!theme.isEmpty());
 
+    // Decide if we use small icons or large icons
+    QString size;
+    if (m_large_icons)
+        size = "24x24";
+    else
+        size = "16x16";
+
     // Load the icon theme in the resources folder
-    QString path = ":/icons/themes/" + theme + "/";
+    QString path = QString(":/icons/themes/%1/%2/").arg(theme, size);
 
     // Apply each icon to their respective action
     m_new->setIcon(QIcon(path + "new.png"));

@@ -77,10 +77,11 @@ signals:
     void change_syntax(const QString &lang);
 
 private slots:
-    void createActions();
-    void createMenubar();
-    void updateSettings();
-    void configureActions();
+    void createActions(void);
+    void createMenubar(void);
+    void updateSettings(void);
+    void configureActions(void);
+    void setReadOnly(bool ro);
     void initialize(Window *window);
 
 private:
@@ -124,7 +125,10 @@ private:
     QMenu *v_advanced;
     QAction *v_highlight_current_line;
     QAction *v_line_numbers;
+
+    QMenu *v_appearance;
     QAction *v_toolbar_text;
+    QAction *v_large_toolbar_icons;
 
     QMenu *color_schemes;
     QMenu *syntax_languages;

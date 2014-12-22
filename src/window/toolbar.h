@@ -31,12 +31,37 @@ public:
     ToolBar(Window *parent = 0);
 
 public slots:
+
+    /*!
+     * \brief setReadOnly
+     * \param ro
+     *
+     * Shows or hides the read only button based on the \c ro parameter
+     */
+
     void setReadOnly(bool ro);
+
+    /*!
+     * \brief setToolbarText
+     * \param enabled
+     *
+     * Shows or hides the text under the toolbar icons
+     * based on the \c enabled parameter
+     */
+
     void setToolbarText(bool enabled);
+
+    /*!
+     * \brief setSaveEnabled
+     * \param enabled
+     *
+     * Enables or disables the save button based on the \c enabled parameter
+     */
+
     void setSaveEnabled(bool enabled);
 
 private slots:
-    void updateSettings();
+    void updateSettings(void);
     void initialize(Window *window);
     void update_theme(const QString &theme);
 
@@ -53,7 +78,8 @@ private:
     QAction *m_find_replace;
     QAction *m_readonly;
 
-    bool m_old_value;
+    bool m_large_icons;
+    bool m_toolbar_text;
     QSettings *m_settings;
 };
 

@@ -8,14 +8,14 @@
 #ifndef APP_H
 #define APP_H
 
-#include "window.h"
-
 #include <QSettings>
 #include <QMessageBox>
 #include <QApplication>
+#include <QSharedMemory>
 #include <QFileOpenEvent>
-
 #include <QSimpleUpdater>
+
+#include "window.h"
 
 class Application : public QApplication {
     Q_OBJECT
@@ -32,15 +32,23 @@ public:
      * the current instance of the application.
      */
 
-    int showInitError();
+    int showInitError(void);
 
 public slots:
-    void checkForUpdates();
+
+    /*!
+     * \brief checkForUpdates
+     *
+     * Connects to the Internet and checks if there is
+     * a newer version of the application online
+     */
+
+    void checkForUpdates(void);
 
 private slots:
-    void showLatestVersion();
-    void onCheckingFinished();
-    void showUpdateAvailable();
+    void showLatestVersion(void);
+    void onCheckingFinished(void);
+    void showUpdateAvailable(void);
 
 protected:
     bool event(QEvent *_event);

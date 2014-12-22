@@ -8,6 +8,7 @@
 #ifndef SYNTAX_HIGHLIGHTER_H
 #define SYNTAX_HIGHLIGHTER_H
 
+#include <QDebug>
 #include <QRegExp>
 #include <QStringList>
 #include <QTextStream>
@@ -29,42 +30,60 @@
  */
 
 class SyntaxHighlighter : public QSyntaxHighlighter {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
-    explicit SyntaxHighlighter(QTextDocument *parent);
+  explicit SyntaxHighlighter(QTextDocument *parent);
 
 public slots:
-    void updateColor(Theme *theme);
-    void setLanguage(const QString &lang);
+
+  /*!
+   * \brief updateColor
+   * \param theme
+   *
+   * Changes the colors to be used to highlight
+   * the contents of the document.
+   */
+
+  void updateColor(Theme *theme);
+
+  /*!
+   * \brief setLanguage
+   * \param lang
+   *
+   * Searches, loads and configures a syntax definition
+   * file for the given language.
+   */
+
+  void setLanguage(const QString &lang);
+
+  /*!
+   * \brief detectLanguage
+   * \param file
+   *
+   * Decides which definition to use based on
+   * the extension of the given file.
+   */
+
+  void detectLanguage(const QString &file);
 
 protected:
-    void highlightBlock(const QString &text);
+  void highlightBlock(const QString &text);
 
 private:
-    struct HighlightingRule {
-        QRegExp pattern;
-        QTextCharFormat format;
-    };
-    QVector<HighlightingRule> highlightingRules;
+  struct HighlightingRule {
+    QRegExp pattern;
+    QTextCharFormat format;
+  };
 
-    QString _others;
-    QString _functions;
-    QString _comment_end;
-    QString _comment_start;
-    QString _multiline_comment_end;
-    QString _multiline_comment_start;
+  QVector<HighlightingRule> m_highlighting_rules;
 
-    QStringList _keywords;
-    QStringList _data_types;
+  QString m_lang;
 
-    QColor m_othersColor;
-    QColor m_functionsColor;
-    QColor m_commentsColor;
-    QColor m_keyworsColor;
-    QColor m_numbersColor;
-    QColor m_stringColor;
-    QColor m_typesColor;
+  QTextCharFormat m_others_format;
+  QTextCharFormat m_comments_format;
+  QTextCharFormat m_keywords_format;
+  QTextCharFormat m_functions_format;
 };
 
 #endif

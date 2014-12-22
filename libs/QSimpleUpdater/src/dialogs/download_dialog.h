@@ -18,33 +18,33 @@ class DownloadDialog;
 }
 
 class DownloadDialog : public QWidget {
-  Q_OBJECT
+    Q_OBJECT
 
 public:
-  explicit DownloadDialog(QWidget *parent = 0);
-  ~DownloadDialog();
+    explicit DownloadDialog (QWidget *parent = 0);
+    ~DownloadDialog(void);
 
-  void beginDownload(const QUrl &url);
+    void beginDownload (const QUrl& url);
 
 private slots:
-  void openDownload();
-  void cancelDownload();
-  void downloadFinished();
-  void updateProgress(qint64 received, qint64 total);
-  void ignoreSslErrors(QNetworkReply *reply, const QList<QSslError> &error);
+    void openDownload(void);
+    void cancelDownload(void);
+    void downloadFinished(void);
+    void updateProgress (qint64 received, qint64 total);
+    void ignoreSslErrors (QNetworkReply *reply, const QList<QSslError>& error);
 
 private:
-  Ui::DownloadDialog *ui;
+    Ui::DownloadDialog *ui;
 
-  QString m_path;
-  bool m_download_paused;
+    QString m_path;
+    bool m_download_paused;
 
-  QNetworkReply *m_reply;
-  QNetworkAccessManager *m_manager;
+    QNetworkReply *m_reply;
+    QNetworkAccessManager *m_manager;
 
-  uint m_start_time;
+    uint m_start_time;
 
-  float roundNumber(const float &input);
+    float roundNumber (const float& input);
 };
 
 #endif

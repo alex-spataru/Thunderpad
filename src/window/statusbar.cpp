@@ -12,6 +12,7 @@ StatusBar::StatusBar(Window *parent) : QStatusBar(parent) {
     updateSettings();
 
     initialize(parent);
+
 }
 
 void StatusBar::initialize(Window *window) {
@@ -32,26 +33,29 @@ void StatusBar::initialize(Window *window) {
     connect(window, SIGNAL(updateSettings()), this, SLOT(updateSettings()));
 }
 
-void StatusBar::updateSettings() {
+void StatusBar::updateSettings(void) {
     m_settings->value("statusbar-enabled", true).toBool() ? show() : hide();
 }
 
-void StatusBar::updateStatusLabel() {
+void StatusBar::updateStatusLabel(void) {
     m_label->setText(fileSize() + "    " + wordCount() + "    " + lineCount());
 }
 
-QString StatusBar::fileSize() {
+QString StatusBar::fileSize(void) {
     QString _units;
     float _length = m_text_edit->toPlainText().length();
 
+    // File is less than one KB
     if (_length < 1024)
         _units = " bytes";
 
+    // File is one KB or greater, but smaller than one MB
     else if (_length < 1024 * 1024) {
         _length /= 1024;
         _units = " KB";
     }
 
+    // File is one MB or greater
     else {
         _length /= 1024 * 1024;
         _units = " MB";
@@ -61,7 +65,7 @@ QString StatusBar::fileSize() {
             QString::number(floorf(_length * 100 + 0.5) / 100) + _units;
 }
 
-QString StatusBar::wordCount() {
+QString StatusBar::wordCount(void) {
     long int _words =
             m_text_edit->toPlainText()
             .split(QRegExp("(\\s|\\n|\\r)+"), QString::SkipEmptyParts)
@@ -70,7 +74,7 @@ QString StatusBar::wordCount() {
     return tr("Words:") + " " + QString::number(_words);
 }
 
-QString StatusBar::lineCount() {
+QString StatusBar::lineCount(void) {
     return tr("Lines:") + " " +
             QString::number(m_text_edit->document()->blockCount());
 }

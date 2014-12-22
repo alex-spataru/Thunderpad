@@ -22,14 +22,14 @@ class Editor;
 class LineNumberArea : public QWidget {
 
 public:
-    LineNumberArea(Editor *editor);
-    QSize sizeHint() const;
+  LineNumberArea(Editor *editor);
+  QSize sizeHint(void) const;
 
 protected:
-    void paintEvent(QPaintEvent *event);
+  void paintEvent(QPaintEvent *event);
 
 private:
-    Editor *m_editor;
+  Editor *m_editor;
 };
 
 #endif

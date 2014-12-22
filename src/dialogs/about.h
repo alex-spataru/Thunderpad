@@ -7,10 +7,14 @@
 
 #include <QIcon>
 #include <QLabel>
+#include <QDebug>
 #include <QDialog>
 #include <QLayout>
+#include <QDateTime>
+#include <QPushButton>
 #include <QApplication>
 
+#include "app_info.h"
 #include "platform.h"
 
 /*!
@@ -29,8 +33,7 @@ public:
 private:
     QLabel *m_icon;
     QLabel *m_name;
-    QLabel *m_version;
-    QLabel *m_copyright;
+    QLabel *m_information;
 
     QVBoxLayout *m_layout;
 };

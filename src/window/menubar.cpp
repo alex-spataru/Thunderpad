@@ -9,13 +9,11 @@
 
 MenuBar::MenuBar(Window *parent) : QMenuBar(parent) {
     setAttribute(Qt::WA_DeleteOnClose);
-
     m_settings = new QSettings(APP_COMPANY, APP_NAME);
 
     createActions();
     configureActions();
     createMenubar();
-    updateSettings();
 
     initialize(parent);
 }
@@ -49,7 +47,12 @@ void MenuBar::initialize(Window *window) {
     connect(e_select_all, SIGNAL(triggered()), window->editor(), SLOT(selectAll()));
     connect(e_find_replace, SIGNAL(triggered()), window, SLOT(showFindReplaceDialog()));
     connect(e_read_only, SIGNAL(triggered(bool)), window, SLOT(setReadOnly(bool)));
-    connect(window, SIGNAL(readOnlyChanged(bool)), e_read_only, SLOT(setChecked(bool)));
+    connect(window, SIGNAL(readOnlyChanged(bool)), this, SLOT(setReadOnly(bool)));
+
+    // Connect slots for the tools menu
+    connect(t_goto_line, SIGNAL(triggered()), window->editor(), SLOT(goToLine()));
+    connect(t_sort_selection, SIGNAL(triggered()), window->editor(), SLOT(sortSelection()));
+    connect(t_insert_date_time, SIGNAL(triggered()), window->editor(), SLOT(insertDateTime()));
 
     // Connect slots for the format menu
     connect(format_font, SIGNAL(triggered()), window->editor(), SLOT(selectFonts()));
@@ -61,6 +64,7 @@ void MenuBar::initialize(Window *window) {
     connect(v_highlight_current_line, SIGNAL(triggered(bool)), window, SLOT(setHCLineEnabled(bool)));
     connect(v_line_numbers, SIGNAL(triggered(bool)), window, SLOT(setLineNumbersEnabled(bool)));
     connect(v_toolbar_text, SIGNAL(triggered(bool)), window, SLOT(setToolbarText(bool)));
+    connect(v_large_toolbar_icons, SIGNAL(triggered(bool)), window, SLOT(setUseLargeIcons(bool)));
     connect(this, SIGNAL(change_color(QString)), window, SLOT(setColorscheme(QString)));
     connect(this, SIGNAL(change_icons(QString)), window, SLOT(setIconTheme(QString)));
     connect(this, SIGNAL(change_syntax(QString)), window->editor(), SLOT(setSyntaxLanguage(QString)));
@@ -76,18 +80,22 @@ void MenuBar::initialize(Window *window) {
     connect(h_make_donation, SIGNAL(triggered()), window, SLOT(makeContribution()));
     connect(h_check_for_updates, SIGNAL(triggered()), window, SIGNAL(checkForUpdates()));
     connect(h_official_website, SIGNAL(triggered()), window, SLOT(officialWebsite()));
+
+    // Sync settings
+    connect(window, SIGNAL(updateSettings()), this, SLOT(updateSettings()));
 }
 
-void MenuBar::updateSettings() {
+void MenuBar::updateSettings(void) {
     v_toolbar->setChecked(m_settings->value("toolbar-enabled", true).toBool());
     v_statusbar->setChecked(m_settings->value("statusbar-enabled", true).toBool());
-    v_toolbar_text->setChecked(m_settings->value("toolbar-text", MAC_OS_X).toBool());
+    v_toolbar_text->setChecked(m_settings->value("toolbar-text", false).toBool());
     format_word_wrap->setChecked(m_settings->value("wordwrap-enabled", true).toBool());
+    v_large_toolbar_icons->setChecked(m_settings->value("large-icons", MAC_OS_X).toBool());
     v_line_numbers->setChecked(m_settings->value("line-numbers-enabled", true).toBool());
     v_highlight_current_line->setChecked(m_settings->value("hc-line-enabled", true).toBool());
 }
 
-void MenuBar::createActions() {
+void MenuBar::createActions(void) {
     // Create the file menu actions
     f_new = new QAction(tr("New"), this);
     f_open = new QAction(tr("Open") + "...", this);
@@ -117,8 +125,9 @@ void MenuBar::createActions() {
     v_toolbar = new QAction(tr("Toolbar"), this);
     v_statusbar = new QAction(tr("Statusbar"), this);
     v_highlight_current_line = new QAction(tr("Highlight current line"), this);
-    v_line_numbers = new QAction(tr("Line numbers"), this);
-    v_toolbar_text = new QAction(tr("Toolbar text"), this);
+    v_line_numbers = new QAction(tr("Show line numbers"), this);
+    v_large_toolbar_icons = new QAction(tr("Large toolbar icons"), this);
+    v_toolbar_text = new QAction(tr("Display text under toolbar icons"), this);
 
     // Create the tools menu actions
     t_sort_selection = new QAction(tr("Sort selection"), this);
@@ -138,7 +147,7 @@ void MenuBar::createActions() {
     h_official_website = new QAction(tr("Website") + "...", this);
 }
 
-void MenuBar::configureActions() {
+void MenuBar::configureActions(void) {
     // Set the menu roles
     f_quit->setMenuRole(QAction::QuitRole);
     h_about_qt->setMenuRole(QAction::AboutQtRole);
@@ -173,10 +182,11 @@ void MenuBar::configureActions() {
     format_word_wrap->setCheckable(true);
     v_line_numbers->setCheckable(true);
     v_toolbar_text->setCheckable(true);
+    v_large_toolbar_icons->setCheckable(true);
     v_highlight_current_line->setCheckable(true);
 }
 
-void MenuBar::createMenubar() {
+void MenuBar::createMenubar(void) {
     // Create the main menus we are adding the "&" before
     // each menu to inhibit the OS to add aditional items
     // to the menubar (such as in the Edit menu in Mac).
@@ -235,11 +245,41 @@ void MenuBar::createMenubar() {
     v_advanced->addAction(v_highlight_current_line);
     v_advanced->addAction(v_line_numbers);
     v_advanced->addSeparator();
-    v_advanced->addAction(v_toolbar_text);
-    v_advanced->addSeparator();
+    v_advanced->addAction(v_large_toolbar_icons);
+
+    // Create the appearance menu
+    v_appearance = m_view->addMenu(tr("Appearance"));
+
+    // Create the icon theme menu
+    v_icon_theme = v_appearance->addMenu(tr("Icon themes"));
+    QActionGroup *icon_themes_group = new QActionGroup(this);
+    QSignalMapper *icon_themes_mapper = new QSignalMapper(this);
+    connect(icon_themes_mapper, SIGNAL(mapped(QString)), this, SIGNAL(change_icons(QString)));
+
+    // Read all the registered icons in the resources
+    QDir icon_themes_dir(":/icons/themes/");
+    QStringList icon_themes_list = icon_themes_dir.entryList();
+
+    // Create a new action for each registered icon theme
+    for (int i = 0; icon_themes_list.count() > i; ++i) {
+        // Get the name of the current theme and create the action
+        QAction *_action = new QAction(icon_themes_list.at(i), this);
+
+        // Configure the action
+        _action->setCheckable(true);
+        v_icon_theme->addAction(_action);
+        icon_themes_group->addAction(_action);
+        icon_themes_mapper->setMapping(_action, _action->text());
+        connect(_action, SIGNAL(triggered()), icon_themes_mapper, SLOT(map()));
+
+        // Check the icon if necessary
+        if (m_settings->value("icon-theme", "Silk").toString() == _action->text())
+            _action->setChecked(true);
+    }
+
 
     // Create the color schemes menu
-    color_schemes = v_advanced->addMenu(tr("Color schemes"));
+    color_schemes = v_appearance->addMenu(tr("Color schemes"));
     QActionGroup *color_schemes_group = new QActionGroup(this);
     QSignalMapper *color_schemes_mapper = new QSignalMapper(this);
 
@@ -269,13 +309,28 @@ void MenuBar::createMenubar() {
             _action->setChecked(true);
     }
 
+    // Add the toolbar text action
+    v_appearance->addSeparator();
+    v_appearance->addAction(v_toolbar_text);
+
     // Create the syntax highlighter menu in a process similar to the color
     // schemes menu
-    syntax_languages = v_advanced->addMenu(tr("Syntax highlighting"));
+    syntax_languages = m_view->addMenu(tr("Highlighting mode"));
     QActionGroup *syntax_languages_group = new QActionGroup(this);
     QSignalMapper *syntax_languages_mapper = new QSignalMapper(this);
     connect(syntax_languages_mapper, SIGNAL(mapped(QString)), this,
             SIGNAL(change_syntax(QString)));
+
+    // Add the "plain text" option to the syntax highlighting options
+    QAction* _plain_text = new QAction(tr("Plain text"), this);
+    syntax_languages->addAction(_plain_text);
+    syntax_languages->addSeparator();
+
+    _plain_text->setCheckable(true);
+    _plain_text->setChecked(true);
+    syntax_languages_group->addAction(_plain_text);
+    syntax_languages_mapper->setMapping(_plain_text, _plain_text->text());
+    connect(_plain_text, SIGNAL(triggered()), syntax_languages_mapper, SLOT(map()));
 
     // Read all the registered color schemes in the resources
     QDir syntax_languages_dir(":/languages/");
@@ -297,34 +352,6 @@ void MenuBar::createMenubar() {
         syntax_languages_group->addAction(_action);
         syntax_languages_mapper->setMapping(_action, _action->text());
         connect(_action, SIGNAL(triggered()), syntax_languages_mapper, SLOT(map()));
-    }
-
-    // Create the icon theme menu using a process similar to the color schemes
-    // menu
-    v_icon_theme = m_view->addMenu(tr("Icon themes"));
-    QActionGroup *icon_themes_group = new QActionGroup(this);
-    QSignalMapper *icon_themes_mapper = new QSignalMapper(this);
-    connect(icon_themes_mapper, SIGNAL(mapped(QString)), this, SIGNAL(change_icons(QString)));
-
-    // Read all the registered color schemes in the resources
-    QDir icon_themes_dir(":/icons/themes/");
-    QStringList icon_themes_list = icon_themes_dir.entryList();
-
-    // Create a new action for each registered icon theme
-    for (int i = 0; icon_themes_list.count() > i; ++i) {
-        // Get the name of the current theme and create the action
-        QAction *_action = new QAction(icon_themes_list.at(i), this);
-
-        // Configure the action
-        _action->setCheckable(true);
-        v_icon_theme->addAction(_action);
-        icon_themes_group->addAction(_action);
-        icon_themes_mapper->setMapping(_action, _action->text());
-        connect(_action, SIGNAL(triggered()), icon_themes_mapper, SLOT(map()));
-
-        // Check the icon if necessary
-        if (m_settings->value("icon-theme", "Silk").toString() == _action->text())
-            _action->setChecked(true);
     }
 
     // Create the tools menu
@@ -349,4 +376,15 @@ void MenuBar::createMenubar() {
     m_help->addSeparator();
     m_help->addAction(h_check_for_updates);
     m_help->addAction(h_official_website);
+}
+
+void MenuBar::setReadOnly(bool ro) {
+    e_undo->setEnabled(!ro);
+    e_redo->setEnabled(!ro);
+
+    e_cut->setEnabled(!ro);
+    e_copy->setEnabled(!ro);
+    e_paste->setEnabled(!ro);
+
+    e_read_only->setChecked(ro);
 }

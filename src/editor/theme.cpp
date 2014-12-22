@@ -9,21 +9,23 @@
 
 Theme::Theme(QObject *parent) : QObject(parent) {
     QSettings _settings(APP_COMPANY, APP_NAME);
-    readTheme(_settings.value("color-scheme", "Light").toString());
 }
 
-void Theme::useFallbackColors() {
-    m_background = "#fff";
-    m_foreground = "#555";
+void Theme::useFallbackColors(void) {
+    qDebug() << this << "Error loading theme, using fallback colors";
+
+    m_background = "#ffffff";
+    m_foreground = "#555555";
     m_highlight_background = "#b0c4dc";
-    m_highlight_foreground = "#555";
-    m_line_numbers_background = "#fff";
+    m_highlight_foreground = "#555555";
+    m_line_numbers_background = "#f0f0f0";
     m_line_numbers_foreground = "#a8a8a8";
     m_current_line_background = "#ffffd1";
 }
 
 void Theme::readTheme(const QString &theme) {
     Q_ASSERT(!theme.isEmpty());
+    qDebug() << this << "Loading color scheme with name" << theme << "";
 
     QFile _file(":/color-schemes/" + theme + ".xml");
 
@@ -67,67 +69,54 @@ void Theme::readTheme(const QString &theme) {
         m_current_line_background = _values.at(_types.indexOf("current_line_background"));
 
         m_others = _values.at(_types.indexOf("others"));
-        m_numbers = _values.at(_types.indexOf("numbers"));
-        m_strings = _values.at(_types.indexOf("strings"));
         m_keywords = _values.at(_types.indexOf("keywords"));
         m_comments = _values.at(_types.indexOf("comments"));
         m_functions = _values.at(_types.indexOf("functions"));
-        m_data_types = _values.at(_types.indexOf("data_types"));
+
+        qDebug() << this << "Color scheme" << theme << "loaded successfully";
     }
 }
 
-QColor Theme::background() const {
+QColor Theme::background(void) const {
     return QColor(m_background);
 }
 
-QColor Theme::foreground() const {
+QColor Theme::foreground(void) const {
     return QColor(m_foreground);
 }
 
-QColor Theme::highlightBackground() const {
+QColor Theme::highlightBackground(void) const {
     return QColor(m_highlight_background);
 }
 
-QColor Theme::highlightForeground() const {
+QColor Theme::highlightForeground(void) const {
     return QColor(m_highlight_foreground);
 }
 
-QColor Theme::currentLineBackground() const {
+QColor Theme::currentLineBackground(void) const {
     return QColor(m_current_line_background);
 }
 
-QColor Theme::lineNumbersBackground() const {
+QColor Theme::lineNumbersBackground(void) const {
     return QColor(m_line_numbers_background);
 }
 
-QColor Theme::lineNumbersForeground() const {
+QColor Theme::lineNumbersForeground(void) const {
     return QColor(m_line_numbers_foreground);
 }
 
-QColor Theme::others() const {
+QColor Theme::others(void) const {
     return QColor(m_others);
 }
 
-QColor Theme::numbers() const {
-    return QColor(m_numbers);
-}
-
-QColor Theme::strings() const {
-    return QColor(m_strings);
-}
-
-QColor Theme::keywords() const {
+QColor Theme::keywords(void) const {
     return QColor(m_keywords);
 }
 
-QColor Theme::comments() const {
+QColor Theme::comments(void) const {
     return QColor(m_comments);
 }
 
-QColor Theme::functions() const {
+QColor Theme::functions(void) const {
     return QColor(m_functions);
-}
-
-QColor Theme::data_types() const {
-    return QColor(m_data_types);
 }

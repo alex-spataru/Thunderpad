@@ -14,7 +14,7 @@ SpellChecker::SpellChecker(const QString &dictionaryPath) {
     QByteArray affixFilePathBA = affixFile.toLocal8Bit();
     _hunspell = new Hunspell(affixFilePathBA.constData(), dictFilePathBA.constData());
 
-    // detect encoding analyzing the SET option in the affix file
+    // Detect encoding analyzing the SET option in the affix file
     _encoding = "ISO8859-1";
     QFile _affixFile(affixFile);
 
@@ -35,12 +35,15 @@ SpellChecker::SpellChecker(const QString &dictionaryPath) {
     }
 
     _codec = QTextCodec::codecForName(this->_encoding.toLatin1().constData());
+
+
 }
 
-SpellChecker::~SpellChecker() { delete _hunspell; }
+SpellChecker::~SpellChecker(void) {
+    delete _hunspell;
+}
 
 bool SpellChecker::spell(const QString &word) {
-    // Encode from Unicode to the encoding used by current dictionary
     return _hunspell->spell(_codec->fromUnicode(word).constData()) != 0;
 }
 
@@ -60,7 +63,9 @@ QStringList SpellChecker::suggest(const QString &word) {
     return suggestions;
 }
 
-void SpellChecker::ignoreWord(const QString &word) { put_word(word); }
+void SpellChecker::ignoreWord(const QString &word) {
+    put_word(word);
+}
 
 void SpellChecker::put_word(const QString &word) {
     _hunspell->add(_codec->fromUnicode(word).constData());

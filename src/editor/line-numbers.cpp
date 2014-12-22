@@ -12,7 +12,7 @@ LineNumberArea::LineNumberArea(Editor *editor) : QWidget(editor) {
     m_editor = editor;
 }
 
-QSize LineNumberArea::sizeHint() const {
+QSize LineNumberArea::sizeHint(void) const {
     return QSize(m_editor->lineNumberAreaWidth(), 0);
 }
 

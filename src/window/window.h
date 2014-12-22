@@ -44,26 +44,26 @@ class Window : public QMainWindow {
     Q_OBJECT
 
 public:
-    Window();
+    Window(void);
 
-    Editor *editor() const;
-    ToolBar *toolbar() const;
+    Editor *editor(void) const;
+    ToolBar *toolbar(void) const;
 
     void configureWindow(Window *window);
     void openFile(const QString &file_name);
 
 signals:
-    void updateSettings();
-    void settingsChanged();
-    void checkForUpdates();
+    void updateSettings(void);
+    void settingsChanged(void);
+    void checkForUpdates(void);
     void readOnlyChanged(bool ro);
 
 protected:
     void closeEvent(QCloseEvent *event);
 
 public slots:
-    void newFile();
-    void open();
+    void newFile(void);
+    void open(void);
 
     void setReadOnly(bool ro);
     void setWordWrap(bool ww);
@@ -71,25 +71,26 @@ public slots:
     void setToolbarEnabled(bool tb);
     void setStatusBarEnabled(bool sb);
     void setHCLineEnabled(bool hc);
+    void setUseLargeIcons(bool li);
     void setLineNumbersEnabled(bool ln);
     void setIconTheme(const QString &theme);
     void setColorscheme(const QString &colorscheme);
 
-    void showFindReplaceDialog();
+    void showFindReplaceDialog(void);
 
-    void aboutThunderpad();
-    void license();
-    void donate();
-    void viewHelp();
-    void reportBug();
-    void sendFeedback();
-    void makeContribution();
-    void officialWebsite();
+    void aboutThunderpad(void);
+    void license(void);
+    void donate(void);
+    void viewHelp(void);
+    void reportBug(void);
+    void sendFeedback(void);
+    void makeContribution(void);
+    void officialWebsite(void);
 
 private slots:
-    void updateTitle();
-    void syncSettings();
-    void saveWindowState();
+    void updateTitle(void);
+    void syncSettings(void);
+    void saveWindowState(void);
 
 private:
     MenuBar *m_menu;

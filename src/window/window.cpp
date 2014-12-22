@@ -12,7 +12,7 @@
 #include "statusbar.h"
 #include "searchdialog.h"
 
-Window::Window() {
+Window::Window(void) {
     setObjectName("window");
     setAttribute(Qt::WA_DeleteOnClose);
 
@@ -50,22 +50,27 @@ Window::Window() {
     m_settings->value("maximized", false).toBool() ? showMaximized() : showNormal();
 }
 
-Editor *Window::editor() const {
+Editor *Window::editor(void) const {
     return m_editor;
 }
 
-ToolBar *Window::toolbar() const {
+ToolBar *Window::toolbar(void) const {
     return m_toolbar;
 }
 
 void Window::closeEvent(QCloseEvent *event) {
-    // Save the window state
-    m_settings->setValue("size", size());
-    m_settings->setValue("position", pos());
+    saveWindowState();
+    qDebug() << this << "Close event requested";
 
-    // Close the window only if the user has saved
-    // his/her work or discharged the changes
-    m_editor->maybeSave() ? event->accept() : event->ignore();
+    if (m_editor->maybeSave()) {
+        event->accept();
+        qDebug() << this << "Close event accepted";
+    }
+
+    else {
+        event->ignore();
+        qDebug() << this << "Close event rejected";
+    }
 }
 
 void Window::openFile(const QString &file_name) {
@@ -83,16 +88,16 @@ void Window::openFile(const QString &file_name) {
     }
 }
 
-void Window::newFile() {
+void Window::newFile(void) {
     Window *_window = new Window();
     configureWindow(_window);
 }
 
-void Window::open() {
-    // Get a list of selected file
+void Window::open(void) {
+    // Get a list of selected files
     QStringList _files = QFileDialog::getOpenFileNames(this, tr("Open"), QDir::homePath());
 
-    // Open each file
+    // Open each file separately
     for (int i = 0; i < _files.count(); ++i)
         if (!_files.at(i).isEmpty())
             openFile(_files.at(i));
@@ -101,6 +106,7 @@ void Window::open() {
 void Window::setReadOnly(bool ro) {
     m_editor->setReadOnly(ro);
     m_toolbar->setReadOnly(ro);
+
     emit readOnlyChanged(ro);
 }
 
@@ -129,6 +135,11 @@ void Window::setHCLineEnabled(bool hc) {
     syncSettings();
 }
 
+void Window::setUseLargeIcons(bool li) {
+    m_settings->setValue("large-icons", li);
+    syncSettings();
+}
+
 void Window::setLineNumbersEnabled(bool ln) {
     m_settings->setValue("line-numbers-enabled", ln);
     syncSettings();
@@ -141,7 +152,7 @@ void Window::setColorscheme(const QString &colorscheme) {
     syncSettings();
 }
 
-void Window::showFindReplaceDialog() {
+void Window::showFindReplaceDialog(void) {
     m_search_dialog->show();
 }
 
@@ -152,40 +163,40 @@ void Window::setIconTheme(const QString &theme) {
     syncSettings();
 }
 
-void Window::aboutThunderpad() {
+void Window::aboutThunderpad(void) {
     m_about_dlg->show();
 }
 
-void Window::license() {
+void Window::license(void) {
     QDesktopServices::openUrl(QUrl("http://www.gnu.org/copyleft/gpl.html"));
 }
 
-void Window::donate() {
+void Window::donate(void) {
     QDesktopServices::openUrl(QUrl("http://www.thunderpad.sf.net/donate"));
 }
 
-void Window::viewHelp() {
+void Window::viewHelp(void) {
     QDesktopServices::openUrl(QUrl("http://thunderpad.sf.net/support"));
 }
 
-void Window::sendFeedback() {
+void Window::sendFeedback(void) {
     QDesktopServices::openUrl(QUrl("mailto:alex_spataru@outlook.com"));
 }
 
-void Window::reportBug() {
+void Window::reportBug(void) {
     QDesktopServices::openUrl(
                 QUrl("https://github.com/alex-97/thunderpad/issues/new"));
 }
 
-void Window::makeContribution() {
+void Window::makeContribution(void) {
     QDesktopServices::openUrl(QUrl("http://thunderpad.sf.net/contribute"));
 }
 
-void Window::officialWebsite() {
+void Window::officialWebsite(void) {
     QDesktopServices::openUrl(QUrl("http://thunderpad.sf.net"));
 }
 
-void Window::updateTitle() {
+void Window::updateTitle(void) {
     QString _title;
 
     // Use "untitled" when we have no saved document
@@ -216,12 +227,12 @@ void Window::updateTitle() {
     }
 }
 
-void Window::syncSettings() {
+void Window::syncSettings(void) {
     emit updateSettings();
     emit settingsChanged();
 }
 
-void Window::saveWindowState() {
+void Window::saveWindowState(void) {
     m_settings->setValue("maximized", isMaximized());
 
     if (!isMaximized()) {
@@ -233,12 +244,14 @@ void Window::saveWindowState() {
 void Window::configureWindow(Window *window) {
     Q_ASSERT(window != NULL);
 
+    qDebug() << this << "Configuring new window...";
+
     window->saveWindowState();
     connect(window, SIGNAL(checkForUpdates()), this, SIGNAL(checkForUpdates()));
 
     // Ensure that all windows are connected together and synced together
     foreach (QWidget *_widget, QApplication::topLevelWidgets()) {
-        if (_widget->objectName() == "window") {
+        if (_widget->objectName() == objectName()) {
             connect(_widget, SIGNAL(settingsChanged()), window,
                     SIGNAL(updateSettings()));
             connect(window, SIGNAL(settingsChanged()), _widget,

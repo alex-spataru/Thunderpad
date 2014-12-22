@@ -50,7 +50,7 @@ void Editor::lineNumberAreaPaintEvent(QPaintEvent *event) {
     }
 }
 
-int Editor::lineNumberAreaWidth() {
+int Editor::lineNumberAreaWidth(void) {
     if (m_lineNumberArea->isEnabled()) {
         int _digits = 1;
         int _max = qMax(1, blockCount());
@@ -75,7 +75,9 @@ void Editor::updateLineNumberArea(const QRect &rect, int dy) {
         m_lineNumberArea->scroll(0, dy);
 
     else
-        m_lineNumberArea->update(0, rect.y(), m_lineNumberArea->width(),
+        m_lineNumberArea->update(0,
+                                 rect.y(),
+                                 m_lineNumberArea->width(),
                                  rect.height());
 
     if (rect.contains(viewport()->rect()))
@@ -84,12 +86,13 @@ void Editor::updateLineNumberArea(const QRect &rect, int dy) {
 
 void Editor::resizeEvent(QResizeEvent *e) {
     QPlainTextEdit::resizeEvent(e);
-    m_lineNumberArea->setGeometry(
-                QRect(contentsRect().left(), contentsRect().top(), lineNumberAreaWidth(),
-                      contentsRect().height()));
+    m_lineNumberArea->setGeometry(QRect(contentsRect().left(),
+                                        contentsRect().top(),
+                                        lineNumberAreaWidth(),
+                                        contentsRect().height()));
 }
 
-void Editor::highlightCurrentLine() {
+void Editor::highlightCurrentLine(void) {
     QList<QTextEdit::ExtraSelection> _extra_selections;
 
     if (!isReadOnly() && _hc_line_enabled) {
@@ -104,38 +107,40 @@ void Editor::highlightCurrentLine() {
     setExtraSelections(_extra_selections);
 }
 
-void Editor::checkSpelling() {
-    QString _dict_path = ":/dictionaries/en_US.dic";
-    SpellChecker *spellChecker = new SpellChecker(_dict_path);
+void Editor::configureDocument(const QString &file) {
+    Q_UNUSED(file);
+    Q_ASSERT(!file.isEmpty());
+
+    setDocumentTitle(file);
+    document()->setModified(false);
+    m_highlighter->detectLanguage(file);
+
+    emit updateTitle();
 }
 
-void Editor::updateSettings() {
-    // Decide which font to use as a default based on the target
-    // operating system
+void Editor::checkSpelling(void) {
+    // TODO
+    qCritical() << this << "function not implemeted yet";
+}
+
+void Editor::updateSettings(void) {
     int _default_size = 11;
     QString _default_font = "Courier";
 
-    // Use Menlo (as in Xcode) in Mac OS X
-    if (MAC_OS_X)
-        _default_font = "Menlo";
-
-    // Use Consolas in Windows Vista and later.
-    // If detected OS is older, then use Courier New. We need to use
-    // the preprocessors because we use the windowsVersion() function.
-#if WINDOWS
-    _default_size = 10;
-
-    if (QSysInfo::windowsVersion() >= 0x0080)
-        _default_font = "Consolas";
-
-    else
-        _default_font = "Courier New";
-
+#if MAC_OS_X
+    _default_font = "Menlo";
 #endif
 
-    // We need to take care of every aspect of the font, such as the family,
-    // the size and the style in an individual manner because QSettings
-    // does not support saving fonts directly
+#if WINDOWS
+    _default_size = 10;
+    _default_font = QSysInfo::windowsVersion() >= 0x0080 ? "Consolas" : "Courier New";
+#endif
+
+#if LINUX
+    // Get system monospaced font?
+#endif
+
+    // Load saved font
     QFont _font;
     _font.setBold(m_settings->value("font-bold", false).toBool());
     _font.setItalic(m_settings->value("font-italic", false).toBool());
@@ -149,6 +154,8 @@ void Editor::updateSettings() {
 
     // Update the colors of the text editor
     m_theme->readTheme(m_settings->value("color-scheme", "Light").toString());
+    m_highlighter->updateColor(m_theme);
+
     QPalette _palette = palette();
     _palette.setColor(QPalette::Base, m_theme->background());
     _palette.setColor(QPalette::Text, m_theme->foreground());
@@ -156,7 +163,7 @@ void Editor::updateSettings() {
     _palette.setColor(QPalette::HighlightedText, m_theme->highlightForeground());
     setPalette(_palette);
 
-    // Update the current color of the line
+    // Update the current color of the highlighted line
     _hc_line_enabled = m_settings->value("hc-line-enabled", "true").toBool();
     highlightCurrentLine();
 
@@ -165,32 +172,27 @@ void Editor::updateSettings() {
                 m_settings->value("line-numbers-enabled", "true").toBool());
     m_lineNumberArea->setVisible(m_lineNumberArea->isEnabled());
     updateLineNumberAreaWidth(blockCount());
-
-    // Update the highlighter colors
-    m_highlighter->updateColor(m_theme);
 }
 
-bool Editor::save() {
+bool Editor::save(void) {
     return documentTitle().isEmpty() ? saveAs() : writeFile(documentTitle());
 }
 
-bool Editor::saveAs() {
+bool Editor::saveAs(void) {
     return writeFile(QFileDialog::getSaveFileName(this, tr("Save as") + "...",
                                                   QDir::homePath()));
 }
 
-bool Editor::maybeSave() {
+bool Editor::maybeSave(void) {
     // We don't need to save the document if it isn't modified
     if (!document()->isModified())
         return true;
 
-    // The document was already saved in the hard disk, however,
-    // it has unsaved changes.
+    // The document was already saved in the hard disk, however, it has unsaved changes.
     if (!documentTitle().isEmpty() && document()->isModified())
         return save();
 
-    // The document was never saved as a file, so we need to prompt
-    // the user where to save our document.
+    // The document was never saved in the hard disk, so we prompt the user
     else if (document()->isModified()) {
         QMessageBox _message;
         _message.setParent(this);
@@ -208,13 +210,10 @@ bool Editor::maybeSave() {
                     tr("Your changes will be lost if you close this item without saving."));
 
         int _return_ = _message.exec();
-
         if (_return_ == QMessageBox::Save)
             return save();
-
         else if (_return_ == QMessageBox::Discard)
             return true;
-
         else
             return false;
     }
@@ -222,46 +221,51 @@ bool Editor::maybeSave() {
     return false;
 }
 
-void Editor::print() {
+void Editor::goToLine(void) {
     // TODO
+    qCritical() << this << "function not implemeted yet";
 }
 
-void Editor::exportPdf() {
+void Editor::sortSelection() {
     // TODO
+    qCritical() << this << "function not implemeted yet";
 }
 
-void Editor::exportHtml() {
+void Editor::insertDateTime() {
     // TODO
+    qCritical() << this << "function not implemeted yet";
 }
 
-void Editor::selectFonts() {
-    // Create a new QFontDialog and select the same font
-    // as the text editor
+void Editor::print(void) {
+    // TODO
+    qCritical() << this << "function not implemeted yet";
+}
+
+void Editor::exportPdf(void) {
+    // TODO
+    qCritical() << this << "function not implemeted yet";
+}
+
+void Editor::exportHtml(void) {
+    // TODO
+    qCritical() << this << "function not implemeted yet";
+}
+
+void Editor::selectFonts(void) {
     QFontDialog _dialog;
     _dialog.setCurrentFont(font());
 
-    // Only save and apply new font if the user clicked on
-    // the "Accept" || "Ok" button
     if (_dialog.exec() == QFontDialog::Accepted) {
         setFont(_dialog.selectedFont());
 
-        // As explained before, we need to define every
-        // important detail about the font when saving it
-        // into QSettings.
         m_settings->setValue("font-bold", font().bold());
         m_settings->setValue("font-italic", font().italic());
         m_settings->setValue("font-family", font().family());
         m_settings->setValue("font-size", font().pointSize());
         m_settings->setValue("font-underline", font().underline());
 
-        // Notify the rest of the program that the settings must
-        // be synced.
         emit settingsChanged();
     }
-}
-
-void Editor::setReadOnly(bool ro) {
-    setEnabled(!ro);
 }
 
 void Editor::setWordWrap(bool ww) {
@@ -270,58 +274,70 @@ void Editor::setWordWrap(bool ww) {
 }
 
 void Editor::readFile(const QString &file) {
-    // Only read valid paths
-    if (!file.isEmpty()) {
+    qApp->setOverrideCursor(Qt::WaitCursor);
 
-        // Create a file and open it in Read Only mode
+    if (!file.isEmpty()) {
         QFile _file(file);
 
+        // File can be opened
         if (_file.open(QIODevice::ReadOnly)) {
-
-            // Read the contents of the file and display them
-            // in the text editor
             setPlainText(QString::fromUtf8(_file.readAll()));
+            configureDocument(file);
 
-            // Update the document state
-            document()->setModified(false);
-            setDocumentTitle(file);
-            emit updateTitle();
+            _file.close();
+            qDebug() << this << "Read contents of" << file;
         }
 
-        // Close the file so that it can be used by the system
-        _file.close();
+        // File is read protected
+        else {
+            QMessageBox::warning(this,
+                                 tr("Read error"),
+                                 tr("Cannot open file \"%1\" for reading, wrong permisions?")
+                                 .arg(file));
+        }
     }
+
+    qApp->restoreOverrideCursor();
 }
 
 bool Editor::writeFile(const QString &file) {
-    // Only use valid paths
     if (!file.isEmpty()) {
-
-        // Create a file and open it i Write Only mode
         QFile _file(file);
 
+        // We can write to the file
         if (_file.open(QIODevice::WriteOnly)) {
+            qApp->setOverrideCursor(Qt::WaitCursor);
 
-            // Write the contents of the text editor
-            // into the file
+            configureDocument(file);
             _file.write(toPlainText().toUtf8());
+            _file.close();
 
-            // Update the document state
-            document()->setModified(false);
-            setDocumentTitle(file);
-            emit updateTitle();
+            qDebug() << this << "Wrote data on" << file;
+            qApp->restoreOverrideCursor();
+            return true;
         }
 
-        // Close the file
-        _file.close();
+        // The file is write-protected
+        else {
+            QMessageBox _message;
+            _message.setParent(this);
+            _message.setIcon(QMessageBox::Warning);
+            _message.setWindowTitle(tr("Write error"));
+            _message.setWindowModality(Qt::WindowModal);
+            _message.setWindowIcon(QIcon(":/icons/dummy.png"));
+            _message.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Discard);
+            _message.setText("<b>" + tr("The selected file is write-protected") + "</b>");
+            _message.setInformativeText(
+                        tr("Do you want to save the document under a different name?"));
 
-        // Tell the rest of the program that the saving was
-        // successfull.
-        return true;
+            int _return = _message.exec();
+            if (_return == QMessageBox::Yes)
+                return saveAs();
+            else if (_return == QMessageBox::Discard)
+                return true;
+        }
     }
 
-    // Tell the rest of the program that the saving was not
-    // successfull.
     return false;
 }
 

@@ -6,7 +6,6 @@
 //
 
 #include "app/app.h"
-#include <qsharedmemory.h>
 
 int main(int argc, char *argv[]) {
     Application app(argc, argv);
@@ -15,5 +14,6 @@ int main(int argc, char *argv[]) {
     if (mem.create(1) && mem.error() != QSharedMemory::AlreadyExists)
         return app.exec();
 
-    return mem.attach() ? app.exec() : app.showInitError();
+    // TODO: Find a way to communicate the app with running instance
+    return app.showInitError();
 }

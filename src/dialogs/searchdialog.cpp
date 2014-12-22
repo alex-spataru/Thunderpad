@@ -73,7 +73,10 @@ SearchDialog::SearchDialog(Window *parent) : QDialog(parent) {
     connect(ui_replace_button, SIGNAL(clicked()), this, SLOT(replaceFirstOccurrence()));
 }
 
-void SearchDialog::search() {
+void SearchDialog::search(void) {
+    // Change the cursor to show that we are working
+    qApp->setOverrideCursor(Qt::WaitCursor);
+
     // Append the "match case" and "whole words only" flags according to the user input
     QTextDocument::FindFlags _flags;
     if (ui_match_case_checkbox->isChecked())
@@ -97,6 +100,9 @@ void SearchDialog::search() {
             ++matches;
         }
 
+        // Log our findings
+        qDebug() << this << "Found" << matches << "matches of" << ui_find_lineedit->text();
+
         // Enable replace functions
         ui_replace_button->setEnabled(matches > 0);
         ui_replace_lineedit->setEnabled(matches > 0);
@@ -112,39 +118,64 @@ void SearchDialog::search() {
         ui_replace_lineedit->setEnabled(false);
         ui_replace_all_button->setEnabled(false);
     }
+
+    // Restore the normal cursor
+    qApp->restoreOverrideCursor();
 }
 
-void SearchDialog::replaceAll() {
-    // Append the "match case" and "whole words only" flags according to the user input
-    QTextDocument::FindFlags flags;
-    if (ui_match_case_checkbox->isChecked())
-        flags |= QTextDocument::FindCaseSensitively;
-    if (ui_whole_words_checkbox->isChecked())
-        flags |= QTextDocument::FindWholeWords;
+void SearchDialog::replaceAll(void) {
 
-    // Replace the matched text recursively
-    while (m_text_edit->textCursor().hasSelection()) {
-        m_text_edit->moveCursor(QTextCursor::Start);
-        while (m_text_edit->find(ui_find_lineedit->text(), flags))
-            m_text_edit->textCursor().insertText(ui_replace_lineedit->text());
+    // Document can be edited
+    if (!m_text_edit->isReadOnly()) {
+
+        // Append the "match case" and "whole words only" flags according to the user input
+        QTextDocument::FindFlags flags;
+        if (ui_match_case_checkbox->isChecked())
+            flags |= QTextDocument::FindCaseSensitively;
+        if (ui_whole_words_checkbox->isChecked())
+            flags |= QTextDocument::FindWholeWords;
+
+        // Replace the matched text recursively
+        while (m_text_edit->textCursor().hasSelection()) {
+            m_text_edit->moveCursor(QTextCursor::Start);
+            while (m_text_edit->find(ui_find_lineedit->text(), flags))
+                m_text_edit->textCursor().insertText(ui_replace_lineedit->text());
+        }
+
+        qDebug() << this << "All occurrences of" << ui_find_lineedit->text() <<
+                    "have been replaced with" << ui_replace_lineedit->text();
+
+        // Show a message box informing the user that the operation is complete
+        QMessageBox::information(this, tr("Search/Replace"),
+                                 tr("All occurrences of \"%1\" have been replaced with \"%2\"")
+                                 .arg(ui_find_lineedit->text())
+                                 .arg(ui_replace_lineedit->text()));
+
+        // Disable replace functions
+        ui_replace_button->setEnabled(false);
+        ui_replace_lineedit->setEnabled(false);
+        ui_replace_all_button->setEnabled(false);
     }
 
-    // Show a message box informing the user that the operation is complete
-    QMessageBox::information(this, tr("Search/Replace"),
-                             tr("All occurrences of \"%1\" have been replaced with \"%2\"")
-                             .arg(ui_find_lineedit->text())
-                             .arg(ui_replace_lineedit->text()));
-
-    // Disable replace functions
-    ui_replace_button->setEnabled(false);
-    ui_replace_lineedit->setEnabled(false);
-    ui_replace_all_button->setEnabled(false);
+    // Show a warning message when the document is locked
+    else {
+        QMessageBox::warning(this, tr("Search/Replace"), tr("Document is read-only!"));
+    }
 }
 
-void SearchDialog::replaceFirstOccurrence() {
+void SearchDialog::replaceFirstOccurrence(void) {
     // Replace the first occurrence of the matched text and search again
-    if (m_text_edit->textCursor().hasSelection()) {
+    if (m_text_edit->textCursor().hasSelection() && !m_text_edit->isReadOnly()) {
         m_text_edit->textCursor().insertText(ui_replace_lineedit->text());
+        qDebug() << this << "Replaced"
+                 << ui_find_lineedit->text()
+                 << "with"
+                 << ui_replace_lineedit->text();
         search();
+    }
+
+    // Show a warning message when the document is locked
+    else {
+        QMessageBox::warning(this, tr("Search/Replace"), tr("Document is read-only!"));
     }
 }

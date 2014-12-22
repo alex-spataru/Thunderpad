@@ -29,8 +29,8 @@ public:
     StatusBar(Window *parent = 0);
 
 private slots:
-    void updateSettings();
-    void updateStatusLabel();
+    void updateSettings(void);
+    void updateStatusLabel(void);
     void initialize(Window *window);
 
 private:
@@ -38,7 +38,7 @@ private:
     QSettings *m_settings;
     QPlainTextEdit *m_text_edit;
 
-    QString fileSize();
-    QString wordCount();
-    QString lineCount();
+    QString fileSize(void);
+    QString wordCount(void);
+    QString lineCount(void);
 };
