@@ -174,6 +174,6 @@ void ToolBar::update_theme(const QString &theme) {
     m_cut->setIcon(QIcon(path + "cut.png"));
     m_copy->setIcon(QIcon(path + "copy.png"));
     m_paste->setIcon(QIcon(path + "paste.png"));
-    m_find_replace->setIcon(QIcon(path + "replace.png"));
-    m_readonly->setIcon(QIcon(path + "lock.png"));
+    m_readonly->setIcon(QIcon(path + "read-only.png"));
+    m_find_replace->setIcon(QIcon(path + "search.png"));
 }
