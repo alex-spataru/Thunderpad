@@ -5,6 +5,7 @@
 //  Please check the license.txt file for more information.
 //
 
+#include <math.h>
 #include <QLabel>
 #include <QString>
 #include <QRegExp>

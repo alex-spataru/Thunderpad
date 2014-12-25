@@ -163,6 +163,8 @@ private:
   QString m_keywords;
   QString m_comments;
   QString m_functions;
+  QString m_strings;
+  QString m_numbers;
 
   void useFallbackColors(void);
 };

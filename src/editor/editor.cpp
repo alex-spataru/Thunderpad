@@ -237,18 +237,72 @@ void Editor::insertDateTime() {
 }
 
 void Editor::print(void) {
-    // TODO
-    qCritical() << this << "function not implemeted yet";
+    qApp->setOverrideCursor(Qt::WaitCursor);
+
+    QPrinter _printer(QPrinter::HighResolution);
+    QPrintDialog *_dialog = new QPrintDialog(&_printer, this);
+
+    _printer.setDocName(documentTitle());
+    _printer.setFontEmbeddingEnabled(true);
+
+    if (_dialog->exec() == QDialog::Accepted)
+        document()->print(&_printer);
+
+    qApp->restoreOverrideCursor();
 }
 
 void Editor::exportPdf(void) {
-    // TODO
-    qCritical() << this << "function not implemeted yet";
+    // Ask user where to save PDF
+    QString _file_location =
+            QFileDialog::getSaveFileName(this,
+                                         tr("Export PDF"),
+                                         QDir::homePath(),
+                                         "*.pdf");
+
+    qApp->setOverrideCursor(Qt::WaitCursor);
+
+    // Write PDF file
+    if (!_file_location.isEmpty()) {
+        QPrinter _printer(QPrinter::HighResolution);
+
+        _printer.setDocName(documentTitle());
+        _printer.setFontEmbeddingEnabled(true);
+        _printer.setOutputFileName(_file_location);
+        _printer.setOutputFormat(QPrinter::PdfFormat);
+
+        document()->print(&_printer);
+    }
+
+    qApp->restoreOverrideCursor();
 }
 
 void Editor::exportHtml(void) {
-    // TODO
-    qCritical() << this << "function not implemeted yet";
+    QString _file_location =
+            QFileDialog::getSaveFileName(this,
+                                         tr("Export HTML"),
+                                         QDir::homePath(),
+                                         "*.html");
+
+    qApp->setOverrideCursor(Qt::WaitCursor);
+
+    if (!_file_location.isEmpty()) {
+        QFile _file(_file_location);
+
+        if (_file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            _file.write(document()->toHtml().toUtf8());
+            _file.close();
+        }
+
+        else {
+            QMessageBox::warning(this,
+                                 tr("Write error"),
+                                 tr("Cannot write data to %1.\n%2")
+                                 .arg(_file_location)
+                                 .arg(_file.errorString()));
+        }
+
+        qApp->restoreOverrideCursor();
+    }
 }
 
 void Editor::selectFonts(void) {
@@ -292,8 +346,9 @@ void Editor::readFile(const QString &file) {
         else {
             QMessageBox::warning(this,
                                  tr("Read error"),
-                                 tr("Cannot open file \"%1\" for reading, wrong permisions?")
-                                 .arg(file));
+                                 tr("Cannot open file \"%1\" for reading!\n%2")
+                                 .arg(file)
+                                 .arg(_file.errorString()));
         }
     }
 
@@ -326,7 +381,7 @@ bool Editor::writeFile(const QString &file) {
             _message.setWindowModality(Qt::WindowModal);
             _message.setWindowIcon(QIcon(":/icons/dummy.png"));
             _message.setStandardButtons(QMessageBox::Yes | QMessageBox::No | QMessageBox::Discard);
-            _message.setText("<b>" + tr("The selected file is write-protected") + "</b>");
+            _message.setText("<b>" + tr("Cannot write data to file (%1)").arg(_file.errorString()) + "</b>");
             _message.setInformativeText(
                         tr("Do you want to save the document under a different name?"));
 

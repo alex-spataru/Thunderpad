@@ -10,12 +10,14 @@
 
 #include <QIcon>
 #include <QFile>
+#include <QPrinter>
 #include <QPainter>
 #include <QSettings>
 #include <QTextBlock>
 #include <QFontDialog>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QPrintDialog>
 #include <QApplication>
 #include <QInputDialog>
 #include <QPlainTextEdit>
