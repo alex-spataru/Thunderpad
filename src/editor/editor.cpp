@@ -346,7 +346,7 @@ void Editor::readFile(const QString &file) {
         else {
             QMessageBox::warning(this,
                                  tr("Read error"),
-                                 tr("Cannot open file \"%1\" for reading!\n%2")
+                                 tr("Cannot open file \"%1\"!\n%2")
                                  .arg(file)
                                  .arg(_file.errorString()));
         }

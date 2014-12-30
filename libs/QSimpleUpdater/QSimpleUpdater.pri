@@ -20,7 +20,7 @@ OTHER_FILES += $$PWD/src/QSimpleUpdater
 
 INCLUDEPATH += $$PWD/src
 
-unix:!android:!ios {
+unix:!android {
     LIBS += -lcrypto -lssl
 }
 

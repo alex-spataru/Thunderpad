@@ -10,12 +10,13 @@
 About::About(QWidget *parent) : QDialog(parent) {
     hide();
     setWindowFlags(Qt::Dialog |
-                   Qt::WindowTitleHint |
                    Qt::CustomizeWindowHint |
                    Qt::WindowStaysOnTopHint |
                    Qt::WindowCloseButtonHint);
 
-    setWindowIcon(QIcon(":/icons/dummy.png"));
+    QIcon _blank;
+    setWindowIcon(_blank);
+    setWindowTitle(tr("About %1").arg(APP_NAME));
 
     m_icon = new QLabel(this);
     m_name = new QLabel(this);

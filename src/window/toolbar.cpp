@@ -156,6 +156,7 @@ void ToolBar::update_theme(const QString &theme) {
 
     // Decide if we use small icons or large icons
     QString size;
+
     if (m_large_icons)
         size = "24x24";
     else

@@ -35,7 +35,9 @@ private slots:
     void initialize(Window *window);
 
 private:
-    QLabel *m_label;
+    QLabel *m_size_label;
+    QLabel *m_words_label;
+    QLabel *m_lines_label;
     QSettings *m_settings;
     QPlainTextEdit *m_text_edit;
 

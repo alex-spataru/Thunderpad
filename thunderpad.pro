@@ -47,7 +47,7 @@ unix:!macx {
     INSTALLS      += target desktop
 }
 
-RESOURCES += $$PWD/resources/resources.qrc
+RESOURCES += $$PWD/res/res.qrc
 
 HEADERS += \
     $$PWD/src/app/app.h \

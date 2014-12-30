@@ -12,24 +12,23 @@ StatusBar::StatusBar(Window *parent) : QStatusBar(parent) {
     updateSettings();
 
     initialize(parent);
-
 }
 
 void StatusBar::initialize(Window *window) {
     Q_ASSERT(window != NULL);
 
-    // Attach the statusbar to the window
     window->setStatusBar(this);
-
-    // Configure the statusbar label
-    m_label = new QLabel(this);
-    addPermanentWidget(m_label);
-
-    // Get access to the window's text editor
     m_text_edit = window->editor();
-    connect(m_text_edit, SIGNAL(textChanged()), this, SLOT(updateStatusLabel()));
 
-    // Show/hide the statusbar when neccessary
+    m_size_label = new QLabel(this);
+    m_lines_label = new QLabel(this);
+    m_words_label = new QLabel(this);
+
+    addPermanentWidget(m_size_label);
+    addPermanentWidget(m_lines_label);
+    addPermanentWidget(m_words_label);
+
+    connect(m_text_edit, SIGNAL(textChanged()), this, SLOT(updateStatusLabel()));
     connect(window, SIGNAL(updateSettings()), this, SLOT(updateSettings()));
 }
 
@@ -38,7 +37,9 @@ void StatusBar::updateSettings(void) {
 }
 
 void StatusBar::updateStatusLabel(void) {
-    m_label->setText(fileSize() + "    " + wordCount() + "    " + lineCount());
+    m_size_label->setText("  " + fileSize() + "  ");
+    m_lines_label->setText("  " + lineCount() + "  ");
+    m_words_label->setText("  " + wordCount() + "  ");
 }
 
 QString StatusBar::fileSize(void) {
