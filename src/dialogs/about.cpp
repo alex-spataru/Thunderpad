@@ -30,7 +30,11 @@ About::About(QWidget *parent) : QDialog(parent) {
 
     QIcon _blank;
     setWindowIcon(_blank);
-    setWindowTitle(tr("About %1").arg(APP_NAME));
+
+    if (!MAC_OS_X)
+        setWindowTitle(tr("About %1").arg(APP_NAME));
+    else
+        setWindowTitle(" ");
 
     m_icon = new QLabel(this);
     m_name = new QLabel(this);
