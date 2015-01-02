@@ -130,10 +130,10 @@ void Application::showLatestVersion(void) {
     qDebug() << this << "You have the latest version installed!";
 
     QMessageBox _message;
+    _message.setWindowTitle(" ");
     _message.setStandardButtons(QMessageBox::Ok);
     _message.setWindowIcon(QIcon(":/icons/dummy.png"));
     _message.setIconPixmap(QPixmap(":/icons/logo.png"));
-    _message.setWindowTitle(tr("No updates available"));
     _message.setInformativeText(
                 tr("The latest release of Thunderpad is version %1")
                 .arg(qApp->applicationVersion()));

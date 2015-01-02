@@ -23,18 +23,16 @@
 
 About::About(QWidget *parent) : QDialog(parent) {
     hide();
-    setWindowFlags(Qt::Dialog |
-                   Qt::CustomizeWindowHint |
-                   Qt::WindowStaysOnTopHint |
-                   Qt::WindowCloseButtonHint);
 
     QIcon _blank;
     setWindowIcon(_blank);
 
-    if (!MAC_OS_X)
-        setWindowTitle(tr("About %1").arg(APP_NAME));
-    else
-        setWindowTitle(" ");
+    setWindowModality(Qt::WindowModal);
+    setWindowFlags(Qt::Dialog |
+                   Qt::CustomizeWindowHint |
+                   Qt::WindowCloseButtonHint);
+
+    setWindowTitle(tr("About %1").arg(APP_NAME));
 
     m_icon = new QLabel(this);
     m_name = new QLabel(this);
