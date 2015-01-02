@@ -34,6 +34,16 @@ public:
 
     int showInitError(void);
 
+    /*!
+     * \brief run
+     * \return
+     *
+     * Creates a new window, configures the updater system
+     * and runs exec()
+     */
+
+    int run(void);
+
 public slots:
 
     /*!
@@ -59,6 +69,9 @@ private:
     QSimpleUpdater *m_updater;
 
     bool m_show_all_updater_messages;
+
+    int m_argc;
+    QString m_arguments;
 };
 
 #endif

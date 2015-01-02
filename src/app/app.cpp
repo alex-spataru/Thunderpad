@@ -29,18 +29,20 @@ Application::Application(int &argc, char **argv)
     setOrganizationName(APP_COMPANY);
     setApplicationVersion(APP_VERSION);
 
+    m_argc = argc;
+    if (argc != 1) {
+        for (int i = 0; i < m_argc; i++)
+            m_arguments = argv[i];
+    }
+}
+
+int Application::run(void) {
     m_window = new Window();
     m_updater = new QSimpleUpdater();
     m_settings = new QSettings(APP_COMPANY, APP_NAME);
 
-    if (argc != 1) {
-        QString _args;
-
-        for (int i = 0; i < argc; i++)
-            _args = argv[i];
-
-        m_window->openFile(_args);
-    }
+    if (m_argc != 1)
+        m_window->openFile(m_arguments);
 
     connect(m_window, SIGNAL(checkForUpdates()), this, SLOT(checkForUpdates()));
     connect(m_updater, SIGNAL(checkingFinished()), this,
@@ -109,15 +111,25 @@ Application::Application(int &argc, char **argv)
         qDebug() << this << "Checking for updates...";
         m_updater->checkForUpdates();
     }
+
+    return exec();
 }
 
 int Application::showInitError(void) {
     qCritical() << this << "There's a running instance of" << APP_NAME;
-    QMessageBox::warning(
-                NULL, tr("Application error"),
-                tr("There's already a running instance of %1").arg(applicationName()));
 
-    return -1;
+    QMessageBox _message;
+    _message.setWindowTitle(tr("Warning"));
+    _message.setIcon(QMessageBox::Warning);
+    _message.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    _message.setText("<b>" + tr("There's already a running instace of %1, "
+                                "do you still want to open a new instance?").arg(APP_NAME) + "</b>");
+    _message.setInformativeText(tr("Doing so may cause unexpected side-effects!"));
+
+    if (_message.exec() == QMessageBox::Yes)
+        return run();
+    else
+        return -1;
 }
 
 void Application::checkForUpdates(void) {
@@ -130,9 +142,7 @@ void Application::showLatestVersion(void) {
     qDebug() << this << "You have the latest version installed!";
 
     QMessageBox _message;
-    _message.setWindowTitle(" ");
     _message.setStandardButtons(QMessageBox::Ok);
-    _message.setWindowIcon(QIcon(":/icons/dummy.png"));
     _message.setIconPixmap(QPixmap(":/icons/logo.png"));
     _message.setInformativeText(
                 tr("The latest release of Thunderpad is version %1")
@@ -148,9 +158,7 @@ void Application::showUpdateAvailable(void) {
     qDebug() << this << "An application update was found online!";
 
     QMessageBox _message;
-    _message.setWindowTitle(" ");
     _message.setDetailedText(m_updater->changeLog());
-    _message.setWindowIcon(QIcon(":/icons/dummy.png"));
     _message.setIconPixmap(QPixmap(":/icons/logo.png"));
     _message.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     _message.setText("<b>" + tr("There's a new version of Thunderpad!") + " (" +

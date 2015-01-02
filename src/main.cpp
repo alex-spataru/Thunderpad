@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
     QSharedMemory mem("thunderpad");
 
     if (mem.create(1) && mem.error() != QSharedMemory::AlreadyExists)
-        return app.exec();
+        return app.run();
 
     return app.showInitError();
 }
