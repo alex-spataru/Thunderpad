@@ -6,6 +6,6 @@ before_install:
 script:
     - mkdir build
     - cd build
-    - qmake ../*.pro
+    - qmake ../thunderpad.pro
     - make
     - sudo make install
