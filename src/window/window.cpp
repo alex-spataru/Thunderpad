@@ -273,8 +273,12 @@ void Window::configureWindow(Window *window) {
         }
     }
 
-    window->resize(size());
-    window->move(window->x() + 45, window->y() + 45);
+    // Resize the new window to fit the current window
+    if (!isMaximized())
+        window->resize(size());
+
+    // Move the window
+    window->move(window->x() + 30, window->y() + 30);
     m_settings->setValue("position", QPoint(window->x(), window->y()));
 }
 
