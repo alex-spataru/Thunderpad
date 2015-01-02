@@ -63,7 +63,7 @@ HEADERS += \
     $$PWD/src/window/statusbar.h \
     $$PWD/src/shared/platform.h \
     $$PWD/src/editor/theme.h \
-    $$PWD/src/shared/app_info.h \
+    $$PWD/src/shared/assembly_info.h \
 
 SOURCES += \
     $$PWD/src/app/app.cpp \

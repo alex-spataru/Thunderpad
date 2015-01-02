@@ -31,7 +31,7 @@
 #include <QPlainTextEdit>
 
 #include "window.h"
-#include "app_info.h"
+#include "assembly_info.h"
 
 /*!
  * \class StatusBar

@@ -31,7 +31,7 @@
 #include <QPushButton>
 #include <QApplication>
 
-#include "app_info.h"
+#include "assembly_info.h"
 #include "platform.h"
 
 /*!

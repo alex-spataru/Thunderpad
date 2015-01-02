@@ -29,7 +29,7 @@
 #include <QSettings>
 #include <QXmlStreamReader>
 
-#include "app_info.h"
+#include "assembly_info.h"
 
 /*!
  * \class Theme

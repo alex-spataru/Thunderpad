@@ -37,7 +37,7 @@
 #include <QPlainTextEdit>
 
 #include "theme.h"
-#include "app_info.h"
+#include "assembly_info.h"
 #include "platform.h"
 #include "line-numbers.h"
 #include "spell-checker.h"

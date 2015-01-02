@@ -32,7 +32,7 @@
 
 #include "about.h"
 #include "editor.h"
-#include "app_info.h"
+#include "assembly_info.h"
 
 class ToolBar;
 class MenuBar;

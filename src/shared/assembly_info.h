@@ -19,13 +19,11 @@
 //  USA
 //
 
-#ifndef APP_INFO_H
-#define APP_INFO_H
+#ifndef ASSEMBLY_INFO_H
+#define ASSEMBLY_INFO_H
 
-#define APP_VERSION "0.9.1"
+#define APP_VERSION "0.9.2"
 #define APP_NAME "Thunderpad"
 #define APP_COMPANY "Alex Spataru"
-
-#define BITCOIN_ADDRESS "1BdxESMayJAengjAkjipMwfWkiqZUztyhU"
 
 #endif
