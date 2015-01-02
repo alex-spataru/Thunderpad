@@ -32,8 +32,6 @@ Window::Window(void) {
 
     // Create the core components
     // NOTE: The text editor must be initialized first or the application may crash
-    //       This happens because some of the components have direct access to the
-    //       text editor with the window->editor() function.
     m_editor = new Editor(this);
     m_menu = new MenuBar(this);
     m_about_dlg = new About(this);
@@ -45,10 +43,6 @@ Window::Window(void) {
     // Display the components correctly
     updateTitle();
     setCentralWidget(editor());
-
-    // Set the window icon
-    if (LINUX)
-        setWindowIcon(QIcon(":/icons/logo.png"));
 
     // Connect slots between the text editor and window
     connect(editor(), SIGNAL(updateTitle()), this, SLOT(updateTitle()));

@@ -28,6 +28,5 @@ int main(int argc, char *argv[]) {
     if (mem.create(1) && mem.error() != QSharedMemory::AlreadyExists)
         return app.exec();
 
-    // TODO: Find a way to communicate the app with running instance
     return app.showInitError();
 }

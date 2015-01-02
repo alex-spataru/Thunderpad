@@ -21,6 +21,9 @@
 
 #include "statusbar.h"
 
+#define KILOBYTE 1024
+#define MEGABYTE 1048576
+
 StatusBar::StatusBar(Window *parent) : QStatusBar(parent) {
     m_settings = new QSettings(APP_COMPANY, APP_NAME);
     updateSettings();
@@ -61,19 +64,19 @@ QString StatusBar::fileSize(void) {
     float _length = m_text_edit->toPlainText().length();
 
     // File is less than one KB
-    if (_length < 1024)
-        _units = " bytes";
+    if (_length < KILOBYTE)
+        _units = " " + tr("bytes");
 
     // File is one KB or greater, but smaller than one MB
-    else if (_length < 1024 * 1024) {
-        _length /= 1024;
-        _units = " KB";
+    else if (_length < MEGABYTE) {
+        _length /= KILOBYTE;
+        _units = " " + tr("KB");
     }
 
     // File is one MB or greater
     else {
-        _length /= 1024 * 1024;
-        _units = " MB";
+        _length /= MEGABYTE;
+        _units = " " + tr("MB");
     }
 
     return tr("Size:") + " " +

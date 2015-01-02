@@ -19,7 +19,7 @@
 //  USA
 //
 
-#ifndef SPELL_CHEKCER_H
+#ifndef SPELL_CHECKER_H
 #define SPELL_CHECKER_H
 
 #include <QFile>

@@ -21,6 +21,13 @@
 
 #include "toolbar.h"
 
+#define LARGE_ICONS_SIZE "24x24"
+#define SMALL_ICONS_SIZE "16x16"
+#define DEFAULT_ICON_THEME "Silk"
+#define DEFAULT_TOOLBAR_TEXT false
+#define DEFAULT_TOOLBAR_ENABLED true
+#define ICON_THEMES_PATH ":/icons/themes"
+
 ToolBar::ToolBar(Window *parent) : QToolBar(parent) {
     setAttribute(Qt::WA_DeleteOnClose);
 
@@ -95,7 +102,7 @@ void ToolBar::setToolbarText(bool enabled) {
     // Show the text and set the size of the toolbar
     if (enabled) {
         if (m_large_icons)
-            _toolbar_size = 48;
+            _toolbar_size = MAC_OS_X ? 48 : 56;
         else
             _toolbar_size = MAC_OS_X ? 36 : 48;
 
@@ -105,7 +112,7 @@ void ToolBar::setToolbarText(bool enabled) {
     // Hide the text and set the size of the toolbar
     else {
         if (m_large_icons)
-            _toolbar_size = 32;
+            _toolbar_size = MAC_OS_X ? 32 : 36;
         else
             _toolbar_size = MAC_OS_X ? 24 : 32;
 
@@ -146,7 +153,7 @@ void ToolBar::initialize(Window *window) {
 }
 
 void ToolBar::updateSettings(void) {
-    bool _new_value = m_settings->value("toolbar-text", false).toBool();
+    bool _new_value = m_settings->value("toolbar-text", DEFAULT_TOOLBAR_TEXT).toBool();
     bool _new_sizes = m_settings->value("large-icons", MAC_OS_X).toBool();
 
     // Resize and redraw the toolbar if neccessary
@@ -158,26 +165,21 @@ void ToolBar::updateSettings(void) {
     }
 
     // Hide/show the toolbar
-    setVisible(m_settings->value("toolbar-enabled", true).toBool());
-    setEnabled(m_settings->value("toolbar-enabled", true).toBool());
+    setVisible(m_settings->value("toolbar-enabled", DEFAULT_TOOLBAR_ENABLED).toBool());
+    setEnabled(m_settings->value("toolbar-enabled", DEFAULT_TOOLBAR_ENABLED).toBool());
 
     // Set icon theme
-    update_theme(m_settings->value("icon-theme", "Silk").toString());
+    update_theme(m_settings->value("icon-theme", DEFAULT_ICON_THEME).toString());
 }
 
 void ToolBar::update_theme(const QString &theme) {
     Q_ASSERT(!theme.isEmpty());
 
     // Decide if we use small icons or large icons
-    QString size;
-
-    if (m_large_icons)
-        size = "24x24";
-    else
-        size = "16x16";
+    QString size = m_large_icons ? LARGE_ICONS_SIZE : SMALL_ICONS_SIZE;
 
     // Load the icon theme in the resources folder
-    QString path = QString(":/icons/themes/%1/%2/").arg(theme, size);
+    QString path = QString("%1/%2/%3/").arg(ICON_THEMES_PATH, theme, size);
 
     // Apply each icon to their respective action
     m_new->setIcon(QIcon(path + "new.png"));

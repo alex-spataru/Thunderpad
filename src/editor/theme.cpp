@@ -20,6 +20,7 @@
 //
 
 #include "theme.h"
+#define COLOR_SCHEMES_PATH ":/color-schemes/"
 
 Theme::Theme(QObject *parent) : QObject(parent) {
     QSettings _settings(APP_COMPANY, APP_NAME);
@@ -41,7 +42,7 @@ void Theme::readTheme(const QString &theme) {
     Q_ASSERT(!theme.isEmpty());
     qDebug() << this << "Loading color scheme with name" << theme << "";
 
-    QFile _file(":/color-schemes/" + theme + ".xml");
+    QFile _file(COLOR_SCHEMES_PATH + theme + ".xml");
 
     if (!_file.open(QFile::ReadOnly)) {
         useFallbackColors();
