@@ -134,7 +134,6 @@ void Editor::configureDocument(const QString &file) {
 
 void Editor::checkSpelling(void) {
     // TODO
-    qCritical() << this << "function not implemeted yet";
 }
 
 void Editor::updateSettings(void) {
@@ -237,17 +236,14 @@ bool Editor::maybeSave(void) {
 
 void Editor::goToLine(void) {
     // TODO
-    qCritical() << this << "function not implemeted yet";
 }
 
 void Editor::sortSelection() {
     // TODO
-    qCritical() << this << "function not implemeted yet";
 }
 
 void Editor::insertDateTime() {
     // TODO
-    qCritical() << this << "function not implemeted yet";
 }
 
 void Editor::print(void) {
@@ -353,7 +349,6 @@ void Editor::readFile(const QString &file) {
             configureDocument(file);
 
             _file.close();
-            qDebug() << this << "Read contents of" << file;
         }
 
         // File is read protected
@@ -381,7 +376,6 @@ bool Editor::writeFile(const QString &file) {
             _file.write(toPlainText().toUtf8());
             _file.close();
 
-            qDebug() << this << "Wrote data on" << file;
             qApp->restoreOverrideCursor();
             return true;
         }

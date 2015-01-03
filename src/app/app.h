@@ -8,6 +8,7 @@
 #ifndef APP_H
 #define APP_H
 
+#include <QBuffer>
 #include <QSettings>
 #include <QMessageBox>
 #include <QApplication>
@@ -23,42 +24,16 @@ class Application : public QApplication {
 public:
     Application(int &argc, char **argv);
 
-    /*!
-     * \brief showInitError
-     * \return
-     *
-     * Shows a message box informing the user
-     * that there was an error connecting to
-     * the current instance of the application.
-     */
-
-    int showInitError(void);
-
-    /*!
-     * \brief run
-     * \return
-     *
-     * Creates a new window, configures the updater system
-     * and runs exec()
-     */
-
-    int run(void);
-
 public slots:
-
-    /*!
-     * \brief checkForUpdates
-     *
-     * Connects to the Internet and checks if there is
-     * a newer version of the application online
-     */
-
     void checkForUpdates(void);
 
 private slots:
+    void setupUpdater(void);
+    void showWelcomeMessages(void);
     void showLatestVersion(void);
     void onCheckingFinished(void);
     void showUpdateAvailable(void);
+    void createMainWindow(const QString &arguments);
 
 protected:
     bool event(QEvent *_event);
@@ -67,11 +42,9 @@ private:
     Window *m_window;
     QSettings *m_settings;
     QSimpleUpdater *m_updater;
+    QSharedMemory m_shared_memory;
 
     bool m_show_all_updater_messages;
-
-    int m_argc;
-    QString m_arguments;
 };
 
 #endif

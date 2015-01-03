@@ -24,7 +24,6 @@
 
 #include <QIcon>
 #include <QLabel>
-#include <QDebug>
 #include <QDialog>
 #include <QLayout>
 #include <QDateTime>

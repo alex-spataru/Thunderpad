@@ -27,8 +27,6 @@ Theme::Theme(QObject *parent) : QObject(parent) {
 }
 
 void Theme::useFallbackColors(void) {
-    qDebug() << this << "Error loading theme, using fallback colors";
-
     m_background = "#ffffff";
     m_foreground = "#555555";
     m_highlight_background = "#b0c4dc";
@@ -40,8 +38,6 @@ void Theme::useFallbackColors(void) {
 
 void Theme::readTheme(const QString &theme) {
     Q_ASSERT(!theme.isEmpty());
-    qDebug() << this << "Loading color scheme with name" << theme << "";
-
     QFile _file(COLOR_SCHEMES_PATH + theme + ".xml");
 
     if (!_file.open(QFile::ReadOnly)) {
@@ -87,8 +83,6 @@ void Theme::readTheme(const QString &theme) {
         m_keywords = _values.at(_types.indexOf("keywords"));
         m_comments = _values.at(_types.indexOf("comments"));
         m_functions = _values.at(_types.indexOf("functions"));
-
-        qDebug() << this << "Color scheme" << theme << "loaded successfully";
     }
 }
 

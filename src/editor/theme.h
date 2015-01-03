@@ -23,7 +23,6 @@
 #define THEME_H
 
 #include <QFile>
-#include <QDebug>
 #include <QColor>
 #include <QObject>
 #include <QSettings>

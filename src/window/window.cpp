@@ -74,17 +74,7 @@ ToolBar *Window::toolbar(void) const {
 
 void Window::closeEvent(QCloseEvent *event) {
     saveWindowState();
-    qDebug() << this << "Close event requested";
-
-    if (m_editor->maybeSave()) {
-        event->accept();
-        qDebug() << this << "Close event accepted";
-    }
-
-    else {
-        event->ignore();
-        qDebug() << this << "Close event rejected";
-    }
+    m_editor->maybeSave() ? event->accept() : event->ignore();
 }
 
 void Window::openFile(const QString &file_name) {
@@ -257,8 +247,6 @@ void Window::saveWindowState(void) {
 
 void Window::configureWindow(Window *window) {
     Q_ASSERT(window != NULL);
-
-    qDebug() << this << "Configuring new window...";
 
     window->saveWindowState();
     connect(window, SIGNAL(checkForUpdates()), this, SIGNAL(checkForUpdates()));

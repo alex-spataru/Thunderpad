@@ -31,7 +31,6 @@ void SyntaxHighlighter::setLanguage(const QString &lang) {
 
     if (m_lang != tr("Plain text") && !m_lang.isEmpty()) {
         // TODO
-        qCritical() << this << "function not implemeted yet";
     }
 
     rehighlight();
@@ -42,7 +41,6 @@ void SyntaxHighlighter::detectLanguage(const QString &file) {
     Q_UNUSED(file);
 
     // TODO
-    qCritical() << this << "function not implemeted yet";
 }
 
 void SyntaxHighlighter::updateColor(Theme *theme) {

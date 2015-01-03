@@ -19,14 +19,10 @@
 //  USA
 //
 
+#include <QBuffer>
 #include "app/app.h"
 
 int main(int argc, char *argv[]) {
     Application app(argc, argv);
-    QSharedMemory mem("thunderpad");
-
-    if (mem.create(1) && mem.error() != QSharedMemory::AlreadyExists)
-        return app.run();
-
-    return app.showInitError();
+    return app.exec();
 }

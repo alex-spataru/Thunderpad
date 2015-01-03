@@ -23,7 +23,6 @@
 #define SPELL_CHECKER_H
 
 #include <QFile>
-#include <QDebug>
 #include <QTextCodec>
 #include <QStringList>
 #include <QTextStream>

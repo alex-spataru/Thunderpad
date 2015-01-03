@@ -40,7 +40,6 @@ SpellChecker::SpellChecker(const QString &dictionaryPath) {
              line = stream.readLine()) {
             if (enc_detector.indexIn(line) > -1) {
                 _encoding = enc_detector.cap(1);
-                qDebug() << QString("Encoding set to ") + _encoding;
                 break;
             }
         }

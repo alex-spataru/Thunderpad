@@ -22,7 +22,6 @@
 #ifndef SYNTAX_HIGHLIGHTER_H
 #define SYNTAX_HIGHLIGHTER_H
 
-#include <QDebug>
 #include <QRegExp>
 #include <QStringList>
 #include <QTextStream>
