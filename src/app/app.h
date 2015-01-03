@@ -23,7 +23,7 @@ class Application : public QApplication {
 public:
     Application(int &argc, char **argv);
 
-    bool isFirstInstance() const;
+    bool isFirstInstance(void) const;
 
 public slots:
     void checkForUpdates(void);

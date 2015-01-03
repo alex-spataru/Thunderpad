@@ -24,6 +24,7 @@
 #define LARGE_ICONS_SIZE "24x24"
 #define SMALL_ICONS_SIZE "16x16"
 #define DEFAULT_ICON_THEME "Silk"
+#define DEFAULT_LARGE_ICONS false
 #define DEFAULT_TOOLBAR_TEXT false
 #define DEFAULT_TOOLBAR_ENABLED true
 #define ICON_THEMES_PATH ":/icons/themes"
@@ -154,7 +155,7 @@ void ToolBar::initialize(Window *window) {
 
 void ToolBar::updateSettings(void) {
     bool _new_value = m_settings->value("toolbar-text", DEFAULT_TOOLBAR_TEXT).toBool();
-    bool _new_sizes = m_settings->value("large-icons", MAC_OS_X).toBool();
+    bool _new_sizes = m_settings->value("large-icons", DEFAULT_LARGE_ICONS).toBool();
 
     // Resize and redraw the toolbar if neccessary
     if (_new_value != m_toolbar_text || m_large_icons != _new_sizes) {

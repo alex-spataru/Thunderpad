@@ -82,7 +82,7 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv),
     }
 }
 
-bool Application::isFirstInstance() const {
+bool Application::isFirstInstance(void) const {
     return m_first_instance;
 }
 
@@ -119,7 +119,7 @@ void Application::setupUpdater(void) {
         m_updater->checkForUpdates();
 }
 
-void Application::onAboutToQuit() {
+void Application::onAboutToQuit(void) {
 
     // Unlock the running state so that other instances can be launched
     if (!m_settings->value("another-instance-was-executed", false).toBool())
@@ -157,7 +157,7 @@ void Application::showUpdateAvailable(void) {
         m_updater->downloadLatestVersion();
 }
 
-void Application::checkForOtherInstances() {
+void Application::checkForOtherInstances(void) {
 
     // The system tried to open a new instance of Thunderpad, get the instance
     // information and load it in a new window

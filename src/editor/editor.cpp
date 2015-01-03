@@ -238,11 +238,11 @@ void Editor::goToLine(void) {
     // TODO
 }
 
-void Editor::sortSelection() {
+void Editor::sortSelection(void) {
     // TODO
 }
 
-void Editor::insertDateTime() {
+void Editor::insertDateTime(void) {
     // TODO
 }
 
