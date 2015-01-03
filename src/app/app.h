@@ -8,11 +8,10 @@
 #ifndef APP_H
 #define APP_H
 
-#include <QBuffer>
+#include <QTimer>
 #include <QSettings>
 #include <QMessageBox>
 #include <QApplication>
-#include <QSharedMemory>
 #include <QFileOpenEvent>
 #include <QSimpleUpdater>
 
@@ -29,11 +28,12 @@ public slots:
 
 private slots:
     void setupUpdater(void);
-    void showWelcomeMessages(void);
+    void onAboutToQuit(void);
     void showLatestVersion(void);
     void onCheckingFinished(void);
+    void showWelcomeMessages(void);
     void showUpdateAvailable(void);
-    void createMainWindow(const QString &arguments);
+    void checkForOtherInstances(void);
 
 protected:
     bool event(QEvent *_event);
@@ -42,7 +42,7 @@ private:
     Window *m_window;
     QSettings *m_settings;
     QSimpleUpdater *m_updater;
-    QSharedMemory m_shared_memory;
+    QTimer *m_instance_refresh_timer;
 
     bool m_show_all_updater_messages;
 };

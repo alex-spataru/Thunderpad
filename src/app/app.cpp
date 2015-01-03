@@ -21,35 +21,60 @@
 
 #include "app.h"
 
-Application::Application(int &argc, char **argv)
-    : QApplication(argc, argv),
-      m_show_all_updater_messages(false) {
+Application::Application(int &argc, char **argv) : QApplication(argc, argv),
+    m_show_all_updater_messages(false) {
+
+    // Set application info
     setApplicationName(APP_NAME);
     setOrganizationName(APP_COMPANY);
     setApplicationVersion(APP_VERSION);
 
+    // Initialize shared components
+    m_updater = new QSimpleUpdater();
+    m_settings = new QSettings(APP_COMPANY, APP_NAME);
+
+    // Read system arguments
     QString arguments;
     if (argc != 1) {
         for (int i = 0; i < argc; i++)
             arguments = argv[i];
     }
 
-    if (m_shared_memory.create(1) && m_shared_memory.error() != QSharedMemory::AlreadyExists)
-        createMainWindow(arguments);
+    // We are the first instance of Thunderpad, create a new window and
+    // lock the running status so that we are the only instance allowed to run
+    if (!m_settings->value("running", false).toBool()) {
+        m_window = new Window();
+        m_window->openFile(arguments);
+        m_instance_refresh_timer = new QTimer(this);
 
+        connect(this, SIGNAL(lastWindowClosed()), this, SLOT(onAboutToQuit()));
+        connect(m_window, SIGNAL(checkForUpdates()), this, SLOT(checkForUpdates()));
+        connect(m_instance_refresh_timer, SIGNAL(timeout()), this, SLOT(checkForOtherInstances()));
+
+        m_instance_refresh_timer->start(10);
+        m_settings->setValue("running", true);
+
+        setupUpdater();
+        showWelcomeMessages();
+    }
+
+    // There's already a running instance of Thunderpad, send data and quit
     else {
-        QMessageBox _message;
-        _message.setWindowTitle(tr("Warning"));
-        _message.setIcon(QMessageBox::Warning);
-        _message.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-        _message.setText("<b>" + tr("There's already a running instance of %1, "
-                                    "do you still want to open a new instance?").arg(APP_NAME) + "</b>");
-        _message.setInformativeText(tr("Doing so may cause unexpected side-effects!"));
 
-        if (_message.exec() == QMessageBox::Yes)
-            createMainWindow(arguments);
-        else
-            exit(-1);
+        // Reset settings if Thunderpad crashed before
+        int instances_closed = m_settings->value("instances-closed", 0).toInt();
+        if (instances_closed > 1) {
+            m_settings->setValue("running", false);
+            m_settings->setValue("instances-closed", 0);
+        }
+
+        // Write instance information
+        m_settings->setValue("another-instance-was-executed", true);
+        m_settings->setValue("instances-closed", instances_closed + 1);
+        m_settings->setValue("arguments-from-other-instances", arguments);
+
+        // Quit
+        exit(0);
     }
 }
 
@@ -63,6 +88,7 @@ void Application::setupUpdater(void) {
     QString base_repo_url = "https://raw.githubusercontent.com/"
                             "alex-97/thunderpad/updater/";
 
+    // Decide which file to download
 #if MAC_OS_X
     download_package_url = base_repo_url + "files/thunderpad-latest.dmg";
 #elif WINDOWS
@@ -71,54 +97,28 @@ void Application::setupUpdater(void) {
     download_package_url = base_repo_url + "files/thunderpad-latest.tar.gz";
 #endif
 
+    // Specify updater details
     m_updater->setDownloadUrl(download_package_url);
     m_updater->setApplicationVersion(applicationVersion());
     m_updater->setReferenceUrl(base_repo_url + "latest.txt");
     m_updater->setChangelogUrl(base_repo_url + "changelog.txt");
 
+    // Show message box when new update is found
+    connect(m_updater, SIGNAL(checkingFinished()), this, SLOT(onCheckingFinished()));
+
+    // Check for updates automatically
     if (m_settings->value("check-for-updates", true).toBool())
         m_updater->checkForUpdates();
 }
 
-void Application::showWelcomeMessages(void) {
-    QMessageBox _message;
-    _message.setWindowModality(Qt::WindowModal);
-    _message.setIconPixmap(QPixmap(":/icons/logo.png"));
+void Application::onAboutToQuit() {
 
-    if (m_settings->value("first-launch", true).toBool()) {
-        _message.setStandardButtons(QMessageBox::Close);
-        _message.setText("<b>" + tr("Thank you for downloading Thunderpad!") +
-                         "</b>           ");
-        _message.setInformativeText(
-                    tr("If you find this program useful and would like to help "
-                       "contribute to future development, please consider "
-                       "a small donation. You can  use the Donate item in the "
-                       "Help menu to send your much needed assistance via BitCoins.\n\n"
-                       "Please share Thunderpad with your friends and colleagues, "
-                       "and feel free to send me feedback!"));
-        _message.exec();
+    // Unlock the running state so that other instances can be launched
+    if (!m_settings->value("another-instance-was-executed", false).toBool())
+        m_settings->setValue("running", false);
 
-        m_settings->setValue("first-launch", false);
-        m_settings->setValue("second-launch", true);
-
-    }
-
-    else if (m_settings->value("second-launch", false).toBool()) {
-        _message.setDefaultButton(QMessageBox::Yes);
-        _message.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-        _message.setText(
-                    "<b>" + tr("Do you want to check for updates automatically?") + "</b>");
-        _message.setInformativeText(tr("You can always check for updates from the "
-                                       "Help menu"));
-
-        if (_message.exec() == QMessageBox::Yes)
-            m_settings->setValue("check-for-updates", true);
-
-        else
-            m_settings->setValue("check-for-updates", false);
-
-        m_settings->setValue("second-launch", false);
-    }
+    // Quit the application
+    exit(0);
 }
 
 void Application::showLatestVersion(void) {
@@ -149,20 +149,23 @@ void Application::showUpdateAvailable(void) {
         m_updater->downloadLatestVersion();
 }
 
-void Application::createMainWindow(const QString &arguments) {
-    m_window = new Window();
-    m_updater = new QSimpleUpdater();
-    m_settings = new QSettings(APP_COMPANY, APP_NAME);
+void Application::checkForOtherInstances() {
 
-    if (!arguments.isEmpty())
-        m_window->openFile(arguments);
+    // The system tried to open a new instance of Thunderpad, get the instance
+    // information and load it in a new window
+    if (m_settings->value("another-instance-was-executed", false).toBool()) {
+        Window *_window = new Window();
+        _window->openFile(m_settings->value("arguments-from-other-instances", "").toString());
+        m_window->configureWindow(_window);
 
-    connect(m_window, SIGNAL(checkForUpdates()), this, SLOT(checkForUpdates()));
-    connect(m_updater, SIGNAL(checkingFinished()), this,
-            SLOT(onCheckingFinished()));
+        // Reset instance settings
+        m_settings->setValue("instances-closed", 0);
+        m_settings->setValue("arguments-from-other-instances", "");
+        m_settings->setValue("another-instance-was-executed", false);
+    }
 
-    setupUpdater();
-    showWelcomeMessages();
+    // Continue instance refresh loop
+    m_instance_refresh_timer->start(500);
 }
 
 void Application::onCheckingFinished(void) {
@@ -175,10 +178,55 @@ void Application::onCheckingFinished(void) {
     }
 }
 
+void Application::showWelcomeMessages(void) {
+    QMessageBox _message;
+    _message.setWindowModality(Qt::WindowModal);
+    _message.setIconPixmap(QPixmap(":/icons/logo.png"));
+
+    // Welcome the user to Thunderpad
+    if (m_settings->value("first-launch", true).toBool()) {
+        _message.setStandardButtons(QMessageBox::Close);
+        _message.setText("<b>" + tr("Thank you for downloading Thunderpad!") +
+                         "</b>           ");
+        _message.setInformativeText(
+                    tr("If you find this program useful and would like to help "
+                       "contribute to future development, please consider "
+                       "a small donation. You can  use the Donate item in the "
+                       "Help menu to send your much needed assistance via BitCoins.\n\n"
+                       "Please share Thunderpad with your friends and colleagues, "
+                       "and feel free to send me feedback!"));
+        _message.exec();
+
+        m_settings->setValue("first-launch", false);
+        m_settings->setValue("second-launch", true);
+    }
+
+    // Ask the user to check for updates automatically
+    else if (m_settings->value("second-launch", false).toBool()) {
+        _message.setDefaultButton(QMessageBox::Yes);
+        _message.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        _message.setText(
+                    "<b>" + tr("Do you want to check for updates automatically?") + "</b>");
+        _message.setInformativeText(tr("You can always check for updates from the "
+                                       "Help menu"));
+
+        if (_message.exec() == QMessageBox::Yes)
+            m_settings->setValue("check-for-updates", true);
+
+        else
+            m_settings->setValue("check-for-updates", false);
+
+        m_settings->setValue("second-launch", false);
+    }
+}
+
 bool Application::event(QEvent *_event) {
+
+    // System requested us to open a file
     if (_event->type() == QEvent::FileOpen)
         m_window->openFile(static_cast<QFileOpenEvent *>(_event)->file());
 
+    // System requested us to do another thing
     else
         return QApplication::event(_event);
 

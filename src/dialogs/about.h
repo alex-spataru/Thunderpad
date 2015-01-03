@@ -30,8 +30,8 @@
 #include <QPushButton>
 #include <QApplication>
 
-#include "assembly_info.h"
 #include "platform.h"
+#include "assembly_info.h"
 
 /*!
  * \class About
