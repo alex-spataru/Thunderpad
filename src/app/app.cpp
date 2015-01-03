@@ -44,25 +44,8 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv),
 
     // We are the first instance of Thunderpad, create a new window and
     // lock the running status so that we are the only instance allowed to run
-    if (!m_settings->value("running", false).toBool()) {
-        m_window = new Window();
-        m_first_instance = true;
-        m_window->openFile(arguments);
-        m_instance_refresh_timer = new QTimer(this);
-
-        connect(this, SIGNAL(lastWindowClosed()), this, SLOT(onAboutToQuit()));
-        connect(m_window, SIGNAL(checkForUpdates()), this, SLOT(checkForUpdates()));
-        connect(m_instance_refresh_timer, SIGNAL(timeout()), this, SLOT(checkForOtherInstances()));
-
-        m_instance_refresh_timer->start(10);
-        m_settings->setValue("running", true);
-
-        setupUpdater();
-        showWelcomeMessages();
-
-        // Stop execution of current function
-        return;
-    }
+    if (!m_settings->value("running", false).toBool())
+        runNormally(arguments);
 
     // There's already a running instance of Thunderpad, send data and quit
     else {
@@ -79,6 +62,8 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv),
             m_settings->setValue("running", false);
             m_settings->setValue("instances-closed", 0);
             m_settings->setValue("another-instance-was-executed", false);
+
+            runNormally(arguments);
         }
     }
 }
@@ -159,7 +144,6 @@ void Application::showUpdateAvailable(void) {
 }
 
 void Application::checkForOtherInstances(void) {
-
     // The system tried to open a new instance of Thunderpad, get the instance
     // information and load it in a new window
     if (m_settings->value("another-instance-was-executed", false).toBool()) {
@@ -175,6 +159,23 @@ void Application::checkForOtherInstances(void) {
 
     // Continue instance refresh loop
     m_instance_refresh_timer->start(500);
+}
+
+void Application::runNormally(const QString &arguments) {
+    m_window = new Window();
+    m_first_instance = true;
+    m_window->openFile(arguments);
+    m_instance_refresh_timer = new QTimer(this);
+
+    connect(this, SIGNAL(lastWindowClosed()), this, SLOT(onAboutToQuit()));
+    connect(m_window, SIGNAL(checkForUpdates()), this, SLOT(checkForUpdates()));
+    connect(m_instance_refresh_timer, SIGNAL(timeout()), this, SLOT(checkForOtherInstances()));
+
+    m_instance_refresh_timer->start(10);
+    m_settings->setValue("running", true);
+
+    setupUpdater();
+    showWelcomeMessages();
 }
 
 void Application::onCheckingFinished(void) {

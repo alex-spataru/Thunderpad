@@ -36,6 +36,7 @@ private slots:
     void showWelcomeMessages(void);
     void showUpdateAvailable(void);
     void checkForOtherInstances(void);
+    void runNormally(const QString &arguments);
 
 protected:
     bool event(QEvent *_event);
