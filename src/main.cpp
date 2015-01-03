@@ -21,7 +21,7 @@
 
 #include "app/app.h"
 
-int main(int argc, char *argv[]) {
-    Application app(argc, argv);
+int main (int argc, char *argv[]) {
+    Application app (argc, argv);
     return app.isFirstInstance() ? app.exec() : -1;
 }

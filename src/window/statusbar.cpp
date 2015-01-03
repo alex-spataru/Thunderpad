@@ -24,75 +24,75 @@
 #define KILOBYTE 1024
 #define MEGABYTE 1048576
 
-StatusBar::StatusBar(Window *parent) : QStatusBar(parent) {
-    m_settings = new QSettings(APP_COMPANY, APP_NAME);
+StatusBar::StatusBar (Window *parent) : QStatusBar (parent) {
+    m_settings = new QSettings (APP_COMPANY, APP_NAME);
     updateSettings();
 
-    initialize(parent);
+    initialize (parent);
 }
 
-void StatusBar::initialize(Window *window) {
-    Q_ASSERT(window != NULL);
+void StatusBar::initialize (Window *window) {
+    Q_ASSERT (window != NULL);
 
-    window->setStatusBar(this);
+    window->setStatusBar (this);
     m_text_edit = window->editor();
 
-    m_size_label = new QLabel(this);
-    m_lines_label = new QLabel(this);
-    m_words_label = new QLabel(this);
+    m_size_label = new QLabel (this);
+    m_lines_label = new QLabel (this);
+    m_words_label = new QLabel (this);
 
-    addPermanentWidget(m_size_label);
-    addPermanentWidget(m_lines_label);
-    addPermanentWidget(m_words_label);
+    addPermanentWidget (m_size_label);
+    addPermanentWidget (m_lines_label);
+    addPermanentWidget (m_words_label);
 
-    connect(m_text_edit, SIGNAL(textChanged()), this, SLOT(updateStatusLabel()));
-    connect(window, SIGNAL(updateSettings()), this, SLOT(updateSettings()));
+    connect (m_text_edit, SIGNAL (textChanged()), this, SLOT (updateStatusLabel()));
+    connect (window, SIGNAL (updateSettings()), this, SLOT (updateSettings()));
 }
 
-void StatusBar::updateSettings(void) {
-    m_settings->value("statusbar-enabled", true).toBool() ? show() : hide();
+void StatusBar::updateSettings (void) {
+    m_settings->value ("statusbar-enabled", true).toBool() ? show() : hide();
 }
 
-void StatusBar::updateStatusLabel(void) {
-    m_size_label->setText("  " + fileSize() + "  ");
-    m_lines_label->setText("  " + lineCount() + "  ");
-    m_words_label->setText("  " + wordCount() + "  ");
+void StatusBar::updateStatusLabel (void) {
+    m_size_label->setText ("  " + fileSize() + "  ");
+    m_lines_label->setText ("  " + lineCount() + "  ");
+    m_words_label->setText ("  " + wordCount() + "  ");
 }
 
-QString StatusBar::fileSize(void) {
+QString StatusBar::fileSize (void) {
     QString _units;
     float _length = m_text_edit->toPlainText().length();
 
     // File is less than one KB
     if (_length < KILOBYTE)
-        _units = " " + tr("bytes");
+        _units = " " + tr ("bytes");
 
     // File is one KB or greater, but smaller than one MB
     else if (_length < MEGABYTE) {
         _length /= KILOBYTE;
-        _units = " " + tr("KB");
+        _units = " " + tr ("KB");
     }
 
     // File is one MB or greater
     else {
         _length /= MEGABYTE;
-        _units = " " + tr("MB");
+        _units = " " + tr ("MB");
     }
 
-    return tr("Size:") + " " +
-            QString::number(floorf(_length * 100 + 0.5) / 100) + _units;
+    return tr ("Size:") + " " +
+           QString::number (floorf (_length * 100 + 0.5) / 100) + _units;
 }
 
-QString StatusBar::wordCount(void) {
+QString StatusBar::wordCount (void) {
     long int _words =
-            m_text_edit->toPlainText()
-            .split(QRegExp("(\\s|\\n|\\r)+"), QString::SkipEmptyParts)
-            .count();
+        m_text_edit->toPlainText()
+        .split (QRegExp ("(\\s|\\n|\\r)+"), QString::SkipEmptyParts)
+        .count();
 
-    return tr("Words:") + " " + QString::number(_words);
+    return tr ("Words:") + " " + QString::number (_words);
 }
 
-QString StatusBar::lineCount(void) {
-    return tr("Lines:") + " " +
-            QString::number(m_text_edit->document()->blockCount());
+QString StatusBar::lineCount (void) {
+    return tr ("Lines:") + " " +
+           QString::number (m_text_edit->document()->blockCount());
 }

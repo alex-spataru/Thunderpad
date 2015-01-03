@@ -22,11 +22,11 @@ QSimpleUpdater::QSimpleUpdater (QObject *parent)
     m_downloadDialog = new DownloadDialog();
 }
 
-QString QSimpleUpdater::changeLog() const {    
+QString QSimpleUpdater::changeLog() const {
     return m_changelog;
 }
 
-void QSimpleUpdater::checkForUpdates(void) {
+void QSimpleUpdater::checkForUpdates (void) {
     if (!m_reference_url.isEmpty()) {
         QNetworkAccessManager *_manager = new QNetworkAccessManager (this);
 
@@ -43,7 +43,7 @@ void QSimpleUpdater::checkForUpdates(void) {
         qDebug() << "QSimpleUpdater: Invalid reference URL";
 }
 
-void QSimpleUpdater::openDownloadLink(void) {
+void QSimpleUpdater::openDownloadLink (void) {
     if (!m_download_url.isEmpty())
         QDesktopServices::openUrl (m_download_url);
 }
@@ -56,7 +56,7 @@ QString QSimpleUpdater::installedVersion() const {
     return m_installed_version;
 }
 
-void QSimpleUpdater::downloadLatestVersion(void) {
+void QSimpleUpdater::downloadLatestVersion (void) {
     if (!m_download_url.isEmpty())
         m_downloadDialog->beginDownload (m_download_url);
 }

@@ -43,60 +43,60 @@
  */
 
 class SyntaxHighlighter : public QSyntaxHighlighter {
-  Q_OBJECT
+        Q_OBJECT
 
-public:
-  explicit SyntaxHighlighter(QTextDocument *parent);
+    public:
+        explicit SyntaxHighlighter (QTextDocument *parent);
 
-public slots:
+    public slots:
 
-  /*!
-   * \brief updateColor
-   * \param theme
-   *
-   * Changes the colors to be used to highlight
-   * the contents of the document.
-   */
+        /*!
+         * \brief updateColor
+         * \param theme
+         *
+         * Changes the colors to be used to highlight
+         * the contents of the document.
+         */
 
-  void updateColor(Theme *theme);
+        void updateColor (Theme *theme);
 
-  /*!
-   * \brief setLanguage
-   * \param lang
-   *
-   * Searches, loads and configures a syntax definition
-   * file for the given language.
-   */
+        /*!
+         * \brief setLanguage
+         * \param lang
+         *
+         * Searches, loads and configures a syntax definition
+         * file for the given language.
+         */
 
-  void setLanguage(const QString &lang);
+        void setLanguage (const QString &lang);
 
-  /*!
-   * \brief detectLanguage
-   * \param file
-   *
-   * Decides which definition to use based on
-   * the extension of the given file.
-   */
+        /*!
+         * \brief detectLanguage
+         * \param file
+         *
+         * Decides which definition to use based on
+         * the extension of the given file.
+         */
 
-  void detectLanguage(const QString &file);
+        void detectLanguage (const QString &file);
 
-protected:
-  void highlightBlock(const QString &text);
+    protected:
+        void highlightBlock (const QString &text);
 
-private:
-  struct HighlightingRule {
-    QRegExp pattern;
-    QTextCharFormat format;
-  };
+    private:
+        struct HighlightingRule {
+            QRegExp pattern;
+            QTextCharFormat format;
+        };
 
-  QVector<HighlightingRule> m_highlighting_rules;
+        QVector<HighlightingRule> m_highlighting_rules;
 
-  QString m_lang;
+        QString m_lang;
 
-  QTextCharFormat m_others_format;
-  QTextCharFormat m_comments_format;
-  QTextCharFormat m_keywords_format;
-  QTextCharFormat m_functions_format;
+        QTextCharFormat m_others_format;
+        QTextCharFormat m_comments_format;
+        QTextCharFormat m_keywords_format;
+        QTextCharFormat m_functions_format;
 };
 
 #endif

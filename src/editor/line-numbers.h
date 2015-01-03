@@ -35,15 +35,15 @@ class Editor;
 
 class LineNumberArea : public QWidget {
 
-public:
-  LineNumberArea(Editor *editor);
-  QSize sizeHint(void) const;
+    public:
+        LineNumberArea (Editor *editor);
+        QSize sizeHint (void) const;
 
-protected:
-  void paintEvent(QPaintEvent *event);
+    protected:
+        void paintEvent (QPaintEvent *event);
 
-private:
-  Editor *m_editor;
+    private:
+        Editor *m_editor;
 };
 
 #endif

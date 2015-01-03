@@ -25,10 +25,10 @@
 !define APPNAME "Thunderpad"
 !define COMPANYNAME "Alex Spataru"
 !define DESCRIPTION "A simple, powerful and cross-platform text editor "
-!define VERSIONMAJOR 1
-!define VERSIONMINOR 0
-!define VERSIONBUILD 0
-!define ESTIMATED_SIZE 16500
+!define VERSIONMAJOR 0
+!define VERSIONMINOR 9
+!define VERSIONBUILD 2
+!define ESTIMATED_SIZE 18100
 !define MUI_ABORTWARNING
 !define INSTALL_DIR "$PROGRAMFILES\${APPNAME}"
 !define MUI_FINISHPAGE_RUN

@@ -22,14 +22,14 @@
 #include "editor.h"
 #include "line-numbers.h"
 
-LineNumberArea::LineNumberArea(Editor *editor) : QWidget(editor) {
+LineNumberArea::LineNumberArea (Editor *editor) : QWidget (editor) {
     m_editor = editor;
 }
 
-QSize LineNumberArea::sizeHint(void) const {
-    return QSize(m_editor->lineNumberAreaWidth(), 0);
+QSize LineNumberArea::sizeHint (void) const {
+    return QSize (m_editor->lineNumberAreaWidth(), 0);
 }
 
-void LineNumberArea::paintEvent(QPaintEvent *event) {
-    m_editor->lineNumberAreaPaintEvent(event);
+void LineNumberArea::paintEvent (QPaintEvent *event) {
+    m_editor->lineNumberAreaPaintEvent (event);
 }

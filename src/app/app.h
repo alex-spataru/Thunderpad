@@ -18,37 +18,37 @@
 #include "window.h"
 
 class Application : public QApplication {
-    Q_OBJECT
+        Q_OBJECT
 
-public:
-    Application(int &argc, char **argv);
+    public:
+        Application (int &argc, char **argv);
 
-    bool isFirstInstance(void) const;
+        bool isFirstInstance (void) const;
 
-public slots:
-    void checkForUpdates(void);
+    public slots:
+        void checkForUpdates (void);
 
-private slots:
-    void setupUpdater(void);
-    void onAboutToQuit(void);
-    void showLatestVersion(void);
-    void onCheckingFinished(void);
-    void showWelcomeMessages(void);
-    void showUpdateAvailable(void);
-    void checkForOtherInstances(void);
-    void runNormally(const QString &arguments);
+    private slots:
+        void setupUpdater (void);
+        void onAboutToQuit (void);
+        void showLatestVersion (void);
+        void onCheckingFinished (void);
+        void showWelcomeMessages (void);
+        void showUpdateAvailable (void);
+        void checkForOtherInstances (void);
+        void runNormally (const QString &arguments);
 
-protected:
-    bool event(QEvent *_event);
+    protected:
+        bool event (QEvent *_event);
 
-private:
-    Window *m_window;
-    QSettings *m_settings;
-    QSimpleUpdater *m_updater;
-    QTimer *m_instance_refresh_timer;
+    private:
+        Window *m_window;
+        QSettings *m_settings;
+        QSimpleUpdater *m_updater;
+        QTimer *m_instance_refresh_timer;
 
-    bool m_first_instance;
-    bool m_show_all_updater_messages;
+        bool m_first_instance;
+        bool m_show_all_updater_messages;
 };
 
 #endif

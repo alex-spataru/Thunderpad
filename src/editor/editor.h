@@ -61,206 +61,206 @@
 
 class Editor : public QPlainTextEdit {
 
-  Q_OBJECT
+        Q_OBJECT
 
-public:
-  explicit Editor(QWidget *parent = 0);
+    public:
+        explicit Editor (QWidget *parent = 0);
 
-  /*!
-   * \brief maybeSave
-   * \return
-   *
-   * Returns \c true when the document was:
-   *       - saved automatically
-   *       - saved by the user
-   *       - discarded by the user
-   *
-   * Returns \c false when the user wants to continue editing the document.
-   * (eg. when clicking the "cancel" button)
-   */
+        /*!
+         * \brief maybeSave
+         * \return
+         *
+         * Returns \c true when the document was:
+         *       - saved automatically
+         *       - saved by the user
+         *       - discarded by the user
+         *
+         * Returns \c false when the user wants to continue editing the document.
+         * (eg. when clicking the "cancel" button)
+         */
 
-  bool maybeSave(void);
+        bool maybeSave (void);
 
-  /* The following functions are used by the  line numbers widget */
-  /* These functions are for internal use only */
-  int lineNumberAreaWidth(void);
-  void lineNumberAreaPaintEvent(QPaintEvent *event);
+        /* The following functions are used by the  line numbers widget */
+        /* These functions are for internal use only */
+        int lineNumberAreaWidth (void);
+        void lineNumberAreaPaintEvent (QPaintEvent *event);
 
-signals:
+    signals:
 
-  /*!
-   * \brief updateTitle
-   *
-   * This signal es emitted when the document title has
-   * changed, so that we can change the title of the main window.
-   */
+        /*!
+         * \brief updateTitle
+         *
+         * This signal es emitted when the document title has
+         * changed, so that we can change the title of the main window.
+         */
 
-  void updateTitle(void);
+        void updateTitle (void);
 
-  /*!
-   * \brief settingsChanged
-   *
-   * This signal es emitted when the user changes a setting of
-   * the editor. It allows us to apply the changed settings along
-   * all the opened windows/instances of the application.
-   */
+        /*!
+         * \brief settingsChanged
+         *
+         * This signal es emitted when the user changes a setting of
+         * the editor. It allows us to apply the changed settings along
+         * all the opened windows/instances of the application.
+         */
 
-  void settingsChanged(void);
+        void settingsChanged (void);
 
-public slots:
+    public slots:
 
-  /*!
-   * \brief checkSpelling
-   *
-   * Checks the spelling of the document and highlights any errors.
-   */
+        /*!
+         * \brief checkSpelling
+         *
+         * Checks the spelling of the document and highlights any errors.
+         */
 
-  void checkSpelling(void);
+        void checkSpelling (void);
 
-  /*!
-   * \brief updateSettings
-   *
-   * Scans for changes in the user settings and re-loads the widget
-   */
+        /*!
+         * \brief updateSettings
+         *
+         * Scans for changes in the user settings and re-loads the widget
+         */
 
-  void updateSettings(void);
+        void updateSettings (void);
 
-  /*!
-   * \brief save
-   * \return
-   *
-   * Saves the current document and returns \c true if the
-   * saving is successfull. In the case that the document has not
-   * been saved to the hard disk storage (eg: editing an untitled document),
-   * this function calls the \c saveAs() function.
-   */
+        /*!
+         * \brief save
+         * \return
+         *
+         * Saves the current document and returns \c true if the
+         * saving is successfull. In the case that the document has not
+         * been saved to the hard disk storage (eg: editing an untitled document),
+         * this function calls the \c saveAs() function.
+         */
 
-  bool save(void);
+        bool save (void);
 
-  /*!
-   * \brief saveAs
-   * \return
-   *
-   * Shows a file dialog and saves the current document with the given user
-   *input.
-   */
+        /*!
+         * \brief saveAs
+         * \return
+         *
+         * Shows a file dialog and saves the current document with the given user
+         *input.
+         */
 
-  bool saveAs(void);
+        bool saveAs (void);
 
-  /*!
-   * \brief goToLine
-   *
-   * Navigates to the given line number by prompting the user with a dialog
-   */
+        /*!
+         * \brief goToLine
+         *
+         * Navigates to the given line number by prompting the user with a dialog
+         */
 
-  void goToLine(void);
+        void goToLine (void);
 
-  /*!
-   * \brief sortSelection
-   *
-   * Sorts the current selection by alphabetical and numerical order
-   */
+        /*!
+         * \brief sortSelection
+         *
+         * Sorts the current selection by alphabetical and numerical order
+         */
 
-  void sortSelection(void);
+        void sortSelection (void);
 
-  /*!
-   * \brief insertDateTime
-   *
-   * Inserts the current date and time in the cursor
-   */
+        /*!
+         * \brief insertDateTime
+         *
+         * Inserts the current date and time in the cursor
+         */
 
-  void insertDateTime(void);
+        void insertDateTime (void);
 
-  /*!
-   * \brief print
-   *
-   * Shows a print dialog that allows the user to send the current
-   * document to the connected printer(s).
-   */
+        /*!
+         * \brief print
+         *
+         * Shows a print dialog that allows the user to send the current
+         * document to the connected printer(s).
+         */
 
-  void print(void);
+        void print (void);
 
-  /*!
-   * \brief exportPdf
-   *
-   * Shows a file dialog and exports the current document as a PDF
-   * file given the user input.
-   */
+        /*!
+         * \brief exportPdf
+         *
+         * Shows a file dialog and exports the current document as a PDF
+         * file given the user input.
+         */
 
-  void exportPdf(void);
+        void exportPdf (void);
 
-  /*!
-   * \brief exportHtml
-   *
-   * Shows a file dialog and exports the current document as a HTML
-   * file given the user input.
-   */
+        /*!
+         * \brief exportHtml
+         *
+         * Shows a file dialog and exports the current document as a HTML
+         * file given the user input.
+         */
 
-  void exportHtml(void);
+        void exportHtml (void);
 
-  /*!
-   * \brief selectFonts
-   *
-   * Shows a font dialog and changes the editor's font based on
-   * the selected user option.
-   */
+        /*!
+         * \brief selectFonts
+         *
+         * Shows a font dialog and changes the editor's font based on
+         * the selected user option.
+         */
 
-  void selectFonts(void);
+        void selectFonts (void);
 
-  /*!
-   * \brief setWordWrap
-   * \param ww
-   *
-   * Enables or disables word wrapping based on the \c ww parameter
-   */
+        /*!
+         * \brief setWordWrap
+         * \param ww
+         *
+         * Enables or disables word wrapping based on the \c ww parameter
+         */
 
-  void setWordWrap(bool ww);
+        void setWordWrap (bool ww);
 
-  /*!
-   * \brief readFile
-   * \param file
-   *
-   * Loads the given file into the editor.
-   */
+        /*!
+         * \brief readFile
+         * \param file
+         *
+         * Loads the given file into the editor.
+         */
 
-  void readFile(const QString &file);
+        void readFile (const QString &file);
 
-  /*!
-   * \brief writeFile
-   * \param file
-   * \return
-   *
-   * Writes the content of the text document in the given file
-   */
+        /*!
+         * \brief writeFile
+         * \param file
+         * \return
+         *
+         * Writes the content of the text document in the given file
+         */
 
-  bool writeFile(const QString &file);
+        bool writeFile (const QString &file);
 
-  /*!
-   * \brief setSyntaxLanguage
-   * \param language
-   *
-   * Highlights the document based on the given programming
-   * language.
-   */
+        /*!
+         * \brief setSyntaxLanguage
+         * \param language
+         *
+         * Highlights the document based on the given programming
+         * language.
+         */
 
-  void setSyntaxLanguage(const QString &language);
+        void setSyntaxLanguage (const QString &language);
 
-protected:
-  void resizeEvent(QResizeEvent *event);
+    protected:
+        void resizeEvent (QResizeEvent *event);
 
-private slots:
-  void highlightCurrentLine(void);
-  void configureDocument(const QString &file);
-  void updateLineNumberArea(const QRect &, int);
-  void updateLineNumberAreaWidth(int newBlockCount);
+    private slots:
+        void highlightCurrentLine (void);
+        void configureDocument (const QString &file);
+        void updateLineNumberArea (const QRect &, int);
+        void updateLineNumberAreaWidth (int newBlockCount);
 
-private:
-  Theme *m_theme;
-  QSettings *m_settings;
-  QWidget *m_lineNumberArea;
-  SyntaxHighlighter *m_highlighter;
+    private:
+        Theme *m_theme;
+        QSettings *m_settings;
+        QWidget *m_lineNumberArea;
+        SyntaxHighlighter *m_highlighter;
 
-  bool _hc_line_enabled;
+        bool _hc_line_enabled;
 };
 
 #endif

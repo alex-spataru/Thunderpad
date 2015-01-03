@@ -35,15 +35,15 @@
 #define MAXPHONETUTF8LEN (MAXPHONETLEN * 4)
 
 struct phonetable {
-  char utf8;
-  cs_info *lang;
-  int num;
-  char **rules;
-  int hash[HASHSIZE];
+    char utf8;
+    cs_info *lang;
+    int num;
+    char **rules;
+    int hash[HASHSIZE];
 };
 
-void init_phonet_hash(phonetable &parms);
+void init_phonet_hash (phonetable &parms);
 
-int phonet(const char *inword, char *target, int len, phonetable &phone);
+int phonet (const char *inword, char *target, int len, phonetable &phone);
 
 #endif

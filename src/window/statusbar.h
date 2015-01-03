@@ -41,26 +41,26 @@
  */
 
 class StatusBar : public QStatusBar {
-    Q_OBJECT
+        Q_OBJECT
 
-public:
-    StatusBar(Window *parent = 0);
+    public:
+        StatusBar (Window *parent = 0);
 
-private slots:
-    void updateSettings(void);
-    void updateStatusLabel(void);
-    void initialize(Window *window);
+    private slots:
+        void updateSettings (void);
+        void updateStatusLabel (void);
+        void initialize (Window *window);
 
-private:
-    QLabel *m_size_label;
-    QLabel *m_words_label;
-    QLabel *m_lines_label;
-    QSettings *m_settings;
-    QPlainTextEdit *m_text_edit;
+    private:
+        QLabel *m_size_label;
+        QLabel *m_words_label;
+        QLabel *m_lines_label;
+        QSettings *m_settings;
+        QPlainTextEdit *m_text_edit;
 
-    QString fileSize(void);
-    QString wordCount(void);
-    QString lineCount(void);
+        QString fileSize (void);
+        QString wordCount (void);
+        QString lineCount (void);
 };
 
 #endif

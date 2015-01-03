@@ -51,7 +51,6 @@ RESOURCES += $$PWD/res/res.qrc
 
 HEADERS += \
     $$PWD/src/app/app.h \
-    $$PWD/src/dialogs/about.h \
     $$PWD/src/dialogs/searchdialog.h \
     $$PWD/src/editor/editor.h \
     $$PWD/src/editor/line-numbers.h \
@@ -67,7 +66,6 @@ HEADERS += \
 
 SOURCES += \
     $$PWD/src/app/app.cpp \
-    $$PWD/src/dialogs/about.cpp \
     $$PWD/src/dialogs/searchdialog.cpp \
     $$PWD/src/editor/editor.cpp \
     $$PWD/src/editor/line-numbers.cpp \

@@ -7,7 +7,7 @@
 #else
 // empty inline function to switch off warnings (instead of the C99 standard
 // variadic macros)
-static inline void HUNSPELL_WARNING(FILE *, const char *, ...) {}
+static inline void HUNSPELL_WARNING (FILE *, const char *, ...) {}
 #endif
 #endif
 
@@ -51,40 +51,40 @@ static inline void HUNSPELL_WARNING(FILE *, const char *, ...) {}
 #define TESTAFF(a, b, c) flag_bsearch((unsigned short *)a, (unsigned short)b, c)
 
 struct affentry {
-  char *strip;
-  char *appnd;
-  unsigned char stripl;
-  unsigned char appndl;
-  char numconds;
-  char opts;
-  unsigned short aflag;
-  unsigned short *contclass;
-  short contclasslen;
-  union {
-    char conds[MAXCONDLEN];
-    struct {
-      char conds1[MAXCONDLEN_1];
-      char *conds2;
-    } l;
-  } c;
-  char *morphcode;
+    char *strip;
+    char *appnd;
+    unsigned char stripl;
+    unsigned char appndl;
+    char numconds;
+    char opts;
+    unsigned short aflag;
+    unsigned short *contclass;
+    short contclasslen;
+    union {
+        char conds[MAXCONDLEN];
+        struct {
+            char conds1[MAXCONDLEN_1];
+            char *conds2;
+        } l;
+    } c;
+    char *morphcode;
 };
 
 struct guessword {
-  char *word;
-  bool allow;
-  char *orig;
+    char *word;
+    bool allow;
+    char *orig;
 };
 
 struct mapentry {
-  char *set;
-  w_char *set_utf16;
-  int len;
+    char *set;
+    w_char *set_utf16;
+    int len;
 };
 
 struct flagentry {
-  FLAG *def;
-  int len;
+    FLAG *def;
+    int len;
 };
 
 #endif

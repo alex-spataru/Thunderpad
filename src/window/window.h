@@ -30,7 +30,6 @@
 #include <QSimpleUpdater>
 #include <QDesktopServices>
 
-#include "about.h"
 #include "editor.h"
 #include "assembly_info.h"
 
@@ -55,68 +54,67 @@ class MenuBar;
 class ToolBar;
 
 class Window : public QMainWindow {
-    Q_OBJECT
+        Q_OBJECT
 
-public:
-    Window(void);
+    public:
+        Window (void);
 
-    Editor *editor(void) const;
-    ToolBar *toolbar(void) const;
+        Editor *editor (void) const;
+        ToolBar *toolbar (void) const;
 
-    void configureWindow(Window *window);
-    void openFile(const QString &file_name);
+        void configureWindow (Window *window);
+        void openFile (const QString &file_name);
 
-signals:
-    void updateSettings(void);
-    void settingsChanged(void);
-    void checkForUpdates(void);
-    void readOnlyChanged(bool ro);
+    signals:
+        void updateSettings (void);
+        void settingsChanged (void);
+        void checkForUpdates (void);
+        void readOnlyChanged (bool ro);
 
-protected:
-    void closeEvent(QCloseEvent *event);
+    protected:
+        void closeEvent (QCloseEvent *event);
 
-public slots:
-    void newFile(void);
-    void open(void);
+    public slots:
+        void newFile (void);
+        void open (void);
 
-    void setReadOnly(bool ro);
-    void setWordWrap(bool ww);
-    void setToolbarText(bool tt);
-    void setToolbarEnabled(bool tb);
-    void setStatusBarEnabled(bool sb);
-    void setHCLineEnabled(bool hc);
-    void setUseLargeIcons(bool li);
-    void setLineNumbersEnabled(bool ln);
-    void setIconTheme(const QString &theme);
-    void setColorscheme(const QString &colorscheme);
+        void setReadOnly (bool ro);
+        void setWordWrap (bool ww);
+        void setToolbarText (bool tt);
+        void setToolbarEnabled (bool tb);
+        void setStatusBarEnabled (bool sb);
+        void setHCLineEnabled (bool hc);
+        void setUseLargeIcons (bool li);
+        void setLineNumbersEnabled (bool ln);
+        void setIconTheme (const QString &theme);
+        void setColorscheme (const QString &colorscheme);
 
-    void showFindReplaceDialog(void);
+        void showFindReplaceDialog (void);
 
-    void aboutThunderpad(void);
-    void license(void);
-    void donate(void);
-    void viewHelp(void);
-    void reportBug(void);
-    void sendFeedback(void);
-    void makeContribution(void);
-    void officialWebsite(void);
+        void aboutThunderpad (void);
+        void license (void);
+        void donate (void);
+        void viewHelp (void);
+        void reportBug (void);
+        void sendFeedback (void);
+        void makeContribution (void);
+        void officialWebsite (void);
 
-private slots:
-    void updateTitle(void);
-    void syncSettings(void);
-    void saveWindowState(void);
+    private slots:
+        void updateTitle (void);
+        void syncSettings (void);
+        void saveWindowState (void);
 
-private:
-    MenuBar *m_menu;
-    Editor *m_editor;
-    About *m_about_dlg;
-    ToolBar *m_toolbar;
-    QSettings *m_settings;
-    StatusBar *m_statusbar;
-    SearchDialog *m_search_dialog;
+    private:
+        MenuBar *m_menu;
+        Editor *m_editor;
+        ToolBar *m_toolbar;
+        QSettings *m_settings;
+        StatusBar *m_statusbar;
+        SearchDialog *m_search_dialog;
 
-    QSimpleUpdater *m_updater;
-    QString shortFileName(const QString &file);
+        QSimpleUpdater *m_updater;
+        QString shortFileName (const QString &file);
 };
 
 #endif

@@ -37,31 +37,31 @@
 #include "window.h"
 
 class SearchDialog : public QDialog {
-    Q_OBJECT
+        Q_OBJECT
 
-public:
-    SearchDialog(Window *parent = 0);
+    public:
+        SearchDialog (Window *parent = 0);
 
-private slots:
-    void search(void);
-    void replaceAll(void);
-    void replaceFirstOccurrence(void);
+    private slots:
+        void search (void);
+        void replaceAll (void);
+        void replaceFirstOccurrence (void);
 
-private:
-    QTextCursor *m_text_cursor;
-    QPlainTextEdit *m_text_edit;
+    private:
+        QTextCursor *m_text_cursor;
+        QPlainTextEdit *m_text_edit;
 
-    QLabel *ui_find_label;
-    QGridLayout *ui_layout;
-    QLabel *ui_replace_label;
-    QLineEdit *ui_find_lineedit;
-    QPushButton *ui_done_button;
-    QPushButton *ui_replace_button;
-    QLineEdit *ui_replace_lineedit;
-    QSpacerItem *ui_vertical_spacer;
-    QCheckBox *ui_match_case_checkbox;
-    QCheckBox *ui_whole_words_checkbox;
-    QPushButton *ui_replace_all_button;
+        QLabel *ui_find_label;
+        QGridLayout *ui_layout;
+        QLabel *ui_replace_label;
+        QLineEdit *ui_find_lineedit;
+        QPushButton *ui_done_button;
+        QPushButton *ui_replace_button;
+        QLineEdit *ui_replace_lineedit;
+        QSpacerItem *ui_vertical_spacer;
+        QCheckBox *ui_match_case_checkbox;
+        QCheckBox *ui_whole_words_checkbox;
+        QPushButton *ui_replace_all_button;
 };
 
 #endif
