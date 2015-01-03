@@ -75,7 +75,7 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv),
         m_settings->setValue("arguments-from-other-instances", arguments);
 
         // Reset the settings if Thunderpad crashed before 
-        if (instances_closed >= 0) {
+        if (instances_closed > 0) {
             m_settings->setValue("running", false);
             m_settings->setValue("instances-closed", 0);
             m_settings->setValue("another-instance-was-executed", false);
