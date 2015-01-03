@@ -60,16 +60,16 @@ Window::Window (void) {
     connect (qApp, SIGNAL (aboutToQuit()), this, SLOT (close()));
     connect (this, SIGNAL (updateSettings()), editor(), SLOT (updateSettings()));
 
-    // Set window geometry and show it
-    setMinimumSize (420, 420);
-    resize (m_settings->value ("size", QSize (640, 420)).toSize());
-    move (m_settings->value ("position", QPoint (200, 200)).toPoint());
-    m_settings->value ("maximized", false).toBool() ? showMaximized() : showNormal();
-
     // Configure all widgets
     updateTitle();
     updateSettings();
     setCentralWidget (editor());
+
+    // Set window geometry
+    setMinimumSize (420, 420);
+    resize (m_settings->value ("size", QSize (640, 420)).toSize());
+    move (m_settings->value ("position", QPoint (200, 200)).toPoint());
+    m_settings->value ("maximized", false).toBool() ? showMaximized() : showNormal();
 }
 
 Editor *Window::editor (void) const {
@@ -172,9 +172,9 @@ void Window::setIconTheme (const QString &theme) {
 
 void Window::aboutThunderpad (void) {
     QString _message = QString ("<h2>%1 %2</h2>").arg (APP_NAME, APP_VERSION) +
-                       "<p>" + tr ("Built on %1 at %2").arg (__DATE__, __TIME__) + "</p>" +
-                       "<p>" + tr ("Copyright &copy; 2013-%1 %2").arg (CURRENT_YEAR, APP_COMPANY) + "</p>" +
-                       "<p>" + tr (GNU_WARRANTY_WARNING) + "</p>";
+            "<p>" + tr ("Built on %1 at %2").arg (__DATE__, __TIME__) + "</p>" +
+            "<p>" + tr ("Copyright &copy; 2013-%1 %2").arg (CURRENT_YEAR, APP_COMPANY) + "</p>" +
+            "<p>" + tr (GNU_WARRANTY_WARNING) + "</p>";
 
     QMessageBox::about (this, tr ("About %1").arg (APP_NAME), _message);
 }
@@ -210,17 +210,19 @@ void Window::officialWebsite (void) {
 void Window::updateTitle (void) {
     // Use "Untitled" while editing new documents
     QString _title = editor()->documentTitle().isEmpty() ?
-                     tr ("Untitled") :
-                     shortFileName (editor()->documentTitle());
+                tr ("Untitled") :
+                shortFileName (editor()->documentTitle());
 
     // Add a "*" if the document was modifed
     QString _star = editor()->document()->isModified() ? "* - " : " - ";
     setWindowTitle (_title + _star + APP_NAME);
 
     // Configure the behavior of the 'smart' save actions
-    bool _saveEnabled = !m_editor->documentTitle().isEmpty() && !m_editor->document()->isModified();
-    m_menu->setSaveEnabled (_saveEnabled);
-    m_toolbar->setSaveEnabled (_saveEnabled);
+    bool _save_enabled = !(!m_editor->documentTitle().isEmpty() &&
+                           !m_editor->document()->isModified());
+
+    m_menu->setSaveEnabled (_save_enabled);
+    m_toolbar->setSaveEnabled (_save_enabled);
 }
 
 void Window::syncSettings (void) {
@@ -244,21 +246,23 @@ void Window::configureWindow (Window *window) {
     connect (window, SIGNAL (checkForUpdates()), this, SIGNAL (checkForUpdates()));
 
     // Sync settings across windows
-    foreach (QWidget *_widget, QApplication::topLevelWidgets()) {
-        if (_widget->objectName() == objectName()) {
-            connect (_widget, SIGNAL (settingsChanged()), window,
-                     SIGNAL (updateSettings()));
-            connect (window, SIGNAL (settingsChanged()), _widget,
-                     SIGNAL (updateSettings()));
+    foreach (QWidget *widget, QApplication::topLevelWidgets()) {
+        if (widget->objectName() == objectName()) {
+            connect (widget, SIGNAL (settingsChanged()), window, SIGNAL (updateSettings()));
+            connect (window, SIGNAL (settingsChanged()), widget, SIGNAL (updateSettings()));
         }
     }
 
-    // Resize the new window to fit the current window
-    if (!isMaximized())
-        window->resize (size());
+    // Show the window normally if the current window is maximized
+    if (isMaximized())
+        window->showNormal();
 
-    window->move (window->x() + 30, window->y() + 30);
-    m_settings->setValue ("position", QPoint (window->x(), window->y()));
+    // Resize the window and position it to match the current window
+    else {
+        window->resize (size());
+        window->move (window->x() + 30, window->y() + 30);
+        m_settings->setValue ("position", QPoint (window->x(), window->y()));
+    }
 }
 
 QString Window::shortFileName (const QString &file) {
