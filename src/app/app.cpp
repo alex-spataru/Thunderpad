@@ -67,18 +67,19 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv),
     // There's already a running instance of Thunderpad, send data and quit
     else {
         m_first_instance = false;
-
-        // Reset settings if Thunderpad crashed before
         int instances_closed = m_settings->value("instances-closed", 0).toInt();
-        if (instances_closed > 1) {
-            m_settings->setValue("running", false);
-            m_settings->setValue("instances-closed", 0);
-        }
 
         // Write instance information
         m_settings->setValue("another-instance-was-executed", true);
         m_settings->setValue("instances-closed", instances_closed + 1);
         m_settings->setValue("arguments-from-other-instances", arguments);
+
+        // Reset the settings if Thunderpad crashed before 
+        if (instances_closed >= 0) {
+            m_settings->setValue("running", false);
+            m_settings->setValue("instances-closed", 0);
+            m_settings->setValue("another-instance-was-executed", false);
+        }
     }
 }
 

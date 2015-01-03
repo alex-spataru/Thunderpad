@@ -26,7 +26,6 @@ About::About(QWidget *parent) : QDialog(parent) {
 
     QIcon _blank;
     setWindowIcon(_blank);
-    setWindowModality(Qt::WindowModal);
     setWindowFlags(Qt::Dialog |
                    Qt::CustomizeWindowHint |
                    Qt::WindowCloseButtonHint);
