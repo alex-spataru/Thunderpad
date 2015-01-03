@@ -20,6 +20,7 @@
 //
 
 #include "app.h"
+#define QUIT_ON_LAST_WINDOW true
 
 Application::Application(int &argc, char **argv) : QApplication(argc, argv),
     m_show_all_updater_messages(false) {
@@ -28,6 +29,7 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv),
     setApplicationName(APP_NAME);
     setOrganizationName(APP_COMPANY);
     setApplicationVersion(APP_VERSION);
+    setQuitOnLastWindowClosed(QUIT_ON_LAST_WINDOW);
 
     // Initialize shared components
     m_updater = new QSimpleUpdater();
@@ -44,6 +46,7 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv),
     // lock the running status so that we are the only instance allowed to run
     if (!m_settings->value("running", false).toBool()) {
         m_window = new Window();
+        m_first_instance = true;
         m_window->openFile(arguments);
         m_instance_refresh_timer = new QTimer(this);
 
@@ -56,10 +59,14 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv),
 
         setupUpdater();
         showWelcomeMessages();
+
+        // Stop execution of current function
+        return;
     }
 
     // There's already a running instance of Thunderpad, send data and quit
     else {
+        m_first_instance = false;
 
         // Reset settings if Thunderpad crashed before
         int instances_closed = m_settings->value("instances-closed", 0).toInt();
@@ -72,10 +79,11 @@ Application::Application(int &argc, char **argv) : QApplication(argc, argv),
         m_settings->setValue("another-instance-was-executed", true);
         m_settings->setValue("instances-closed", instances_closed + 1);
         m_settings->setValue("arguments-from-other-instances", arguments);
-
-        // Quit
-        exit(0);
     }
+}
+
+bool Application::isFirstInstance() const {
+    return m_first_instance;
 }
 
 void Application::checkForUpdates(void) {

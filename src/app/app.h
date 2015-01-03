@@ -23,6 +23,8 @@ class Application : public QApplication {
 public:
     Application(int &argc, char **argv);
 
+    bool isFirstInstance() const;
+
 public slots:
     void checkForUpdates(void);
 
@@ -44,6 +46,7 @@ private:
     QSimpleUpdater *m_updater;
     QTimer *m_instance_refresh_timer;
 
+    bool m_first_instance;
     bool m_show_all_updater_messages;
 };
 

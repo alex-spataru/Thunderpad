@@ -28,6 +28,7 @@
 
 Window::Window(void) {
     setObjectName("window");
+    setWindowModality(Qt::WindowModal);
     setAttribute(Qt::WA_DeleteOnClose);
 
     // Create the core components
