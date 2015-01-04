@@ -1,7 +1,7 @@
 //
 //  This file is part of Thunderpad
 //
-//  Copyright (c) 2013-2014 Alex Spataru <alex_spataru@outlook.com>
+//  Copyright (c) 2013-2015 Alex Spataru <alex_spataru@outlook.com>
 //
 //  This program is free software; you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by

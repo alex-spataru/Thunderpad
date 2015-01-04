@@ -1,13 +1,13 @@
 #
 #  This file is part of Thunderpad
 #
-#  Copyright (c) 2013-2014 Alex Spataru <alex.racotta@gmail.com>
+#  Copyright (c) 2013-2015 Alex Spataru <alex.racotta@gmail.com>
 #  Please check the license.txt file for more information.
 #
 
 TEMPLATE   = app
 TARGET     = thunderpad
-VERSION    = 1.0
+VERSION    = 0.9.2
 
 CODECFORTR  = UTF-8
 CODECFORSRC = UTF-8
@@ -30,7 +30,7 @@ INCLUDEPATH += \
 
 win32* {
     TARGET  = "Thunderpad"
-    RC_FILE = $$PWD/data/windows/icon.rc
+    RC_FILE = $$PWD/data/windows/thunderpad.rc
 }
 
 macx* {
