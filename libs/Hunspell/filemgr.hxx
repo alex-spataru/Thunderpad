@@ -3,7 +3,8 @@
 #define _FILEMGR_HXX_
 #include "hunzip.hxx"
 
-class FileMgr {
+class FileMgr
+{
     protected:
         FILE *fin;
         Hunzip *hin;

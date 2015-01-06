@@ -21,7 +21,8 @@
 
 #include "editor.h"
 
-Editor::Editor (QWidget *parent) : QPlainTextEdit (parent) {
+Editor::Editor (QWidget *parent) : QPlainTextEdit (parent)
+{
     setAttribute (Qt::WA_DeleteOnClose);
 
     m_theme = new Theme (this);
@@ -39,7 +40,8 @@ Editor::Editor (QWidget *parent) : QPlainTextEdit (parent) {
     updateLineNumberAreaWidth (0);
 }
 
-void Editor::lineNumberAreaPaintEvent (QPaintEvent *event) {
+void Editor::lineNumberAreaPaintEvent (QPaintEvent *event)
+{
     QPainter _painter (m_lineNumberArea);
     _painter.fillRect (event->rect(), m_theme->lineNumbersBackground());
     _painter.setPen (m_theme->lineNumbersForeground());
@@ -50,41 +52,48 @@ void Editor::lineNumberAreaPaintEvent (QPaintEvent *event) {
         (int)blockBoundingGeometry (_block).translated (contentOffset()).top();
     int _bottom = _top + (int)blockBoundingRect (_block).height();
 
-    while (_block.isValid() && _top <= event->rect().bottom()) {
-        if (_block.isVisible() && _bottom >= event->rect().top()) {
+    while (_block.isValid() && _top <= event->rect().bottom())
+        {
+        if (_block.isVisible() && _bottom >= event->rect().top())
+            {
             QString _number = QString::number (_blockNumber + 1);
             _painter.drawText (0, _top, m_lineNumberArea->width(),
                                fontMetrics().height(), Qt::AlignCenter, _number);
-        }
+            }
 
         _block = _block.next();
         _top = _bottom;
         _bottom = _top + (int)blockBoundingRect (_block).height();
         ++_blockNumber;
-    }
+        }
 }
 
-int Editor::lineNumberAreaWidth (void) {
-    if (m_lineNumberArea->isEnabled()) {
+int Editor::lineNumberAreaWidth (void)
+{
+    if (m_lineNumberArea->isEnabled())
+        {
         int _digits = 1;
         int _max = qMax (1, blockCount());
 
-        while (_max >= 10) {
+        while (_max >= 10)
+            {
             _max /= 10;
             ++_digits;
-        }
+            }
 
         return 16 + fontMetrics().width (QLatin1Char ('9')) * _digits;
-    }
+        }
 
     return 0;
 }
 
-void Editor::updateLineNumberAreaWidth (int) {
+void Editor::updateLineNumberAreaWidth (int)
+{
     setViewportMargins (lineNumberAreaWidth(), 0, 0, 0);
 }
 
-void Editor::updateLineNumberArea (const QRect &rect, int dy) {
+void Editor::updateLineNumberArea (const QRect &rect, int dy)
+{
     if (dy)
         m_lineNumberArea->scroll (0, dy);
 
@@ -98,7 +107,8 @@ void Editor::updateLineNumberArea (const QRect &rect, int dy) {
         updateLineNumberAreaWidth (0);
 }
 
-void Editor::resizeEvent (QResizeEvent *e) {
+void Editor::resizeEvent (QResizeEvent *e)
+{
     QPlainTextEdit::resizeEvent (e);
     m_lineNumberArea->setGeometry (QRect (contentsRect().left(),
                                           contentsRect().top(),
@@ -106,22 +116,25 @@ void Editor::resizeEvent (QResizeEvent *e) {
                                           contentsRect().height()));
 }
 
-void Editor::highlightCurrentLine (void) {
+void Editor::highlightCurrentLine (void)
+{
     QList<QTextEdit::ExtraSelection> _extra_selections;
 
-    if (!isReadOnly() && _hc_line_enabled) {
+    if (!isReadOnly() && _hc_line_enabled)
+        {
         QTextEdit::ExtraSelection _selection;
         _selection.format.setBackground (m_theme->currentLineBackground());
         _selection.format.setProperty (QTextFormat::FullWidthSelection, true);
         _selection.cursor = textCursor();
         _selection.cursor.clearSelection();
         _extra_selections.append (_selection);
-    }
+        }
 
     setExtraSelections (_extra_selections);
 }
 
-void Editor::configureDocument (const QString &file) {
+void Editor::configureDocument (const QString &file)
+{
     Q_UNUSED (file);
     Q_ASSERT (!file.isEmpty());
 
@@ -132,11 +145,13 @@ void Editor::configureDocument (const QString &file) {
     emit updateTitle();
 }
 
-void Editor::checkSpelling (void) {
+void Editor::checkSpelling (void)
+{
     // TODO
 }
 
-void Editor::updateSettings (void) {
+void Editor::updateSettings (void)
+{
     int _default_size = 11;
     QString _default_font = "Courier";
 
@@ -187,16 +202,19 @@ void Editor::updateSettings (void) {
     updateLineNumberAreaWidth (blockCount());
 }
 
-bool Editor::save (void) {
+bool Editor::save (void)
+{
     return documentTitle().isEmpty() ? saveAs() : writeFile (documentTitle());
 }
 
-bool Editor::saveAs (void) {
+bool Editor::saveAs (void)
+{
     return writeFile (QFileDialog::getSaveFileName (this, tr ("Save as") + "...",
                       QDir::homePath()));
 }
 
-bool Editor::maybeSave (void) {
+bool Editor::maybeSave (void)
+{
     // We don't need to save the document if it isn't modified
     if (!document()->isModified())
         return true;
@@ -206,7 +224,8 @@ bool Editor::maybeSave (void) {
         return save();
 
     // The document was never saved in the hard disk, so we prompt the user
-    else if (document()->isModified()) {
+    else if (document()->isModified())
+        {
         QMessageBox _message;
         _message.setParent (this);
         _message.setWindowTitle (" ");
@@ -232,24 +251,28 @@ bool Editor::maybeSave (void) {
 
         else
             return false;
-    }
+        }
 
     return false;
 }
 
-void Editor::goToLine (void) {
+void Editor::goToLine (void)
+{
     // TODO
 }
 
-void Editor::sortSelection (void) {
+void Editor::sortSelection (void)
+{
     // TODO
 }
 
-void Editor::insertDateTime (void) {
+void Editor::insertDateTime (void)
+{
     // TODO
 }
 
-void Editor::print (void) {
+void Editor::print (void)
+{
     qApp->setOverrideCursor (Qt::WaitCursor);
 
     QPrinter _printer (QPrinter::HighResolution);
@@ -264,7 +287,8 @@ void Editor::print (void) {
     qApp->restoreOverrideCursor();
 }
 
-void Editor::exportPdf (void) {
+void Editor::exportPdf (void)
+{
     // Ask user where to save PDF
     QString _file_location =
         QFileDialog::getSaveFileName (this,
@@ -275,7 +299,8 @@ void Editor::exportPdf (void) {
     qApp->setOverrideCursor (Qt::WaitCursor);
 
     // Write PDF file
-    if (!_file_location.isEmpty()) {
+    if (!_file_location.isEmpty())
+        {
         QPrinter _printer (QPrinter::HighResolution);
 
         _printer.setDocName (documentTitle());
@@ -284,12 +309,13 @@ void Editor::exportPdf (void) {
         _printer.setOutputFormat (QPrinter::PdfFormat);
 
         document()->print (&_printer);
-    }
+        }
 
     qApp->restoreOverrideCursor();
 }
 
-void Editor::exportHtml (void) {
+void Editor::exportHtml (void)
+{
     QString _file_location =
         QFileDialog::getSaveFileName (this,
                                       tr ("Export HTML"),
@@ -298,31 +324,36 @@ void Editor::exportHtml (void) {
 
     qApp->setOverrideCursor (Qt::WaitCursor);
 
-    if (!_file_location.isEmpty()) {
+    if (!_file_location.isEmpty())
+        {
         QFile _file (_file_location);
 
-        if (_file.open (QIODevice::WriteOnly | QIODevice::Text)) {
+        if (_file.open (QIODevice::WriteOnly | QIODevice::Text))
+            {
             _file.write (document()->toHtml().toUtf8());
             _file.close();
-        }
+            }
 
-        else {
+        else
+            {
             QMessageBox::warning (this,
                                   tr ("Write error"),
                                   tr ("Cannot write data to %1.\n%2")
                                   .arg (_file_location)
                                   .arg (_file.errorString()));
-        }
+            }
 
         qApp->restoreOverrideCursor();
-    }
+        }
 }
 
-void Editor::selectFonts (void) {
+void Editor::selectFonts (void)
+{
     QFontDialog _dialog;
     _dialog.setCurrentFont (font());
 
-    if (_dialog.exec() == QFontDialog::Accepted) {
+    if (_dialog.exec() == QFontDialog::Accepted)
+        {
         setFont (_dialog.selectedFont());
 
         m_settings->setValue ("font-bold", font().bold());
@@ -332,47 +363,55 @@ void Editor::selectFonts (void) {
         m_settings->setValue ("font-underline", font().underline());
 
         emit settingsChanged();
-    }
+        }
 }
 
-void Editor::setWordWrap (bool ww) {
+void Editor::setWordWrap (bool ww)
+{
     setWordWrapMode (ww ? QTextOption::WrapAtWordBoundaryOrAnywhere
                      : QTextOption::NoWrap);
 }
 
-void Editor::readFile (const QString &file) {
+void Editor::readFile (const QString &file)
+{
     qApp->setOverrideCursor (Qt::WaitCursor);
 
-    if (!file.isEmpty()) {
+    if (!file.isEmpty())
+        {
         QFile _file (file);
 
         // File can be opened
-        if (_file.open (QIODevice::ReadOnly)) {
+        if (_file.open (QIODevice::ReadOnly))
+            {
             setPlainText (QString::fromUtf8 (_file.readAll()));
             configureDocument (file);
 
             _file.close();
-        }
+            }
 
         // File is read protected
-        else {
+        else
+            {
             QMessageBox::warning (this,
                                   tr ("Read error"),
                                   tr ("Cannot open file \"%1\"!\n%2")
                                   .arg (file)
                                   .arg (_file.errorString()));
+            }
         }
-    }
 
     qApp->restoreOverrideCursor();
 }
 
-bool Editor::writeFile (const QString &file) {
-    if (!file.isEmpty()) {
+bool Editor::writeFile (const QString &file)
+{
+    if (!file.isEmpty())
+        {
         QFile _file (file);
 
         // We can write to the file
-        if (_file.open (QIODevice::WriteOnly)) {
+        if (_file.open (QIODevice::WriteOnly))
+            {
             qApp->setOverrideCursor (Qt::WaitCursor);
 
             configureDocument (file);
@@ -381,10 +420,11 @@ bool Editor::writeFile (const QString &file) {
 
             qApp->restoreOverrideCursor();
             return true;
-        }
+            }
 
         // The file is write-protected
-        else {
+        else
+            {
             QMessageBox _message;
             _message.setParent (this);
             _message.setIcon (QMessageBox::Warning);
@@ -403,12 +443,13 @@ bool Editor::writeFile (const QString &file) {
 
             else if (_return == QMessageBox::Discard)
                 return true;
+            }
         }
-    }
 
     return false;
 }
 
-void Editor::setSyntaxLanguage (const QString &language) {
+void Editor::setSyntaxLanguage (const QString &language)
+{
     m_highlighter->setLanguage (language);
 }

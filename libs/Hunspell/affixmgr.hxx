@@ -19,7 +19,8 @@ using namespace std;
 #define dupSFX (1 << 0)
 #define dupPFX (1 << 1)
 
-class AffixMgr {
+class AffixMgr
+{
 
         AffEntry *pStart[SETSIZE];
         AffEntry *sStart[SETSIZE];

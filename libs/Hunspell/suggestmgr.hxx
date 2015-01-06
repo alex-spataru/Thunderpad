@@ -26,7 +26,8 @@
 
 enum { LCS_UP, LCS_LEFT, LCS_UPLEFT };
 
-class SuggestMgr {
+class SuggestMgr
+{
         char *ckey;
         int ckeyl;
         w_char *ckey_utf;

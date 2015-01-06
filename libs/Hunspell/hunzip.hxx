@@ -12,12 +12,14 @@
 #define MSG_MEMORY "error: %s: missing memory\n"
 #define MSG_KEY "error: %s: missing or bad password\n"
 
-struct bit {
+struct bit
+{
     unsigned char c[2];
     int v[2];
 };
 
-class Hunzip {
+class Hunzip
+{
 
     protected:
         char *filename;

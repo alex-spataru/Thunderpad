@@ -12,7 +12,8 @@
 
 enum flag { FLAG_CHAR, FLAG_LONG, FLAG_NUM, FLAG_UNI };
 
-class HashMgr {
+class HashMgr
+{
         int tablesize;
         struct hentry **tableptr;
         int userword;

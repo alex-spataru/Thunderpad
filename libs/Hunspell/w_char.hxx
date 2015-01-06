@@ -2,9 +2,11 @@
 #define __WCHARHXX__
 
 #ifdef WIN32
-typedef struct {
+typedef struct
+{
 #else
-typedef struct __attribute__ ((packed)) {
+typedef struct __attribute__ ((packed))
+{
 #endif
     unsigned char l;
     unsigned char h;
@@ -12,7 +14,8 @@ typedef struct __attribute__ ((packed)) {
 w_char;
 
 // two character arrays
-struct replentry {
+struct replentry
+{
     char *pattern;
     char *pattern2;
 };

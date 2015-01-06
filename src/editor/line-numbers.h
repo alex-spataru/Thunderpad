@@ -33,7 +33,8 @@ class Editor;
  * \c Editor uses to display line numbers.
  */
 
-class LineNumberArea : public QWidget {
+class LineNumberArea : public QWidget
+{
 
     public:
         LineNumberArea (Editor *editor);

@@ -8,57 +8,67 @@
 
 using namespace std;
 
-DictMgr::DictMgr (const char *dictpath, const char *etype) {
+DictMgr::DictMgr (const char *dictpath, const char *etype)
+{
     // load list of etype entries
     numdict = 0;
     pdentry = (dictentry *)malloc (MAXDICTIONARIES * sizeof (struct dictentry));
 
-    if (pdentry) {
-        if (parse_file (dictpath, etype)) {
+    if (pdentry)
+        {
+        if (parse_file (dictpath, etype))
+            {
             numdict = 0;
             // no dictionary.lst found is okay
+            }
         }
-    }
 
     else
         numdict = 0;
 }
 
-DictMgr::~DictMgr() {
+DictMgr::~DictMgr()
+{
     dictentry *pdict = NULL;
 
-    if (pdentry) {
+    if (pdentry)
+        {
         pdict = pdentry;
 
-        for (int i = 0; i < numdict; i++) {
-            if (pdict->lang) {
+        for (int i = 0; i < numdict; i++)
+            {
+            if (pdict->lang)
+                {
                 free (pdict->lang);
                 pdict->lang = NULL;
-            }
+                }
 
-            if (pdict->region) {
+            if (pdict->region)
+                {
                 free (pdict->region);
                 pdict->region = NULL;
-            }
+                }
 
-            if (pdict->filename) {
+            if (pdict->filename)
+                {
                 free (pdict->filename);
                 pdict->filename = NULL;
-            }
+                }
 
             pdict++;
-        }
+            }
 
         free (pdentry);
         pdentry = NULL;
         pdict = NULL;
-    }
+        }
 
     numdict = 0;
 }
 
 // read in list of etype entries and build up structure to describe them
-int DictMgr::parse_file (const char *dictpath, const char *etype) {
+int DictMgr::parse_file (const char *dictpath, const char *etype)
+{
 
     int i;
     char line[MAXDICTENTRYLEN + 1];
@@ -75,19 +85,25 @@ int DictMgr::parse_file (const char *dictpath, const char *etype) {
     // descriptive structures
 
     // read in each line ignoring any that dont start with etype
-    while (fgets (line, MAXDICTENTRYLEN, dictlst)) {
+    while (fgets (line, MAXDICTENTRYLEN, dictlst))
+        {
         mychomp (line);
 
         /* parse in a dictionary entry */
-        if (strncmp (line, etype, 4) == 0) {
-            if (numdict < MAXDICTIONARIES) {
+        if (strncmp (line, etype, 4) == 0)
+            {
+            if (numdict < MAXDICTIONARIES)
+                {
                 char *tp = line;
                 char *piece;
                 i = 0;
 
-                while ((piece = mystrsep (&tp, ' '))) {
-                    if (*piece != '\0') {
-                        switch (i) {
+                while ((piece = mystrsep (&tp, ' ')))
+                    {
+                    if (*piece != '\0')
+                        {
+                        switch (i)
+                            {
                             case 0:
                                 break;
 
@@ -110,33 +126,36 @@ int DictMgr::parse_file (const char *dictpath, const char *etype) {
 
                             default:
                                 break;
-                        }
+                            }
 
                         i++;
-                    }
+                        }
 
                     free (piece);
-                }
+                    }
 
-                if (i == 4) {
+                if (i == 4)
+                    {
                     numdict++;
                     pdict++;
-                }
+                    }
 
-                else {
+                else
+                    {
                     fprintf (stderr, "dictionary list corruption in line \"%s\"\n", line);
                     fflush (stderr);
+                    }
                 }
             }
         }
-    }
 
     fclose (dictlst);
     return 0;
 }
 
 // return text encoding of dictionary
-int DictMgr::get_list (dictentry **ppentry) {
+int DictMgr::get_list (dictentry **ppentry)
+{
     *ppentry = pdentry;
     return numdict;
 }
@@ -145,58 +164,67 @@ int DictMgr::get_list (dictentry **ppentry) {
 // acts like strsep() but only uses a delim char and not
 // a delim string
 
-char *DictMgr::mystrsep (char **stringp, const char delim) {
+char *DictMgr::mystrsep (char **stringp, const char delim)
+{
     char *rv = NULL;
     char *mp = *stringp;
     int n = strlen (mp);
 
-    if (n > 0) {
+    if (n > 0)
+        {
         char *dp = (char *)memchr (mp, (int) ((unsigned char)delim), n);
 
-        if (dp) {
+        if (dp)
+            {
             *stringp = dp + 1;
             int nc = (int) ((unsigned long)dp - (unsigned long)mp);
             rv = (char *)malloc (nc + 1);
 
-            if (rv) {
+            if (rv)
+                {
                 memcpy (rv, mp, nc);
                 * (rv + nc) = '\0';
                 return rv;
+                }
             }
-        }
 
-        else {
+        else
+            {
             rv = (char *)malloc (n + 1);
 
-            if (rv) {
+            if (rv)
+                {
                 memcpy (rv, mp, n);
                 * (rv + n) = '\0';
                 *stringp = mp + n;
                 return rv;
+                }
             }
         }
-    }
 
     return NULL;
 }
 
 // replaces strdup with ansi version
-char *DictMgr::mystrdup (const char *s) {
+char *DictMgr::mystrdup (const char *s)
+{
     char *d = NULL;
 
-    if (s) {
+    if (s)
+        {
         int sl = strlen (s);
         d = (char *)malloc (((sl + 1) * sizeof (char)));
 
         if (d)
             memcpy (d, s, ((sl + 1) * sizeof (char)));
-    }
+        }
 
     return d;
 }
 
 // remove cross-platform text line end characters
-void DictMgr::mychomp (char *s) {
+void DictMgr::mychomp (char *s)
+{
     int k = strlen (s);
 
     if ((k > 0) && ((* (s + k - 1) == '\r') || (* (s + k - 1) == '\n')))

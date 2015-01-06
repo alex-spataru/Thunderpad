@@ -4,31 +4,36 @@
 
 #include "filemgr.hxx"
 
-int FileMgr::fail (const char *err, const char *par) {
+int FileMgr::fail (const char *err, const char *par)
+{
     fprintf (stderr, err, par);
     return -1;
 }
 
-FileMgr::FileMgr (const char *file, const char *key) {
+FileMgr::FileMgr (const char *file, const char *key)
+{
     hin = NULL;
     fin = fopen (file, "r");
 
-    if (!fin) {
+    if (!fin)
+        {
         // check hzipped file
         char *st = (char *)malloc (strlen (file) + strlen (HZIP_EXTENSION));
 
-        if (st) {
+        if (st)
+            {
             strcpy (st, file);
             strcat (st, HZIP_EXTENSION);
             hin = new Hunzip (st, key);
+            }
         }
-    }
 
     if (!fin && !hin)
         fail (MSG_OPEN, file);
 }
 
-FileMgr::~FileMgr() {
+FileMgr::~FileMgr()
+{
     if (fin)
         fclose (fin);
 
@@ -36,7 +41,8 @@ FileMgr::~FileMgr() {
         delete hin;
 }
 
-char *FileMgr::getline() {
+char *FileMgr::getline()
+{
     const char *l;
 
     if (fin)

@@ -30,7 +30,8 @@
 #include "hunspell.h"
 #include "hunspell.hxx"
 
-class SpellChecker {
+class SpellChecker
+{
 
     public:
         SpellChecker (const QString &dictionaryPath);

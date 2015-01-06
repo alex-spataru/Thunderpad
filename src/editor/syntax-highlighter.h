@@ -42,7 +42,8 @@
  * by the XML files found in the resources folder of Thunderpad.
  */
 
-class SyntaxHighlighter : public QSyntaxHighlighter {
+class SyntaxHighlighter : public QSyntaxHighlighter
+{
         Q_OBJECT
 
     public:
@@ -84,7 +85,8 @@ class SyntaxHighlighter : public QSyntaxHighlighter {
         void highlightBlock (const QString &text);
 
     private:
-        struct HighlightingRule {
+        struct HighlightingRule
+        {
             QRegExp pattern;
             QTextCharFormat format;
         };

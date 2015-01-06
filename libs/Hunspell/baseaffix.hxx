@@ -1,7 +1,8 @@
 #ifndef _BASEAFF_HXX_
 #define _BASEAFF_HXX_
 
-class AffEntry {
+class AffEntry
+{
     public:
     protected:
         char *appnd;
@@ -11,12 +12,14 @@ class AffEntry {
         char numconds;
         char opts;
         unsigned short aflag;
-        union {
+        union
+        {
             char conds[MAXCONDLEN];
-            struct {
+            struct
+                {
                 char conds1[MAXCONDLEN_1];
                 char *conds2;
-            } l;
+                } l;
         } c;
         char *morphcode;
         unsigned short *contclass;

@@ -24,14 +24,16 @@
 #define KILOBYTE 1024
 #define MEGABYTE 1048576
 
-StatusBar::StatusBar (Window *parent) : QStatusBar (parent) {
+StatusBar::StatusBar (Window *parent) : QStatusBar (parent)
+{
     m_settings = new QSettings (APP_COMPANY, APP_NAME);
     updateSettings();
 
     initialize (parent);
 }
 
-void StatusBar::initialize (Window *window) {
+void StatusBar::initialize (Window *window)
+{
     Q_ASSERT (window != NULL);
 
     window->setStatusBar (this);
@@ -49,17 +51,20 @@ void StatusBar::initialize (Window *window) {
     connect (window, SIGNAL (updateSettings()), this, SLOT (updateSettings()));
 }
 
-void StatusBar::updateSettings (void) {
+void StatusBar::updateSettings (void)
+{
     m_settings->value ("statusbar-enabled", true).toBool() ? show() : hide();
 }
 
-void StatusBar::updateStatusLabel (void) {
+void StatusBar::updateStatusLabel (void)
+{
     m_size_label->setText ("  " + fileSize() + "  ");
     m_lines_label->setText ("  " + lineCount() + "  ");
     m_words_label->setText ("  " + wordCount() + "  ");
 }
 
-QString StatusBar::fileSize (void) {
+QString StatusBar::fileSize (void)
+{
     QString _units;
     float _length = m_text_edit->toPlainText().length();
 
@@ -68,22 +73,25 @@ QString StatusBar::fileSize (void) {
         _units = " " + tr ("bytes");
 
     // File is one KB or greater, but smaller than one MB
-    else if (_length < MEGABYTE) {
+    else if (_length < MEGABYTE)
+        {
         _length /= KILOBYTE;
         _units = " " + tr ("KB");
-    }
+        }
 
     // File is one MB or greater
-    else {
+    else
+        {
         _length /= MEGABYTE;
         _units = " " + tr ("MB");
-    }
+        }
 
     return tr ("Size:") + " " +
            QString::number (floorf (_length * 100 + 0.5) / 100) + _units;
 }
 
-QString StatusBar::wordCount (void) {
+QString StatusBar::wordCount (void)
+{
     long int _words =
         m_text_edit->toPlainText()
         .split (QRegExp ("(\\s|\\n|\\r)+"), QString::SkipEmptyParts)
@@ -92,7 +100,8 @@ QString StatusBar::wordCount (void) {
     return tr ("Words:") + " " + QString::number (_words);
 }
 
-QString StatusBar::lineCount (void) {
+QString StatusBar::lineCount (void)
+{
     return tr ("Lines:") + " " +
            QString::number (m_text_edit->document()->blockCount());
 }

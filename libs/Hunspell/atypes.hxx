@@ -50,7 +50,8 @@ static inline void HUNSPELL_WARNING (FILE *, const char *, ...) {}
 
 #define TESTAFF(a, b, c) flag_bsearch((unsigned short *)a, (unsigned short)b, c)
 
-struct affentry {
+struct affentry
+{
     char *strip;
     char *appnd;
     unsigned char stripl;
@@ -60,29 +61,34 @@ struct affentry {
     unsigned short aflag;
     unsigned short *contclass;
     short contclasslen;
-    union {
+    union
+    {
         char conds[MAXCONDLEN];
-        struct {
+        struct
+            {
             char conds1[MAXCONDLEN_1];
             char *conds2;
-        } l;
+            } l;
     } c;
     char *morphcode;
 };
 
-struct guessword {
+struct guessword
+{
     char *word;
     bool allow;
     char *orig;
 };
 
-struct mapentry {
+struct mapentry
+{
     char *set;
     w_char *set_utf16;
     int len;
 };
 
-struct flagentry {
+struct flagentry
+{
     FLAG *def;
     int len;
 };

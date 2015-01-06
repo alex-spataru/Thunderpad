@@ -4,13 +4,15 @@
 #define MAXDICTIONARIES 100
 #define MAXDICTENTRYLEN 1024
 
-struct dictentry {
+struct dictentry
+{
     char *filename;
     char *lang;
     char *region;
 };
 
-class DictMgr {
+class DictMgr
+{
 
         int numdict;
         dictentry *pdentry;

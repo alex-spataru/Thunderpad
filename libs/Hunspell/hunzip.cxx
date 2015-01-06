@@ -18,12 +18,14 @@
 #define MAGIC_ENCRYPT "hz1"
 #define MAGICLEN (sizeof(MAGIC) - 1)
 
-int Hunzip::fail (const char *err, const char *par) {
+int Hunzip::fail (const char *err, const char *par)
+{
     fprintf (stderr, err, par);
     return -1;
 }
 
-Hunzip::Hunzip (const char *file, const char *key) {
+Hunzip::Hunzip (const char *file, const char *key)
+{
     bufsiz = 0;
     lastbit = 0;
     inc = 0;
@@ -41,7 +43,8 @@ Hunzip::Hunzip (const char *file, const char *key) {
         bufsiz = getbuf();
 }
 
-int Hunzip::getcode (const char *key) {
+int Hunzip::getcode (const char *key)
+{
     unsigned char c[2];
     int i, j, n, p;
     int allocatedbit = BASEBITREC;
@@ -59,7 +62,8 @@ int Hunzip::getcode (const char *key) {
         return fail (MSG_FORMAT, filename);
 
     // check encryption
-    if (strncmp (MAGIC_ENCRYPT, in, MAGICLEN) == 0) {
+    if (strncmp (MAGIC_ENCRYPT, in, MAGICLEN) == 0)
+        {
         unsigned char cs;
 
         if (!key)
@@ -75,7 +79,7 @@ int Hunzip::getcode (const char *key) {
             return fail (MSG_KEY, filename);
 
         enc = key;
-    }
+        }
 
     else
         key = NULL;
@@ -84,14 +88,15 @@ int Hunzip::getcode (const char *key) {
     if (fread (&c, 1, 2, fin) < 2)
         return fail (MSG_FORMAT, filename);
 
-    if (key) {
+    if (key)
+        {
         c[0] ^= *enc;
 
         if (* (++enc) == '\0')
             enc = key;
 
         c[1] ^= *enc;
-    }
+        }
 
     n = ((int)c[0] << 8) + c[1];
     dec = (struct bit *)malloc (BASEBITREC * sizeof (struct bit));
@@ -103,13 +108,15 @@ int Hunzip::getcode (const char *key) {
     dec[0].v[1] = 0;
 
     // read codes
-    for (i = 0; i < n; i++) {
+    for (i = 0; i < n; i++)
+        {
         unsigned char l;
 
         if (fread (c, 1, 2, fin) < 2)
             return fail (MSG_FORMAT, filename);
 
-        if (key) {
+        if (key)
+            {
             if (* (++enc) == '\0')
                 enc = key;
 
@@ -119,59 +126,65 @@ int Hunzip::getcode (const char *key) {
                 enc = key;
 
             c[1] ^= *enc;
-        }
+            }
 
         if (fread (&l, 1, 1, fin) < 1)
             return fail (MSG_FORMAT, filename);
 
-        if (key) {
+        if (key)
+            {
             if (* (++enc) == '\0')
                 enc = key;
 
             l ^= *enc;
-        }
+            }
 
         if (fread (in, 1, l / 8 + 1, fin) < (size_t)l / 8 + 1)
             return fail (MSG_FORMAT, filename);
 
         if (key)
-            for (j = 0; j <= l / 8; j++) {
+            for (j = 0; j <= l / 8; j++)
+                {
                 if (* (++enc) == '\0')
                     enc = key;
 
                 in[j] ^= *enc;
-            }
+                }
 
         p = 0;
 
-        for (j = 0; j < l; j++) {
+        for (j = 0; j < l; j++)
+            {
             int b = (in[j / 8] & (1 << (7 - (j % 8)))) ? 1 : 0;
             int oldp = p;
             p = dec[p].v[b];
 
-            if (p == 0) {
+            if (p == 0)
+                {
                 lastbit++;
 
-                if (lastbit == allocatedbit) {
+                if (lastbit == allocatedbit)
+                    {
                     allocatedbit += BASEBITREC;
                     dec = (struct bit *)realloc (dec, allocatedbit * sizeof (struct bit));
-                }
+                    }
 
                 dec[lastbit].v[0] = 0;
                 dec[lastbit].v[1] = 0;
                 dec[oldp].v[b] = lastbit;
                 p = lastbit;
+                }
             }
-        }
 
         dec[p].c[0] = c[0];
         dec[p].c[1] = c[1];
-    }
+        }
 
     return 0;
 }
 
-Hunzip::~Hunzip() {
+Hunzip::~Hunzip()
+{
     if (dec)
         free (dec);
 
@@ -182,21 +195,26 @@ Hunzip::~Hunzip() {
         free (filename);
 }
 
-int Hunzip::getbuf() {
+int Hunzip::getbuf()
+{
     int p = 0;
     int o = 0;
 
-    do {
+    do
+        {
         if (inc == 0)
             inbits = fread (in, 1, BUFSIZE, fin) * 8;
 
-        for (; inc < inbits; inc++) {
+        for (; inc < inbits; inc++)
+            {
             int b = (in[inc / 8] & (1 << (7 - (inc % 8)))) ? 1 : 0;
             int oldp = p;
             p = dec[p].v[b];
 
-            if (p == 0) {
-                if (oldp == lastbit) {
+            if (p == 0)
+                {
+                if (oldp == lastbit)
+                    {
                     fclose (fin);
                     fin = NULL;
 
@@ -205,7 +223,7 @@ int Hunzip::getbuf() {
                         out[o++] = dec[lastbit].c[1];
 
                     return o;
-                }
+                    }
 
                 out[o++] = dec[oldp].c[0];
                 out[o++] = dec[oldp].c[1];
@@ -214,53 +232,61 @@ int Hunzip::getbuf() {
                     return o;
 
                 p = dec[p].v[b];
+                }
             }
-        }
 
         inc = 0;
-    }
+        }
     while (inbits == BUFSIZE * 8);
 
     return fail (MSG_FORMAT, filename);
 }
 
-const char *Hunzip::getline() {
+const char *Hunzip::getline()
+{
     char linebuf[BUFSIZE];
     int l = 0, eol = 0, left = 0, right = 0;
 
     if (bufsiz == -1)
         return NULL;
 
-    while (l < bufsiz && !eol) {
+    while (l < bufsiz && !eol)
+        {
         linebuf[l++] = out[outc];
 
-        switch (out[outc]) {
+        switch (out[outc])
+            {
             case '\t':
                 break;
 
-            case 31: { // escape
-                    if (++outc == bufsiz) {
+            case 31:   // escape
+                    {
+                    if (++outc == bufsiz)
+                        {
                         bufsiz = getbuf();
                         outc = 0;
-                    }
+                        }
 
                     linebuf[l - 1] = out[outc];
                     break;
-                }
+                    }
 
             case ' ':
                 break;
 
             default:
-                if (((unsigned char)out[outc]) < 47) {
-                    if (out[outc] > 32) {
+                if (((unsigned char)out[outc]) < 47)
+                    {
+                    if (out[outc] > 32)
+                        {
                         right = out[outc] - 31;
 
-                        if (++outc == bufsiz) {
+                        if (++outc == bufsiz)
+                            {
                             bufsiz = getbuf();
                             outc = 0;
+                            }
                         }
-                    }
 
                     if (out[outc] == 30)
                         left = 9;
@@ -270,14 +296,15 @@ const char *Hunzip::getline() {
 
                     linebuf[l - 1] = '\n';
                     eol = 1;
-                }
-        }
+                    }
+            }
 
-        if (++outc == bufsiz) {
+        if (++outc == bufsiz)
+            {
             outc = 0;
             bufsiz = fin ? getbuf() : -1;
+            }
         }
-    }
 
     if (right)
         strcpy (linebuf + l - 1, line + strlen (line) - right - 1);

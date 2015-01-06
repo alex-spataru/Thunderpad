@@ -115,20 +115,23 @@ int uniqlist (char **list, int n);
 void freelist (char ***list, int n);
 
 // character encoding information
-struct cs_info {
+struct cs_info
+{
     unsigned char ccase;
     unsigned char clower;
     unsigned char cupper;
 };
 
 // Unicode character encoding information
-struct unicode_info {
+struct unicode_info
+{
     unsigned short c;
     unsigned short cupper;
     unsigned short clower;
 };
 
-struct unicode_info2 {
+struct unicode_info2
+{
     char cletter;
     unsigned short cupper;
     unsigned short clower;
@@ -140,14 +143,16 @@ unsigned short unicodetoupper (unsigned short c, int langnum);
 unsigned short unicodetolower (unsigned short c, int langnum);
 int unicodeisalpha (unsigned short c);
 
-struct enc_entry {
+struct enc_entry
+{
     const char *enc_name;
     struct cs_info *cs_table;
 };
 
 // language to encoding default map
 
-struct lang_map {
+struct lang_map
+{
     const char *lang;
     const char *def_enc;
     int num;

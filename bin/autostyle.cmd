@@ -9,7 +9,7 @@ title Autostyle
 cd /d %~dp0
 
 :: Style and format the source code recursively
-astyle --style=java -C -S -xG -Y -XW -w -f -F -p -xd -k3 -y -xj -c -K -L --suffix=none --recursive ../*.cpp ../*.h ../*.hxx ../*.cxx
+astyle --style=vtk -C -S -xG -Y -XW -w -f -F -p -xd -k3 -y -xj -c -K -L --suffix=none --recursive ../*.cpp ../*.h ../*.hxx ../*.cxx
 
 :: Notify the user that we have finished
 echo.

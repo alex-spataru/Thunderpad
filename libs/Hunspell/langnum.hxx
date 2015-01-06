@@ -6,7 +6,8 @@
  see http://l10n.openoffice.org/languages.html
 */
 
-enum {
+enum
+{
     LANG_ar = 96,
     LANG_az = 100, // custom number
     LANG_bg = 41,

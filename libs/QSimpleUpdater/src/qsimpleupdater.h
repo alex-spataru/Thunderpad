@@ -32,7 +32,8 @@
 
 #include "dialogs/download_dialog.h"
 
-class QSimpleUpdater : public QObject {
+class QSimpleUpdater : public QObject
+{
         Q_OBJECT
 
     public:

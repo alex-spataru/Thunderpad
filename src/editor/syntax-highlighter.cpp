@@ -22,28 +22,33 @@
 #include "syntax-highlighter.h"
 
 SyntaxHighlighter::SyntaxHighlighter (QTextDocument *parent)
-    : QSyntaxHighlighter (parent) {
+    : QSyntaxHighlighter (parent)
+{
 
 }
 
-void SyntaxHighlighter::setLanguage (const QString &lang) {
+void SyntaxHighlighter::setLanguage (const QString &lang)
+{
     m_lang = lang;
 
-    if (m_lang != tr ("Plain text") && !m_lang.isEmpty()) {
+    if (m_lang != tr ("Plain text") && !m_lang.isEmpty())
+        {
         // TODO
-    }
+        }
 
     rehighlight();
 }
 
-void SyntaxHighlighter::detectLanguage (const QString &file) {
+void SyntaxHighlighter::detectLanguage (const QString &file)
+{
     Q_ASSERT (!file.isEmpty());
     Q_UNUSED (file);
 
     // TODO
 }
 
-void SyntaxHighlighter::updateColor (Theme *theme) {
+void SyntaxHighlighter::updateColor (Theme *theme)
+{
     Q_ASSERT (theme != NULL);
 
     m_others_format.setForeground (theme->others());
@@ -54,17 +59,20 @@ void SyntaxHighlighter::updateColor (Theme *theme) {
     setLanguage (m_lang);
 }
 
-void SyntaxHighlighter::highlightBlock (const QString &text) {
-    foreach (const HighlightingRule &rule, m_highlighting_rules) {
+void SyntaxHighlighter::highlightBlock (const QString &text)
+{
+    foreach (const HighlightingRule &rule, m_highlighting_rules)
+        {
         QRegExp expression (rule.pattern);
         int index = expression.indexIn (text);
 
-        while (index >= 0) {
+        while (index >= 0)
+            {
             int length = expression.matchedLength();
             setFormat (index, length, rule.format);
             index = expression.indexIn (text, index + length);
+            }
         }
-    }
 
     setCurrentBlockState (0);
 }

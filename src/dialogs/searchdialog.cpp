@@ -21,7 +21,8 @@
 
 #include "searchdialog.h"
 
-SearchDialog::SearchDialog (Window *parent) : QDialog (parent) {
+SearchDialog::SearchDialog (Window *parent) : QDialog (parent)
+{
     QIcon _blank;
     setWindowIcon (_blank);
 
@@ -87,7 +88,8 @@ SearchDialog::SearchDialog (Window *parent) : QDialog (parent) {
     connect (ui_replace_button, SIGNAL (clicked()), this, SLOT (replaceFirstOccurrence()));
 }
 
-void SearchDialog::search (void) {
+void SearchDialog::search (void)
+{
     // Change the cursor to show that we are working
     qApp->setOverrideCursor (Qt::WaitCursor);
 
@@ -101,20 +103,22 @@ void SearchDialog::search (void) {
         _flags |= QTextDocument::FindWholeWords;
 
     // Only search if the find line edit contains text
-    if (!ui_find_lineedit->text().isEmpty()) {
+    if (!ui_find_lineedit->text().isEmpty())
+        {
         int matches = 0;
         m_text_edit->moveCursor (QTextCursor::End);
         QList<QTextEdit::ExtraSelection> extra_selections;
 
         // Format the background and foreground color of each match
-        while (m_text_edit->find (ui_find_lineedit->text(), _flags | QTextDocument::FindBackward)) {
+        while (m_text_edit->find (ui_find_lineedit->text(), _flags | QTextDocument::FindBackward))
+            {
             QTextEdit::ExtraSelection selection;
             selection.format.setBackground (QColor (Qt::yellow));
             selection.format.setForeground (QColor (Qt::black));
             selection.cursor = m_text_edit->textCursor();
             extra_selections.append (selection);
             ++matches;
-        }
+            }
 
         // Enable replace functions
         ui_replace_button->setEnabled (matches > 0);
@@ -123,23 +127,26 @@ void SearchDialog::search (void) {
 
         // Draw the formated text on the text editor widget
         m_text_edit->setExtraSelections (extra_selections);
-    }
+        }
 
     // Disable replace functions when we cannot perform a search
-    else {
+    else
+        {
         ui_replace_button->setEnabled (false);
         ui_replace_lineedit->setEnabled (false);
         ui_replace_all_button->setEnabled (false);
-    }
+        }
 
     // Restore the normal cursor
     qApp->restoreOverrideCursor();
 }
 
-void SearchDialog::replaceAll (void) {
+void SearchDialog::replaceAll (void)
+{
 
     // Document can be edited
-    if (!m_text_edit->isReadOnly()) {
+    if (!m_text_edit->isReadOnly())
+        {
 
         // Append the "match case" and "whole words only" flags according to the user input
         QTextDocument::FindFlags flags;
@@ -151,12 +158,13 @@ void SearchDialog::replaceAll (void) {
             flags |= QTextDocument::FindWholeWords;
 
         // Replace the matched text recursively
-        while (m_text_edit->textCursor().hasSelection()) {
+        while (m_text_edit->textCursor().hasSelection())
+            {
             m_text_edit->moveCursor (QTextCursor::Start);
 
             while (m_text_edit->find (ui_find_lineedit->text(), flags))
                 m_text_edit->textCursor().insertText (ui_replace_lineedit->text());
-        }
+            }
 
         // Show a message box informing the user that the operation is complete
         QMessageBox::information (this, tr ("Search/Replace"),
@@ -168,19 +176,21 @@ void SearchDialog::replaceAll (void) {
         ui_replace_button->setEnabled (false);
         ui_replace_lineedit->setEnabled (false);
         ui_replace_all_button->setEnabled (false);
-    }
+        }
 
     // Show a warning message when the document is locked
     else
         QMessageBox::warning (this, tr ("Search/Replace"), tr ("Document is read-only!"));
 }
 
-void SearchDialog::replaceFirstOccurrence (void) {
+void SearchDialog::replaceFirstOccurrence (void)
+{
     // Replace the first occurrence of the matched text and search again
-    if (m_text_edit->textCursor().hasSelection() && !m_text_edit->isReadOnly()) {
+    if (m_text_edit->textCursor().hasSelection() && !m_text_edit->isReadOnly())
+        {
         m_text_edit->textCursor().insertText (ui_replace_lineedit->text());
         search();
-    }
+        }
 
     // Show a warning message when the document is locked
     else

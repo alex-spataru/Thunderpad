@@ -38,7 +38,8 @@
  * each color used to theme the \c Editor widget.
  */
 
-class Theme : public QObject {
+class Theme : public QObject
+{
         Q_OBJECT
 
     public:

@@ -34,7 +34,8 @@
 #define MAXPHONETLEN 256
 #define MAXPHONETUTF8LEN (MAXPHONETLEN * 4)
 
-struct phonetable {
+struct phonetable
+{
     char utf8;
     cs_info *lang;
     int num;

@@ -59,7 +59,8 @@
  * files, simplyfing its implementation by a great deal.
  */
 
-class Editor : public QPlainTextEdit {
+class Editor : public QPlainTextEdit
+{
 
         Q_OBJECT
 

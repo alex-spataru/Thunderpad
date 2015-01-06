@@ -56,73 +56,88 @@ static int utf_tbl_count =
     0; // utf_tbl can be used by multiple Hunspell instances
 
 /* only UTF-16 (BMP) implementation */
-char *u16_u8 (char *dest, int size, const w_char *src, int srclen) {
+char *u16_u8 (char *dest, int size, const w_char *src, int srclen)
+{
     signed char *u8 = (signed char *)dest;
     signed char *u8_max = (signed char *) (u8 + size);
     const w_char *u2 = src;
     const w_char *u2_max = src + srclen;
 
-    while ((u2 < u2_max) && (u8 < u8_max)) {
-        if (u2->h) { // > 0xFF
+    while ((u2 < u2_max) && (u8 < u8_max))
+        {
+        if (u2->h)   // > 0xFF
+            {
             // XXX 4-byte haven't implemented yet.
-            if (u2->h >= 0x08) { // >= 0x800 (3-byte UTF-8 character)
+            if (u2->h >= 0x08)   // >= 0x800 (3-byte UTF-8 character)
+                {
                 *u8 = 0xe0 + (u2->h >> 4);
                 u8++;
 
-                if (u8 < u8_max) {
+                if (u8 < u8_max)
+                    {
                     *u8 = 0x80 + ((u2->h & 0xf) << 2) + (u2->l >> 6);
                     u8++;
 
-                    if (u8 < u8_max) {
+                    if (u8 < u8_max)
+                        {
                         *u8 = 0x80 + (u2->l & 0x3f);
                         u8++;
+                        }
+                    }
+                }
+
+            else     // < 0x800 (2-byte UTF-8 character)
+                {
+                *u8 = 0xc0 + (u2->h << 2) + (u2->l >> 6);
+                u8++;
+
+                if (u8 < u8_max)
+                    {
+                    *u8 = 0x80 + (u2->l & 0x3f);
+                    u8++;
                     }
                 }
             }
 
-            else {   // < 0x800 (2-byte UTF-8 character)
-                *u8 = 0xc0 + (u2->h << 2) + (u2->l >> 6);
-                u8++;
-
-                if (u8 < u8_max) {
-                    *u8 = 0x80 + (u2->l & 0x3f);
-                    u8++;
-                }
-            }
-        }
-
-        else {                // <= 0xFF
-            if (u2->l & 0x80) { // >0x80 (2-byte UTF-8 character)
+        else                  // <= 0xFF
+            {
+            if (u2->l & 0x80)   // >0x80 (2-byte UTF-8 character)
+                {
                 *u8 = 0xc0 + (u2->l >> 6);
                 u8++;
 
-                if (u8 < u8_max) {
+                if (u8 < u8_max)
+                    {
                     *u8 = 0x80 + (u2->l & 0x3f);
                     u8++;
+                    }
+                }
+
+            else     // < 0x80 (1-byte UTF-8 character)
+                {
+                *u8 = u2->l;
+                u8++;
                 }
             }
 
-            else {   // < 0x80 (1-byte UTF-8 character)
-                *u8 = u2->l;
-                u8++;
-            }
-        }
-
         u2++;
-    }
+        }
 
     *u8 = '\0';
     return dest;
 }
 
 /* only UTF-16 (BMP) implementation */
-int u8_u16 (w_char *dest, int size, const char *src) {
+int u8_u16 (w_char *dest, int size, const char *src)
+{
     const signed char *u8 = (const signed char *)src;
     w_char *u2 = dest;
     w_char *u2_max = u2 + size;
 
-    while ((u2 < u2_max) && *u8) {
-        switch ((*u8) & 0xf0) {
+    while ((u2 < u2_max) && *u8)
+        {
+        switch ((*u8) & 0xf0)
+            {
             case 0x00:
             case 0x10:
             case 0x20:
@@ -130,108 +145,123 @@ int u8_u16 (w_char *dest, int size, const char *src) {
             case 0x40:
             case 0x50:
             case 0x60:
-            case 0x70: {
+            case 0x70:
+                    {
                     u2->h = 0;
                     u2->l = *u8;
                     break;
-                }
+                    }
 
             case 0x80:
             case 0x90:
             case 0xa0:
-            case 0xb0: {
+            case 0xb0:
+                    {
                     HUNSPELL_WARNING (stderr, "UTF-8 encoding error. Unexpected continuation "
                                       "bytes in %ld. character position\n%s\n",
                                       static_cast<long> (u8 - (signed char *)src), src);
                     u2->h = 0xff;
                     u2->l = 0xfd;
                     break;
-                }
+                    }
 
             case 0xc0:
-            case 0xd0: { // 2-byte UTF-8 codes
-                    if ((* (u8 + 1) & 0xc0) == 0x80) {
+            case 0xd0:   // 2-byte UTF-8 codes
+                    {
+                    if ((* (u8 + 1) & 0xc0) == 0x80)
+                        {
                         u2->h = (*u8 & 0x1f) >> 2;
                         u2->l = (*u8 << 6) + (* (u8 + 1) & 0x3f);
                         u8++;
-                    }
+                        }
 
-                    else {
+                    else
+                        {
                         HUNSPELL_WARNING (stderr, "UTF-8 encoding error. Missing continuation "
                                           "byte in %ld. character position:\n%s\n",
                                           static_cast<long> (u8 - (signed char *)src), src);
                         u2->h = 0xff;
                         u2->l = 0xfd;
-                    }
+                        }
 
                     break;
-                }
+                    }
 
-            case 0xe0: { // 3-byte UTF-8 codes
-                    if ((* (u8 + 1) & 0xc0) == 0x80) {
+            case 0xe0:   // 3-byte UTF-8 codes
+                    {
+                    if ((* (u8 + 1) & 0xc0) == 0x80)
+                        {
                         u2->h = ((*u8 & 0x0f) << 4) + ((* (u8 + 1) & 0x3f) >> 2);
                         u8++;
 
-                        if ((* (u8 + 1) & 0xc0) == 0x80) {
+                        if ((* (u8 + 1) & 0xc0) == 0x80)
+                            {
                             u2->l = (*u8 << 6) + (* (u8 + 1) & 0x3f);
                             u8++;
-                        }
+                            }
 
-                        else {
+                        else
+                            {
                             HUNSPELL_WARNING (stderr, "UTF-8 encoding error. Missing continuation "
                                               "byte in %ld. character position:\n%s\n",
                                               static_cast<long> (u8 - (signed char *)src), src);
                             u2->h = 0xff;
                             u2->l = 0xfd;
+                            }
                         }
-                    }
 
-                    else {
+                    else
+                        {
                         HUNSPELL_WARNING (stderr, "UTF-8 encoding error. Missing continuation "
                                           "byte in %ld. character position:\n%s\n",
                                           static_cast<long> (u8 - (signed char *)src), src);
                         u2->h = 0xff;
                         u2->l = 0xfd;
-                    }
+                        }
 
                     break;
-                }
+                    }
 
-            case 0xf0: { // 4 or more byte UTF-8 codes
+            case 0xf0:   // 4 or more byte UTF-8 codes
+                    {
                     HUNSPELL_WARNING (
                         stderr, "This UTF-8 encoding can't convert to UTF-16:\n%s\n", src);
                     u2->h = 0xff;
                     u2->l = 0xfd;
                     return -1;
-                }
-        }
+                    }
+            }
 
         u8++;
         u2++;
-    }
+        }
 
     return u2 - dest;
 }
 
-void flag_qsort (unsigned short flags[], int begin, int end) {
+void flag_qsort (unsigned short flags[], int begin, int end)
+{
     unsigned short reg;
 
-    if (end > begin) {
+    if (end > begin)
+        {
         unsigned short pivot = flags[begin];
         int l = begin + 1;
         int r = end;
 
-        while (l < r) {
+        while (l < r)
+            {
             if (flags[l] <= pivot)
                 l++;
 
-            else {
+            else
+                {
                 r--;
                 reg = flags[l];
                 flags[l] = flags[r];
                 flags[r] = reg;
+                }
             }
-        }
 
         l--;
         reg = flags[begin];
@@ -240,15 +270,17 @@ void flag_qsort (unsigned short flags[], int begin, int end) {
 
         flag_qsort (flags, begin, l);
         flag_qsort (flags, r, end);
-    }
+        }
 }
 
-int flag_bsearch (unsigned short flags[], unsigned short flag, int length) {
+int flag_bsearch (unsigned short flags[], unsigned short flag, int length)
+{
     int mid;
     int left = 0;
     int right = length - 1;
 
-    while (left <= right) {
+    while (left <= right)
+        {
         mid = (left + right) / 2;
 
         if (flags[mid] == flag)
@@ -259,7 +291,7 @@ int flag_bsearch (unsigned short flags[], unsigned short flag, int length) {
 
         else
             left = mid + 1;
-    }
+        }
 
     return 0;
 }
@@ -269,16 +301,19 @@ int flag_bsearch (unsigned short flags[], unsigned short flag, int length) {
 // a delim string
 // default delimiter: white space characters
 
-char *mystrsep (char **stringp, const char delim) {
+char *mystrsep (char **stringp, const char delim)
+{
     char *mp = *stringp;
 
-    if (*mp != '\0') {
+    if (*mp != '\0')
+        {
         char *dp;
 
         if (delim)
             dp = strchr (mp, delim);
 
-        else {
+        else
+            {
             // don't use isspace() here, the string can be in some random charset
             // that's way different than the locale's
             for (dp = mp; (*dp && *dp != ' ' && *dp != '\t'); dp++)
@@ -286,45 +321,51 @@ char *mystrsep (char **stringp, const char delim) {
 
             if (!*dp)
                 dp = NULL;
-        }
+            }
 
-        if (dp) {
+        if (dp)
+            {
             *stringp = dp + 1;
             int nc = (int) ((unsigned long)dp - (unsigned long)mp);
             * (mp + nc) = '\0';
             return mp;
-        }
+            }
 
-        else {
+        else
+            {
             *stringp = mp + strlen (mp);
             return mp;
+            }
         }
-    }
 
     return NULL;
 }
 
 // replaces strdup with ansi version
-char *mystrdup (const char *s) {
+char *mystrdup (const char *s)
+{
     char *d = NULL;
 
-    if (s) {
+    if (s)
+        {
         int sl = strlen (s);
         d = (char *)malloc (((sl + 1) * sizeof (char)));
 
-        if (d) {
+        if (d)
+            {
             memcpy (d, s, ((sl + 1) * sizeof (char)));
             return d;
-        }
+            }
 
         HUNSPELL_WARNING (stderr, "Can't allocate memory.\n");
-    }
+        }
 
     return d;
 }
 
 // remove cross-platform text line end characters
-void mychomp (char *s) {
+void mychomp (char *s)
+{
     int k = strlen (s);
 
     if ((k > 0) && ((* (s + k - 1) == '\r') || (* (s + k - 1) == '\n')))
@@ -335,14 +376,17 @@ void mychomp (char *s) {
 }
 
 //  does an ansi strdup of the reverse of a string
-char *myrevstrdup (const char *s) {
+char *myrevstrdup (const char *s)
+{
     char *d = NULL;
 
-    if (s) {
+    if (s)
+        {
         int sl = strlen (s);
         d = (char *)malloc ((sl + 1) * sizeof (char));
 
-        if (d) {
+        if (d)
+            {
             const char *p = s + sl - 1;
             char *q = d;
 
@@ -350,56 +394,62 @@ char *myrevstrdup (const char *s) {
                 *q++ = *p--;
 
             *q = '\0';
+            }
         }
-    }
 
     return d;
 }
 
 // break text to lines
 // return number of lines
-int line_tok (const char *text, char ***lines, char breakchar) {
+int line_tok (const char *text, char ***lines, char breakchar)
+{
     int linenum = 0;
     char *dup = mystrdup (text);
     char *p = strchr (dup, breakchar);
 
-    while (p) {
+    while (p)
+        {
         linenum++;
         *p = '\0';
         p++;
         p = strchr (p, breakchar);
-    }
+        }
 
     linenum++;
     //    fprintf(stderr, "LINEN:%d %p %p\n", linenum, lines, *lines);
     *lines = (char **)malloc (linenum * sizeof (char *));
 
     //    fprintf(stderr, "hello\n");
-    if (! (*lines)) {
+    if (! (*lines))
+        {
         free (dup);
         return 0;
-    }
+        }
 
     p = dup;
     int l = 0;
 
-    for (int i = 0; i < linenum; i++) {
-        if (*p != '\0') {
+    for (int i = 0; i < linenum; i++)
+        {
+        if (*p != '\0')
+            {
             (*lines)[l] = mystrdup (p);
 
-            if (! (*lines)[l]) {
+            if (! (*lines)[l])
+                {
                 for (i = 0; i < l; i++)
                     free ((*lines)[i]);
 
                 free (dup);
                 return 0;
-            }
+                }
 
             l++;
-        }
+            }
 
         p += strlen (p) + 1;
-    }
+        }
 
     free (dup);
 
@@ -410,32 +460,37 @@ int line_tok (const char *text, char ***lines, char breakchar) {
 }
 
 // uniq line in place
-char *line_uniq (char *text, char breakchar) {
+char *line_uniq (char *text, char breakchar)
+{
     char **lines;
     int linenum = line_tok (text, &lines, breakchar);
     int i;
     strcpy (text, lines[0]);
 
-    for (i = 1; i < linenum; i++) {
+    for (i = 1; i < linenum; i++)
+        {
         int dup = 0;
 
-        for (int j = 0; j < i; j++) {
+        for (int j = 0; j < i; j++)
+            {
             if (strcmp (lines[i], lines[j]) == 0)
                 dup = 1;
-        }
+            }
 
-        if (!dup) {
+        if (!dup)
+            {
             if ((i > 1) || (* (lines[0]) != '\0'))
                 sprintf (text + strlen (text), "%c", breakchar);
 
             strcat (text, lines[i]);
+            }
         }
-    }
 
-    for (i = 0; i < linenum; i++) {
+    for (i = 0; i < linenum; i++)
+        {
         if (lines[i])
             free (lines[i]);
-    }
+        }
 
     if (lines)
         free (lines);
@@ -444,7 +499,8 @@ char *line_uniq (char *text, char breakchar) {
 }
 
 // uniq and boundary for compound analysis: "1\n\2\n\1" -> " ( \1 | \2 ) "
-char *line_uniq_app (char **text, char breakchar) {
+char *line_uniq_app (char **text, char breakchar)
+{
     if (!strchr (*text, breakchar))
         return *text;
 
@@ -453,33 +509,39 @@ char *line_uniq_app (char **text, char breakchar) {
     int linenum = line_tok (*text, &lines, breakchar);
     int dup = 0;
 
-    for (i = 0; i < linenum; i++) {
-        for (int j = 0; j < (i - 1); j++) {
-            if (strcmp (lines[i], lines[j]) == 0) {
+    for (i = 0; i < linenum; i++)
+        {
+        for (int j = 0; j < (i - 1); j++)
+            {
+            if (strcmp (lines[i], lines[j]) == 0)
+                {
                 * (lines[i]) = '\0';
                 dup++;
                 break;
+                }
             }
         }
-    }
 
-    if ((linenum - dup) == 1) {
+    if ((linenum - dup) == 1)
+        {
         strcpy (*text, lines[0]);
         freelist (&lines, linenum);
         return *text;
-    }
+        }
 
     char *newtext = (char *)malloc (strlen (*text) + 2 * linenum + 3 + 1);
 
-    if (newtext) {
+    if (newtext)
+        {
         free (*text);
         *text = newtext;
-    }
+        }
 
-    else {
+    else
+        {
         freelist (&lines, linenum);
         return *text;
-    }
+        }
 
     strcpy (*text, " ( ");
 
@@ -493,30 +555,35 @@ char *line_uniq_app (char **text, char breakchar) {
 }
 
 // append s to ends of every lines in text
-void strlinecat (char *dest, const char *s) {
+void strlinecat (char *dest, const char *s)
+{
     char *dup = mystrdup (dest);
     char *source = dup;
     int len = strlen (s);
 
-    if (dup) {
-        while (*source) {
-            if (*source == '\n') {
+    if (dup)
+        {
+        while (*source)
+            {
+            if (*source == '\n')
+                {
                 strncpy (dest, s, len);
                 dest += len;
-            }
+                }
 
             *dest = *source;
             source++;
             dest++;
-        }
+            }
 
         strcpy (dest, s);
         free (dup);
-    }
+        }
 }
 
 // change \n to char c
-char *tr (char *text, char oldc, char newc) {
+char *tr (char *text, char oldc, char newc)
+{
     char *p;
 
     for (p = text; *p; p++)
@@ -531,7 +598,8 @@ char *tr (char *text, char oldc, char newc) {
 // return 0, if inputs equal
 // return 1, if inputs may equal with a secondary suffix
 // otherwise return -1
-int morphcmp (const char *s, const char *t) {
+int morphcmp (const char *s, const char *t)
+{
     int se = 0;
     int te = 0;
     const char *sl;
@@ -549,10 +617,11 @@ int morphcmp (const char *s, const char *t) {
     if (!s || (sl && sl < s))
         s = strstr (olds, MORPH_INFL_SFX);
 
-    if (!s || (sl && sl < s)) {
+    if (!s || (sl && sl < s))
+        {
         s = strstr (olds, MORPH_TERM_SFX);
         olds = NULL;
-    }
+        }
 
     oldt = t;
     tl = strchr (t, '\n');
@@ -561,45 +630,51 @@ int morphcmp (const char *s, const char *t) {
     if (!t || (tl && tl < t))
         t = strstr (oldt, MORPH_INFL_SFX);
 
-    if (!t || (tl && tl < t)) {
+    if (!t || (tl && tl < t))
+        {
         t = strstr (oldt, MORPH_TERM_SFX);
         oldt = NULL;
-    }
+        }
 
-    while (s && t && (!sl || sl > s) && (!tl || tl > t)) {
+    while (s && t && (!sl || sl > s) && (!tl || tl > t))
+        {
         s += MORPH_TAG_LEN;
         t += MORPH_TAG_LEN;
         se = 0;
         te = 0;
 
-        while ((*s == *t) && !se && !te) {
+        while ((*s == *t) && !se && !te)
+            {
             s++;
             t++;
 
-            switch (*s) {
+            switch (*s)
+                {
                 case ' ':
                 case '\n':
                 case '\t':
                 case '\0':
                     se = 1;
-            }
+                }
 
-            switch (*t) {
+            switch (*t)
+                {
                 case ' ':
                 case '\n':
                 case '\t':
                 case '\0':
                     te = 1;
+                }
             }
-        }
 
-        if (!se || !te) {
+        if (!se || !te)
+            {
             // not terminal suffix difference
             if (olds)
                 return -1;
 
             return 1;
-        }
+            }
 
         olds = s;
         s = strstr (s, MORPH_DERI_SFX);
@@ -607,10 +682,11 @@ int morphcmp (const char *s, const char *t) {
         if (!s || (sl && sl < s))
             s = strstr (olds, MORPH_INFL_SFX);
 
-        if (!s || (sl && sl < s)) {
+        if (!s || (sl && sl < s))
+            {
             s = strstr (olds, MORPH_TERM_SFX);
             olds = NULL;
-        }
+            }
 
         oldt = t;
         t = strstr (t, MORPH_DERI_SFX);
@@ -618,11 +694,12 @@ int morphcmp (const char *s, const char *t) {
         if (!t || (tl && tl < t))
             t = strstr (oldt, MORPH_INFL_SFX);
 
-        if (!t || (tl && tl < t)) {
+        if (!t || (tl && tl < t))
+            {
             t = strstr (oldt, MORPH_TERM_SFX);
             oldt = NULL;
+            }
         }
-    }
 
     if (!s && !t && se && te)
         return 0;
@@ -630,7 +707,8 @@ int morphcmp (const char *s, const char *t) {
     return 1;
 }
 
-int get_sfxcount (const char *morph) {
+int get_sfxcount (const char *morph)
+{
     if (!morph || !*morph)
         return 0;
 
@@ -644,7 +722,8 @@ int get_sfxcount (const char *morph) {
     if (!morph)
         morph = strstr (old, MORPH_TERM_SFX);
 
-    while (morph) {
+    while (morph)
+        {
         n++;
         old = morph;
         morph = strstr (morph + 1, MORPH_DERI_SFX);
@@ -654,29 +733,33 @@ int get_sfxcount (const char *morph) {
 
         if (!morph)
             morph = strstr (old + 1, MORPH_TERM_SFX);
-    }
+        }
 
     return n;
 }
 
-int fieldlen (const char *r) {
+int fieldlen (const char *r)
+{
     int n = 0;
 
-    while (r && *r != '\t' && *r != '\0' && *r != '\n' && *r != ' ') {
+    while (r && *r != '\t' && *r != '\0' && *r != '\n' && *r != ' ')
+        {
         r++;
         n++;
-    }
+        }
 
     return n;
 }
 
-char *copy_field (char *dest, const char *morph, const char *var) {
+char *copy_field (char *dest, const char *morph, const char *var)
+{
     if (!morph)
         return NULL;
 
     const char *beg = strstr (morph, var);
 
-    if (beg) {
+    if (beg)
+        {
         char *d = dest;
 
         for (beg += MORPH_TAG_LEN;
@@ -686,19 +769,22 @@ char *copy_field (char *dest, const char *morph, const char *var) {
 
         *d = '\0';
         return dest;
-    }
+        }
 
     return NULL;
 }
 
-char *mystrrep (char *word, const char *pat, const char *rep) {
+char *mystrrep (char *word, const char *pat, const char *rep)
+{
     char *pos = strstr (word, pat);
 
-    if (pos) {
+    if (pos)
+        {
         int replen = strlen (rep);
         int patlen = strlen (pat);
 
-        if (replen < patlen) {
+        if (replen < patlen)
+            {
             char *end = word + strlen (word);
             char *next = pos + replen;
             char *prev = pos + strlen (pat);
@@ -707,38 +793,42 @@ char *mystrrep (char *word, const char *pat, const char *rep) {
                 ;
 
             *next = '\0';
-        }
+            }
 
-        else if (replen > patlen) {
+        else if (replen > patlen)
+            {
             char *end = pos + patlen;
             char *next = word + strlen (word) + replen - patlen;
             char *prev = next - replen + patlen;
 
             for (; prev >= end; *next = *prev, prev--, next--)
                 ;
-        }
+            }
 
         strncpy (pos, rep, replen);
-    }
+        }
 
     return word;
 }
 
 // reverse word
-int reverseword (char *word) {
+int reverseword (char *word)
+{
     char r;
 
-    for (char *dest = word + strlen (word) - 1; word < dest; word++, dest--) {
+    for (char *dest = word + strlen (word) - 1; word < dest; word++, dest--)
+        {
         r = *word;
         *word = *dest;
         *dest = r;
-    }
+        }
 
     return 0;
 }
 
 // reverse word (error: 1)
-int reverseword_utf (char *word) {
+int reverseword_utf (char *word)
+{
     w_char w[MAXWORDLEN];
     w_char *p;
     w_char r;
@@ -749,94 +839,113 @@ int reverseword_utf (char *word) {
 
     p = w;
 
-    for (w_char *dest = w + l - 1; p < dest; p++, dest--) {
+    for (w_char *dest = w + l - 1; p < dest; p++, dest--)
+        {
         r = *p;
         *p = *dest;
         *dest = r;
-    }
+        }
 
     u16_u8 (word, MAXWORDUTF8LEN, w, l);
     return 0;
 }
 
-int uniqlist (char **list, int n) {
+int uniqlist (char **list, int n)
+{
     int i;
 
     if (n < 2)
         return n;
 
-    for (i = 0; i < n; i++) {
-        for (int j = 0; j < i; j++) {
-            if (list[j] && list[i] && (strcmp (list[j], list[i]) == 0)) {
+    for (i = 0; i < n; i++)
+        {
+        for (int j = 0; j < i; j++)
+            {
+            if (list[j] && list[i] && (strcmp (list[j], list[i]) == 0))
+                {
                 free (list[i]);
                 list[i] = NULL;
                 break;
+                }
             }
         }
-    }
 
     int m = 1;
 
     for (i = 1; i < n; i++)
-        if (list[i]) {
+        if (list[i])
+            {
             list[m] = list[i];
             m++;
-        }
+            }
 
     return m;
 }
 
-void freelist (char ***list, int n) {
-    if (list && *list && n > 0) {
+void freelist (char ***list, int n)
+{
+    if (list && *list && n > 0)
+        {
         for (int i = 0; i < n; i++)
             if ((*list)[i])
                 free ((*list)[i]);
 
         free (*list);
         *list = NULL;
-    }
+        }
 }
 
 // convert null terminated string to all caps
-void mkallcap (char *p, const struct cs_info *csconv) {
-    while (*p != '\0') {
+void mkallcap (char *p, const struct cs_info *csconv)
+{
+    while (*p != '\0')
+        {
         *p = csconv[ ((unsigned char) * p)].cupper;
         p++;
-    }
+        }
 }
 
 // convert null terminated string to all little
-void mkallsmall (char *p, const struct cs_info *csconv) {
-    while (*p != '\0') {
+void mkallsmall (char *p, const struct cs_info *csconv)
+{
+    while (*p != '\0')
+        {
         *p = csconv[ ((unsigned char) * p)].clower;
         p++;
-    }
+        }
 }
 
-void mkallsmall_utf (w_char *u, int nc, int langnum) {
-    for (int i = 0; i < nc; i++) {
+void mkallsmall_utf (w_char *u, int nc, int langnum)
+{
+    for (int i = 0; i < nc; i++)
+        {
         unsigned short idx = (u[i].h << 8) + u[i].l;
 
-        if (idx != unicodetolower (idx, langnum)) {
+        if (idx != unicodetolower (idx, langnum))
+            {
             u[i].h = (unsigned char) (unicodetolower (idx, langnum) >> 8);
             u[i].l = (unsigned char) (unicodetolower (idx, langnum) & 0x00FF);
+            }
         }
-    }
 }
 
-void mkallcap_utf (w_char *u, int nc, int langnum) {
-    for (int i = 0; i < nc; i++) {
+void mkallcap_utf (w_char *u, int nc, int langnum)
+{
+    for (int i = 0; i < nc; i++)
+        {
         unsigned short idx = (u[i].h << 8) + u[i].l;
 
-        if (idx != unicodetoupper (idx, langnum)) {
+        if (idx != unicodetoupper (idx, langnum))
+            {
             u[i].h = (unsigned char) (unicodetoupper (idx, langnum) >> 8);
             u[i].l = (unsigned char) (unicodetoupper (idx, langnum) & 0x00FF);
+            }
         }
-    }
 }
 
 // convert null terminated string to have intial capital
-void mkinitcap (char *p, const struct cs_info *csconv) {
+void mkinitcap (char *p, const struct cs_info *csconv)
+{
     if (*p != '\0')
         *p = csconv[ ((unsigned char) * p)].cupper;
 }
@@ -848,28 +957,32 @@ void enmkallcap (char *d, const char *p, const char *encoding)
 {
     struct cs_info *csconv = get_current_cs (encoding);
 
-    while (*p != '\0') {
+    while (*p != '\0')
+        {
         *d++ = csconv[ ((unsigned char) * p)].cupper;
         p++;
-    }
+        }
 
     *d = '\0';
 }
 
 // convert null terminated string to all little using encoding
-void enmkallsmall (char *d, const char *p, const char *encoding) {
+void enmkallsmall (char *d, const char *p, const char *encoding)
+{
     struct cs_info *csconv = get_current_cs (encoding);
 
-    while (*p != '\0') {
+    while (*p != '\0')
+        {
         *d++ = csconv[ ((unsigned char) * p)].clower;
         p++;
-    }
+        }
 
     *d = '\0';
 }
 
 // convert null terminated string to have intial capital using encoding
-void enmkinitcap (char *d, const char *p, const char *encoding) {
+void enmkinitcap (char *d, const char *p, const char *encoding)
+{
     struct cs_info *csconv = get_current_cs (encoding);
     memcpy (d, p, (strlen (p) + 1));
 
@@ -878,12 +991,14 @@ void enmkinitcap (char *d, const char *p, const char *encoding) {
 }
 
 // conversion function for protected memory
-void store_pointer (char *dest, char *source) {
+void store_pointer (char *dest, char *source)
+{
     memcpy (dest, &source, sizeof (char *));
 }
 
 // conversion function for protected memory
-char *get_stored_pointer (char *s) {
+char *get_stored_pointer (char *s)
+{
     char *p;
     memcpy (&p, s, sizeof (char *));
     return p;
@@ -5298,16 +5413,19 @@ static struct enc_entry encds[] = {{"ISO8859-1", iso1_tbl},
     {"ISCII-DEVANAGARI", iscii_devanagari_tbl}
 };
 
-struct cs_info *get_current_cs (const char *es) {
+struct cs_info *get_current_cs (const char *es)
+{
     struct cs_info *ccs = encds[0].cs_table;
     int n = sizeof (encds) / sizeof (encds[0]);
 
-    for (int i = 0; i < n; i++) {
-        if (strcmp (es, encds[i].enc_name) == 0) {
+    for (int i = 0; i < n; i++)
+        {
+        if (strcmp (es, encds[i].enc_name) == 0)
+            {
             ccs = encds[i].cs_table;
             break;
+            }
         }
-    }
 
     return ccs;
 }
@@ -5315,7 +5433,8 @@ struct cs_info *get_current_cs (const char *es) {
 // XXX This function was rewritten for mozilla. Instead of storing the
 // conversion tables static in this file, create them when needed
 // with help the mozilla backend.
-struct cs_info *get_current_cs (const char *es) {
+struct cs_info *get_current_cs (const char *es)
+{
     struct cs_info *ccs;
 
     nsCOMPtr<nsIUnicodeEncoder> encoder;
@@ -5373,7 +5492,8 @@ struct cs_info *get_current_cs (const char *es) {
     encoder->Convert (uni, &uniLength, lower, &charLength);
 
     // Store
-    for (i = 0x00; i <= 0xff; ++i) {
+    for (i = 0x00; i <= 0xff; ++i)
+        {
         ccs[i].cupper = upper[i];
         ccs[i].clower = lower[i];
 
@@ -5382,7 +5502,7 @@ struct cs_info *get_current_cs (const char *es) {
 
         else
             ccs[i].ccase = false;
-    }
+        }
 
     free (source);
     free (uni);
@@ -5394,17 +5514,20 @@ struct cs_info *get_current_cs (const char *es) {
 #endif
 
 // primitive isalpha() replacement for tokenization
-char *get_casechars (const char *enc) {
+char *get_casechars (const char *enc)
+{
     struct cs_info *csconv = get_current_cs (enc);
     char expw[MAXLNLEN];
     char *p = expw;
 
-    for (int i = 0; i <= 255; i++) {
-        if ((csconv[i].cupper != csconv[i].clower)) {
+    for (int i = 0; i <= 255; i++)
+        {
+        if ((csconv[i].cupper != csconv[i].clower))
+            {
             *p = (char)i;
             p++;
+            }
         }
-    }
 
     *p = '\0';
 #ifdef MOZILLA_CLIENT
@@ -5440,31 +5563,36 @@ struct lang_map lang2enc[] = {{"ar", "UTF-8", LANG_ar},
     {"uk", "KOI8-U", LANG_uk}
 };
 
-const char *get_default_enc (const char *lang) {
+const char *get_default_enc (const char *lang)
+{
     int n = sizeof (lang2enc) / sizeof (lang2enc[0]);
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++)
+        {
         if (strcmp (lang, lang2enc[i].lang) == 0)
             return lang2enc[i].def_enc;
-    }
+        }
 
     return NULL;
 }
 
-int get_lang_num (const char *lang) {
+int get_lang_num (const char *lang)
+{
     int n = sizeof (lang2enc) / sizeof (lang2enc[0]);
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++)
+        {
         if (strncmp (lang, lang2enc[i].lang, 2) == 0)
             return lang2enc[i].num;
-    }
+        }
 
     return LANG_xx;
 }
 
 #ifndef OPENOFFICEORG
 #ifndef MOZILLA_CLIENT
-int initialize_utf_tbl() {
+int initialize_utf_tbl()
+{
     utf_tbl_count++;
 
     if (utf_tbl)
@@ -5472,21 +5600,24 @@ int initialize_utf_tbl() {
 
     utf_tbl = (unicode_info2 *)malloc (CONTSIZE * sizeof (unicode_info2));
 
-    if (utf_tbl) {
+    if (utf_tbl)
+        {
         int j;
 
-        for (j = 0; j < CONTSIZE; j++) {
+        for (j = 0; j < CONTSIZE; j++)
+            {
             utf_tbl[j].cletter = 0;
             utf_tbl[j].clower = (unsigned short)j;
             utf_tbl[j].cupper = (unsigned short)j;
-        }
+            }
 
-        for (j = 0; j < UTF_LST_LEN; j++) {
+        for (j = 0; j < UTF_LST_LEN; j++)
+            {
             utf_tbl[utf_lst[j].c].cletter = 1;
             utf_tbl[utf_lst[j].c].clower = utf_lst[j].clower;
             utf_tbl[utf_lst[j].c].cupper = utf_lst[j].cupper;
+            }
         }
-    }
 
     else
         return 1;
@@ -5496,18 +5627,21 @@ int initialize_utf_tbl() {
 #endif
 #endif
 
-void free_utf_tbl() {
+void free_utf_tbl()
+{
     if (utf_tbl_count > 0)
         utf_tbl_count--;
 
-    if (utf_tbl && (utf_tbl_count == 0)) {
+    if (utf_tbl && (utf_tbl_count == 0))
+        {
         free (utf_tbl);
         utf_tbl = NULL;
-    }
+        }
 }
 
 #ifdef MOZILLA_CLIENT
-static nsCOMPtr<nsICaseConversion> &getcaseConv() {
+static nsCOMPtr<nsICaseConversion> &getcaseConv()
+{
     nsresult rv;
     static nsCOMPtr<nsICaseConversion> caseConv =
         do_GetService (kUnicharUtilCID, &rv);
@@ -5515,7 +5649,8 @@ static nsCOMPtr<nsICaseConversion> &getcaseConv() {
 }
 #endif
 
-unsigned short unicodetoupper (unsigned short c, int langnum) {
+unsigned short unicodetoupper (unsigned short c, int langnum)
+{
     // In Azeri and Turkish, I and i dictinct letters:
     // There are a dotless lower case i pair of upper `I',
     // and an upper I with dot pair of lower `i'.
@@ -5535,7 +5670,8 @@ unsigned short unicodetoupper (unsigned short c, int langnum) {
 #endif
 }
 
-unsigned short unicodetolower (unsigned short c, int langnum) {
+unsigned short unicodetolower (unsigned short c, int langnum)
+{
     // In Azeri and Turkish, I and i dictinct letters:
     // There are a dotless lower case i pair of upper `I',
     // and an upper I with dot pair of lower `i'.
@@ -5555,7 +5691,8 @@ unsigned short unicodetolower (unsigned short c, int langnum) {
 #endif
 }
 
-int unicodeisalpha (unsigned short c) {
+int unicodeisalpha (unsigned short c)
+{
 #ifdef OPENOFFICEORG
     return u_isalpha (c);
 #else
@@ -5564,7 +5701,8 @@ int unicodeisalpha (unsigned short c) {
 }
 
 /* get type of capitalization */
-int get_captype (char *word, int nl, cs_info *csconv) {
+int get_captype (char *word, int nl, cs_info *csconv)
+{
     // now determine the capitalization type of the first nl letters
     int ncap = 0;
     int nneutral = 0;
@@ -5573,14 +5711,15 @@ int get_captype (char *word, int nl, cs_info *csconv) {
     if (csconv == NULL)
         return NOCAP;
 
-    for (char *q = word; *q != '\0'; q++) {
+    for (char *q = word; *q != '\0'; q++)
+        {
         if (csconv[* ((unsigned char *)q)].ccase)
             ncap++;
 
         if (csconv[* ((unsigned char *)q)].cupper ==
                 csconv[* ((unsigned char *)q)].clower)
             nneutral++;
-    }
+        }
 
     if (ncap)
         firstcap = csconv[* ((unsigned char *)word)].ccase;
@@ -5601,7 +5740,8 @@ int get_captype (char *word, int nl, cs_info *csconv) {
     return HUHCAP;
 }
 
-int get_captype_utf8 (w_char *word, int nl, int langnum) {
+int get_captype_utf8 (w_char *word, int nl, int langnum)
+{
     // now determine the capitalization type of the first nl letters
     int ncap = 0;
     int nneutral = 0;
@@ -5616,7 +5756,8 @@ int get_captype_utf8 (w_char *word, int nl, int langnum) {
     if (nl == -1)
         return NOCAP;
 
-    for (int i = 0; i < nl; i++) {
+    for (int i = 0; i < nl; i++)
+        {
         idx = (word[i].h << 8) + word[i].l;
 
         if (idx != unicodetolower (idx, langnum))
@@ -5624,12 +5765,13 @@ int get_captype_utf8 (w_char *word, int nl, int langnum) {
 
         if (unicodetoupper (idx, langnum) == unicodetolower (idx, langnum))
             nneutral++;
-    }
+        }
 
-    if (ncap) {
+    if (ncap)
+        {
         idx = (word[0].h << 8) + word[0].l;
         firstcap = (idx != unicodetolower (idx, langnum));
-    }
+        }
 
     // now finally set the captype
     if (ncap == 0)
@@ -5649,58 +5791,71 @@ int get_captype_utf8 (w_char *word, int nl, int langnum) {
 
 // strip all ignored characters in the string
 void remove_ignored_chars_utf (char *word, unsigned short ignored_chars[],
-                               int ignored_len) {
+                               int ignored_len)
+{
     w_char w[MAXWORDLEN];
     w_char w2[MAXWORDLEN];
     int i;
     int j;
     int len = u8_u16 (w, MAXWORDLEN, word);
 
-    for (i = 0, j = 0; i < len; i++) {
-        if (!flag_bsearch (ignored_chars, ((unsigned short *)w)[i], ignored_len)) {
+    for (i = 0, j = 0; i < len; i++)
+        {
+        if (!flag_bsearch (ignored_chars, ((unsigned short *)w)[i], ignored_len))
+            {
             w2[j] = w[i];
             j++;
+            }
         }
-    }
 
     if (j < i)
         u16_u8 (word, MAXWORDUTF8LEN, w2, j);
 }
 
 // strip all ignored characters in the string
-void remove_ignored_chars (char *word, char *ignored_chars) {
-    for (char *p = word; *p != '\0'; p++) {
-        if (!strchr (ignored_chars, *p)) {
+void remove_ignored_chars (char *word, char *ignored_chars)
+{
+    for (char *p = word; *p != '\0'; p++)
+        {
+        if (!strchr (ignored_chars, *p))
+            {
             *word = *p;
             word++;
+            }
         }
-    }
 
     *word = '\0';
 }
 
-int parse_string (char *line, char **out, const char *warnvar) {
+int parse_string (char *line, char **out, const char *warnvar)
+{
     char *tp = line;
     char *piece;
     int i = 0;
     int np = 0;
 
-    if (*out) {
+    if (*out)
+        {
         HUNSPELL_WARNING (stderr, "error: duplicate %s line\n", warnvar);
         return 1;
-    }
+        }
 
     piece = mystrsep (&tp, 0);
 
-    while (piece) {
-        if (*piece != '\0') {
-            switch (i) {
-                case 0: {
+    while (piece)
+        {
+        if (*piece != '\0')
+            {
+            switch (i)
+                {
+                case 0:
+                        {
                         np++;
                         break;
-                    }
+                        }
 
-                case 1: {
+                case 1:
+                        {
                         *out = mystrdup (piece);
 
                         if (!*out)
@@ -5708,37 +5863,41 @@ int parse_string (char *line, char **out, const char *warnvar) {
 
                         np++;
                         break;
-                    }
+                        }
 
                 default:
                     break;
-            }
+                }
 
             i++;
-        }
+            }
 
         // free(piece);
         piece = mystrsep (&tp, 0);
-    }
+        }
 
-    if (np != 2) {
+    if (np != 2)
+        {
         HUNSPELL_WARNING (stderr, "error: missing %s information\n", warnvar);
         return 1;
-    }
+        }
 
     return 0;
 }
 
 int parse_array (char *line, char **out, unsigned short **out_utf16,
-                 int *out_utf16_len, const char *name, int utf8) {
+                 int *out_utf16_len, const char *name, int utf8)
+{
     if (parse_string (line, out, name))
         return 1;
 
-    if (utf8) {
+    if (utf8)
+        {
         w_char w[MAXWORDLEN];
         int n = u8_u16 (w, MAXWORDLEN, *out);
 
-        if (n > 0) {
+        if (n > 0)
+            {
             flag_qsort ((unsigned short *)w, 0, n);
             *out_utf16 = (unsigned short *)malloc (n * sizeof (unsigned short));
 
@@ -5746,10 +5905,10 @@ int parse_array (char *line, char **out, unsigned short **out_utf16,
                 return 1;
 
             memcpy (*out_utf16, w, n * sizeof (unsigned short));
-        }
+            }
 
         *out_utf16_len = n;
-    }
+        }
 
     return 0;
 }

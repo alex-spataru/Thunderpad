@@ -17,7 +17,8 @@
 // approx. number  of user defined words
 #define USERWORD 1000
 
-struct hentry {
+struct hentry
+{
     unsigned char blen;   // word length in bytes
     unsigned char clen;   // word length in characters (different for UTF-8 enc.)
     short alen;           // length of affix flag vector

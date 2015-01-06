@@ -40,7 +40,8 @@
  * a new QStatusBar widget to be used with the \c Window class.
  */
 
-class StatusBar : public QStatusBar {
+class StatusBar : public QStatusBar
+{
         Q_OBJECT
 
     public:
