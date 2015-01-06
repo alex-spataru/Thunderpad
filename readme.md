@@ -1,6 +1,7 @@
 ## Thunderpad
 
 [![Build Status](https://travis-ci.org/alex-97/Thunderpad.svg)](https://travis-ci.org/alex-97/Thunderpad)
+[![OpenHub](https://www.openhub.net/p/thunderpad/widgets/project_thin_badge.gif)](http://openhub.net/p/thunderpad)
 
 Thunderpad is a simple and lightweight text editor designed for general-purpose usage and casual programming. 
 
