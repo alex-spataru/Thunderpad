@@ -39,31 +39,31 @@ Thunderpad is released with the GNU 3.0 license, you can read a copy of it [here
 
 2. Run the following commands to install the required packages for compiling
 
-sudo apt-get install qt4-default
+        sudo apt-get install qt4-default
 
 3. Then, go to your downloads folder and unzip the current commit.
 
-cd ~/Downloads
-unzip thunderpad-master.zip -d thunderpad-master
-cd thunderpad-master
+        cd ~/Downloads
+        unzip thunderpad-master.zip -d thunderpad-master
+        cd thunderpad-master
 
 4. Make a directory to build the software
 
-mkdir build
-cd build
+        mkdir build
+        cd build
 
 5. Compile the application
 
-qmake ../thunderpad.pro -config release
-make
+        qmake ../thunderpad.pro -config release
+        make
 
 6. To run the application:
 
-./thunderpad
+        ./thunderpad
 
 7. To install Thunderpad, run the following:
 
-sudo make install
+        sudo make install
 
 
 That's all! To run Thunderpad, you can type "thunderpad" (without quotes) in Terminal. You can also run Thunderpad from your application menu (Gnome) or Dash (Unity).
