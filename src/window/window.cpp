@@ -192,9 +192,10 @@ void Window::setIconTheme (const QString &theme)
 void Window::aboutThunderpad (void)
 {
     QString _message = QString ("<h2>%1 %2</h2>").arg (APP_NAME, APP_VERSION) +
+                       "<span style='font-weight:normal;'>"
                        "<p>" + tr ("Built on %1 at %2").arg (__DATE__, __TIME__) + "</p>" +
                        "<p>" + tr ("Copyright &copy; 2013-%1 %2").arg (CURRENT_YEAR, APP_COMPANY) + "</p>" +
-                       "<p>" + tr (GNU_WARRANTY_WARNING) + "</p>";
+                       "<p>" + tr (GNU_WARRANTY_WARNING) + "</p></span>";
 
     QMessageBox::about (this, tr ("About %1").arg (APP_NAME), _message);
 }

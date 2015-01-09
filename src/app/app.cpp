@@ -49,7 +49,10 @@ Application::Application (int &argc, char **argv) : QApplication (argc, argv),
     // We are the first instance of Thunderpad, create a new window and
     // lock the running status so that we are the only instance allowed to run
     if (!m_settings->value ("running", false).toBool())
+        {
         runNormally (arguments);
+        return;
+        }
 
     // There's already a running instance of Thunderpad, send data and quit
     else
