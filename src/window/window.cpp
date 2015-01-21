@@ -19,12 +19,23 @@
 //  USA
 //
 
-#include "window.h"
+#include <QUrl>
+#include <QFile>
+#include <QDateTime>
+#include <QMessageBox>
+#include <QFileDialog>
+#include <QApplication>
+#include <QDesktopServices>
 
+#include <Qsci/qsciprinter.h>
+
+#include "window.h"
 #include "menubar.h"
 #include "toolbar.h"
+#include "platform.h"
 #include "statusbar.h"
 #include "searchdialog.h"
+#include "assembly_info.h"
 
 #define CURRENT_YEAR QDateTime::currentDateTime().toString("yyyy")
 
@@ -32,13 +43,13 @@
 OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, \
 MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE."
 
-#define LICENSE_LINK "http://www.gnu.org/copyleft/gpl.html"
-#define DONATE_LINK "http://thunderpad.sf.net/donate"
 #define HELP_LINK "http://thunderpad.sf.net/support"
+#define DONATE_LINK "http://thunderpad.sf.net/donate"
 #define FEED_BACK_LINK "mailto:alex_spataru@outlook.com"
-#define REPORT_ISSUES_LINK "http://github.com/alex-97/thunderpad/issues"
-#define CONTRIBUTE_LINK "http://thunderpad.sf.net/contribute"
 #define WEBSITE_LINK "http://thunderpad.sourceforge.net"
+#define LICENSE_LINK "http://www.gnu.org/copyleft/gpl.html"
+#define CONTRIBUTE_LINK "http://thunderpad.sf.net/contribute"
+#define REPORT_ISSUES_LINK "http://github.com/alex-97/thunderpad/issues"
 
 Window::Window (void)
 {
@@ -50,16 +61,18 @@ Window::Window (void)
     m_menu = new MenuBar (this);
     m_toolbar = new ToolBar (this);
     m_statusbar = new StatusBar (this);
-    m_updater = new QSimpleUpdater (this);
     m_search_dialog = new SearchDialog (this);
     m_settings = new QSettings (APP_COMPANY, APP_NAME);
 
-    // Connect slots between the text editor and window
+    // Change the title of the window when a new file is loaded
     connect (editor(), SIGNAL (updateTitle()), this, SLOT (updateTitle()));
+
+    // Append a "*" to the document name when the file is modified
     connect (editor(), SIGNAL (textChanged()), this, SLOT (updateTitle()));
+
+    // Sync the settings across the editor and the window
     connect (editor(), SIGNAL (settingsChanged()), this, SIGNAL (settingsChanged()));
-    connect (qApp, SIGNAL (aboutToQuit()), this, SLOT (close()));
-    connect (this, SIGNAL (updateSettings()), editor(), SLOT (updateSettings()));
+    connect (this,     SIGNAL (updateSettings()), editor(), SLOT (updateSettings()));
 
     // Configure all widgets
     updateTitle();
@@ -86,28 +99,29 @@ ToolBar *Window::toolbar (void) const
 void Window::closeEvent (QCloseEvent *event)
 {
     saveWindowState();
+
+    // Save the document before closing
     m_editor->maybeSave() ? event->accept() : event->ignore();
 }
 
 void Window::openFile (const QString &file_name)
 {
-    Q_ASSERT (!file_name.isEmpty());
-
     // Open the file in the same window
-    if (m_editor->documentTitle().isEmpty() && !m_editor->document()->isModified())
+    if (m_editor->documentTitle().isEmpty() && !m_editor->isModified())
         m_editor->readFile (file_name);
 
     // Open the file in another window
     else
-        {
+    {
         Window *_window = new Window();
         configureWindow (_window);
         _window->editor()->readFile (file_name);
-        }
+    }
 }
 
 void Window::newFile (void)
 {
+    // Create a new window  and configure it
     Window *_window = new Window();
     configureWindow (_window);
 }
@@ -120,6 +134,40 @@ void Window::open (void)
     for (int i = 0; i < _files.count(); ++i)
         if (!_files.at (i).isEmpty())
             openFile (_files.at (i));
+}
+
+void Window::exportPdf (void)
+{
+    QString _path = QFileDialog::getSaveFileName(this,
+                                                 tr("Export PDF"),
+                                                 QDir::homePath(),
+                                                 tr("PDF Document") + " (*.pdf)");
+
+    if (!_path.isEmpty()) {
+        QsciPrinter printer (QPrinter::HighResolution);
+
+        printer.setOutputFileName (_path);
+        printer.setWrapMode (editor()->wrapMode());
+        printer.setCreator (qApp->applicationName());
+        printer.setOutputFormat (QPrinter::PdfFormat);
+        printer.setDocName (editor()->documentTitle());
+
+        // Create the file
+        printer.printRange (editor(), 0);
+
+        // Ask user to open file
+        QMessageBox _message;
+        _message.setIcon (QMessageBox::Question);
+        _message.setWindowTitle (tr ("PDF Export"));
+        _message.setInformativeText (tr ("Do you want to open it?"));
+        _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No);
+        _message.setText (
+                    "<b>" + tr ("The PDF document was successfully generated!") +
+                    "</b>");
+
+        if (_message.exec() == QMessageBox::Yes)
+            QDesktopServices::openUrl (QUrl (_path));
+    }
 }
 
 void Window::setReadOnly (bool ro)
@@ -191,10 +239,12 @@ void Window::setIconTheme (const QString &theme)
 
 void Window::aboutThunderpad (void)
 {
-    QString _message = QString ("<h2>%1 %2</h2>").arg (APP_NAME, APP_VERSION) +
-                       "<p>" + tr ("Built on %1 at %2").arg (__DATE__, __TIME__) + "</p>" +
-                       "<p>" + tr ("Copyright &copy; 2013-%1 %2").arg (CURRENT_YEAR, APP_COMPANY) + "</p>" +
-                       "<p>" + tr (GNU_WARRANTY_WARNING) + "</p>";
+    // Show a nice about dialog with application information
+    QString _message = QString ("<h%1>%2 %3</h%1>").arg (MAC_OS_X ? "3" : "2", APP_NAME, APP_VERSION) +
+            QString ("<span style='font-weight:normal;'><font size=%1>").arg (MAC_OS_X ? "2" : "3") +
+            "<p>" + tr ("Built on %1 at %2").arg (__DATE__, __TIME__) + "</p>" +
+            "<p>" + tr ("Copyright &copy; 2013-%1 %2").arg (CURRENT_YEAR, APP_COMPANY) + "</p>" +
+            "<p>" + tr (GNU_WARRANTY_WARNING) + "</p></font></span>";
 
     QMessageBox::about (this, tr ("About %1").arg (APP_NAME), _message);
 }
@@ -238,16 +288,16 @@ void Window::updateTitle (void)
 {
     // Use "Untitled" while editing new documents
     QString _title = editor()->documentTitle().isEmpty() ?
-                     tr ("Untitled") :
-                     shortFileName (editor()->documentTitle());
+                tr ("Untitled") :
+                shortFileName (editor()->documentTitle());
 
     // Add a "*" if the document was modifed
-    QString _star = editor()->document()->isModified() ?  "* - " : " - ";
+    QString _star = editor()->isModified() ?  "* - " : " - ";
     setWindowTitle (_title + _star + APP_NAME);
 
     // Configure the behavior of the 'smart' save actions
     bool _save_enabled = ! (!m_editor->documentTitle().isEmpty() &&
-                            !m_editor->document()->isModified());
+                            !m_editor->isModified());
 
     m_menu->setSaveEnabled (_save_enabled);
     m_toolbar->setSaveEnabled (_save_enabled);
@@ -263,29 +313,30 @@ void Window::saveWindowState (void)
 {
     m_settings->setValue ("maximized", isMaximized());
 
+    // Only save the window size and position if it isn't maximized
     if (!isMaximized())
-        {
+    {
         m_settings->setValue ("size", size());
         m_settings->setValue ("position", pos());
-        }
+    }
 }
 
 void Window::configureWindow (Window *window)
 {
     Q_ASSERT (window != NULL);
 
-    window->saveWindowState();
+    // Allow the other window to ask the application to check for updates
     connect (window, SIGNAL (checkForUpdates()), this, SIGNAL (checkForUpdates()));
 
     // Sync settings across windows
     foreach (QWidget *widget, QApplication::topLevelWidgets())
-        {
+    {
         if (widget->objectName() == objectName())
-            {
+        {
             connect (widget, SIGNAL (settingsChanged()), window, SIGNAL (updateSettings()));
             connect (window, SIGNAL (settingsChanged()), widget, SIGNAL (updateSettings()));
-            }
         }
+    }
 
     // Show the window normally if the current window is maximized
     if (isMaximized())
@@ -293,11 +344,11 @@ void Window::configureWindow (Window *window)
 
     // Resize the window and position it to match the current window
     else
-        {
+    {
         window->resize (size());
         window->move (window->x() + 30, window->y() + 30);
         m_settings->setValue ("position", QPoint (window->x(), window->y()));
-        }
+    }
 }
 
 QString Window::shortFileName (const QString &file)

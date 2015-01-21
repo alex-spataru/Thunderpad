@@ -22,13 +22,7 @@
 #ifndef THEME_H
 #define THEME_H
 
-#include <QFile>
 #include <QColor>
-#include <QObject>
-#include <QSettings>
-#include <QXmlStreamReader>
-
-#include "assembly_info.h"
 
 /*!
  * \class Theme

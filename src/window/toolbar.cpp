@@ -20,14 +20,16 @@
 //
 
 #include "toolbar.h"
+#include "platform.h"
+#include "assembly_info.h"
 
 #define LARGE_ICONS_SIZE "24x24"
 #define SMALL_ICONS_SIZE "16x16"
-#define DEFAULT_ICON_THEME "Silk"
 #define DEFAULT_LARGE_ICONS false
 #define DEFAULT_TOOLBAR_TEXT false
 #define DEFAULT_TOOLBAR_ENABLED true
-#define ICON_THEMES_PATH ":/icons/themes"
+#define ICON_THEMES_PATH ":/images/themes"
+#define DEFAULT_ICON_THEME MAC_OS_X ? "Faience" : "Silk"
 
 ToolBar::ToolBar (Window *parent) : QToolBar (parent)
 {
@@ -106,7 +108,7 @@ void ToolBar::setToolbarText (bool enabled)
 
     // Show the text and set the size of the toolbar
     if (enabled)
-        {
+    {
         if (m_large_icons)
             _toolbar_size = MAC_OS_X ? 48 : 56;
 
@@ -114,11 +116,11 @@ void ToolBar::setToolbarText (bool enabled)
             _toolbar_size = MAC_OS_X ? 36 : 48;
 
         setToolButtonStyle (Qt::ToolButtonTextUnderIcon);
-        }
+    }
 
     // Hide the text and set the size of the toolbar
     else
-        {
+    {
         if (m_large_icons)
             _toolbar_size = MAC_OS_X ? 32 : 36;
 
@@ -126,7 +128,7 @@ void ToolBar::setToolbarText (bool enabled)
             _toolbar_size = MAC_OS_X ? 24 : 32;
 
         setToolButtonStyle (Qt::ToolButtonIconOnly);
-        }
+    }
 
     // Resize the toolbar
     setMinimumHeight (_toolbar_size);
@@ -169,12 +171,12 @@ void ToolBar::updateSettings (void)
 
     // Resize and redraw the toolbar if neccessary
     if (_new_value != m_toolbar_text || m_large_icons != _new_sizes)
-        {
+    {
         m_large_icons = _new_sizes;
         m_toolbar_text = _new_value;
 
         setToolbarText (_new_value);
-        }
+    }
 
     // Hide/show the toolbar
     setVisible (m_settings->value ("toolbar-enabled", DEFAULT_TOOLBAR_ENABLED).toBool());

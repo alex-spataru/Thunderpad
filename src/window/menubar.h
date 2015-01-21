@@ -22,15 +22,12 @@
 #ifndef MENUBAR_H
 #define MENUBAR_H
 
-#include <QDir>
 #include <QMenu>
 #include <QAction>
 #include <QMenuBar>
 #include <QSettings>
-#include <QStringList>
-#include <QKeySequence>
-#include <QSignalMapper>
 
+#include "editor.h"
 #include "window.h"
 
 /*!
@@ -137,16 +134,17 @@ class MenuBar : public QMenuBar
         QAction *v_toolbar;
         QAction *v_statusbar;
 
-        QMenu *v_advanced;
-        QAction *v_highlight_current_line;
-        QAction *v_line_numbers;
+        QMenu *v_zoom;
+        QAction *v_zoom_in;
+        QAction *v_zoom_out;
+        QAction *v_zoom_reset;
 
         QMenu *v_appearance;
+        QAction *v_highlight_current_line;
+        QAction *v_line_numbers;
         QAction *v_toolbar_text;
         QAction *v_large_toolbar_icons;
 
-        QMenu *color_schemes;
-        QMenu *syntax_languages;
         QMenu *v_icon_theme;
 
         QAction *t_sort_selection;

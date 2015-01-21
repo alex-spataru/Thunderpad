@@ -19,7 +19,10 @@
 //  USA
 //
 
+#include <math.h>
+
 #include "statusbar.h"
+#include "assembly_info.h"
 
 #define KILOBYTE 1024
 #define MEGABYTE 1048576
@@ -49,6 +52,8 @@ void StatusBar::initialize (Window *window)
 
     connect (m_text_edit, SIGNAL (textChanged()), this, SLOT (updateStatusLabel()));
     connect (window, SIGNAL (updateSettings()), this, SLOT (updateSettings()));
+
+    updateStatusLabel();
 }
 
 void StatusBar::updateSettings (void)
@@ -66,7 +71,7 @@ void StatusBar::updateStatusLabel (void)
 QString StatusBar::fileSize (void)
 {
     QString _units;
-    float _length = m_text_edit->toPlainText().length();
+    float _length = m_text_edit->length();
 
     // File is less than one KB
     if (_length < KILOBYTE)
@@ -74,17 +79,17 @@ QString StatusBar::fileSize (void)
 
     // File is one KB or greater, but smaller than one MB
     else if (_length < MEGABYTE)
-        {
+    {
         _length /= KILOBYTE;
         _units = " " + tr ("KB");
-        }
+    }
 
     // File is one MB or greater
     else
-        {
+    {
         _length /= MEGABYTE;
         _units = " " + tr ("MB");
-        }
+    }
 
     return tr ("Size:") + " " +
            QString::number (floorf (_length * 100 + 0.5) / 100) + _units;
@@ -93,7 +98,7 @@ QString StatusBar::fileSize (void)
 QString StatusBar::wordCount (void)
 {
     long int _words =
-        m_text_edit->toPlainText()
+        m_text_edit->text()
         .split (QRegExp ("(\\s|\\n|\\r)+"), QString::SkipEmptyParts)
         .count();
 
@@ -103,5 +108,5 @@ QString StatusBar::wordCount (void)
 QString StatusBar::lineCount (void)
 {
     return tr ("Lines:") + " " +
-           QString::number (m_text_edit->document()->blockCount());
+           QString::number (m_text_edit->lines());
 }

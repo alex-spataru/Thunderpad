@@ -1,4 +1,4 @@
-Attentional all Apple / Mac OS X users!
+Attention all Apple / Mac OS X users!
 
 Apparently, Apple has decided to that from Mountain Lion onward, ALL SOFTWARE WILL BE BLOCKED BY DEFAULT by "Gatekeeper", unless the developers hand over $100 for a developer "ID".  
 
@@ -18,7 +18,7 @@ Gatekeeper options are found in Apple menu > System Preferences > Security & Pri
 3. You should now be able to install and open and use Thunderpad (and any other software).
 
 Thanks,
-Alex
+the Thunderpad authors
 
 
 The reference for this comes from: http://support.apple.com/kb/HT5290

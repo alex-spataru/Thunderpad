@@ -32,8 +32,7 @@
 
 #include "dialogs/download_dialog.h"
 
-class QSimpleUpdater : public QObject
-{
+class QSimpleUpdater : public QObject {
         Q_OBJECT
 
     public:
@@ -104,6 +103,7 @@ class QSimpleUpdater : public QObject
         QString m_changelog;
         QString m_latest_version;
         QString m_installed_version;
+        QNetworkAccessManager *m_manager;
 
         QUrl m_download_url;
         QUrl m_reference_url;

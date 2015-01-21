@@ -19,12 +19,16 @@
 //  USA
 //
 
+#include <QFile>
+#include <QXmlStreamReader>
+
 #include "theme.h"
+#include "assembly_info.h"
+
 #define COLOR_SCHEMES_PATH ":/color-schemes/"
 
 Theme::Theme (QObject *parent) : QObject (parent)
 {
-    QSettings _settings (APP_COMPANY, APP_NAME);
 }
 
 void Theme::useFallbackColors (void)
@@ -44,10 +48,10 @@ void Theme::readTheme (const QString &theme)
     QFile _file (COLOR_SCHEMES_PATH + theme + ".xml");
 
     if (!_file.open (QFile::ReadOnly))
-        {
+    {
         useFallbackColors();
         return;
-        }
+    }
 
     QStringList _types;
     QStringList _values;
@@ -55,30 +59,30 @@ void Theme::readTheme (const QString &theme)
     QXmlStreamReader *_xml_reader = new QXmlStreamReader (&_file);
 
     while (!_xml_reader->atEnd() && !_xml_reader->hasError())
-        {
+    {
         QXmlStreamReader::TokenType token = _xml_reader->readNext();
 
         if (token == QXmlStreamReader::StartElement)
-            {
+        {
             if (_xml_reader->name() == "type")
                 _types.append (_xml_reader->readElementText());
 
             if (_xml_reader->name() == "color")
                 _values.append (_xml_reader->readElementText());
-            }
         }
+    }
 
     _xml_reader->clear();
     _file.close();
 
     if (_types.count() != _values.count())
-        {
+    {
         useFallbackColors();
         return;
-        }
+    }
 
     else
-        {
+    {
         m_background = _values.at (_types.indexOf ("background"));
         m_foreground = _values.at (_types.indexOf ("foreground"));
         m_highlight_background = _values.at (_types.indexOf ("highlight_background"));
@@ -91,7 +95,7 @@ void Theme::readTheme (const QString &theme)
         m_keywords = _values.at (_types.indexOf ("keywords"));
         m_comments = _values.at (_types.indexOf ("comments"));
         m_functions = _values.at (_types.indexOf ("functions"));
-        }
+    }
 }
 
 QColor Theme::background (void) const

@@ -22,16 +22,14 @@
 #ifndef STATUSBAR_H
 #define STATUSBAR_H
 
-#include <math.h>
 #include <QLabel>
 #include <QString>
 #include <QRegExp>
 #include <QSettings>
 #include <QStatusBar>
-#include <QPlainTextEdit>
 
+#include "editor.h"
 #include "window.h"
-#include "assembly_info.h"
 
 /*!
  * \class StatusBar
@@ -57,7 +55,7 @@ class StatusBar : public QStatusBar
         QLabel *m_words_label;
         QLabel *m_lines_label;
         QSettings *m_settings;
-        QPlainTextEdit *m_text_edit;
+        Editor *m_text_edit;
 
         QString fileSize (void);
         QString wordCount (void);

@@ -7,13 +7,13 @@
 	<key>CFBundleIconFile</key>
 	<string>icon.icns</string>
 	<key>CFBundleVersion</key>
-	<string>1.0</string>
+	<string>0.9.3</string>
 	<key>CFBundleExecutable</key>
 	<string>Thunderpad</string>
 	<key>CFBundleIdentifier</key>
 	<string>alex.spataru.thunderpad</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright (c) 2014 Alex S. et al.
+	<string>Copyright (c) 2013-2015 Alex S. et al.
 GNU General Public License v3.0</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
@@ -97,6 +97,6 @@ GNU General Public License v3.0</string>
 		</dict>
 	</array>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>0.9.3</string>
 </dict>
 </plist>

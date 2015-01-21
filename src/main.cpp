@@ -24,5 +24,5 @@
 int main (int argc, char *argv[])
 {
     Application app (argc, argv);
-    return app.isFirstInstance() ? app.exec() : -1;
+    return app.exec();
 }

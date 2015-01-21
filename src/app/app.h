@@ -8,11 +8,8 @@
 #ifndef APP_H
 #define APP_H
 
-#include <QTimer>
 #include <QSettings>
-#include <QMessageBox>
 #include <QApplication>
-#include <QFileOpenEvent>
 #include <QSimpleUpdater>
 
 #include "window.h"
@@ -23,20 +20,16 @@ class Application : public QApplication
 
     public:
         Application (int &argc, char **argv);
-        bool isFirstInstance (void) const;
 
     public slots:
         void checkForUpdates (void);
 
     private slots:
         void setupUpdater (void);
-        void onAboutToQuit (void);
         void showLatestVersion (void);
         void onCheckingFinished (void);
         void showWelcomeMessages (void);
         void showUpdateAvailable (void);
-        void checkForOtherInstances (void);
-        void runNormally (const QString &arguments);
 
     protected:
         bool event (QEvent *_event);
@@ -45,9 +38,7 @@ class Application : public QApplication
         Window *m_window;
         QSettings *m_settings;
         QSimpleUpdater *m_updater;
-        QTimer *m_instance_refresh_timer;
 
-        bool m_first_instance;
         bool m_show_all_updater_messages;
 };
 

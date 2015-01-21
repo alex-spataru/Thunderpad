@@ -22,18 +22,15 @@
 #ifndef SearchDialog_H
 #define SearchDialog_H
 
-#include <QColor>
 #include <QLabel>
 #include <QDialog>
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QSpacerItem>
-#include <QTextCursor>
 #include <QGridLayout>
-#include <QTextDocument>
-#include <QPlainTextEdit>
 
+#include "editor.h"
 #include "window.h"
 
 class SearchDialog : public QDialog
@@ -49,8 +46,7 @@ class SearchDialog : public QDialog
         void replaceFirstOccurrence (void);
 
     private:
-        QTextCursor *m_text_cursor;
-        QPlainTextEdit *m_text_edit;
+        Editor *m_text_edit;
 
         QLabel *ui_find_label;
         QGridLayout *ui_layout;

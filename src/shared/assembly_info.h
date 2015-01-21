@@ -22,7 +22,7 @@
 #ifndef ASSEMBLY_INFO_H
 #define ASSEMBLY_INFO_H
 
-#define APP_VERSION "0.9.2"
+#define APP_VERSION "0.9.3"
 #define APP_NAME "Thunderpad"
 #define APP_COMPANY "Alex Spataru"
 

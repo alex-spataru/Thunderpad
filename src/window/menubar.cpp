@@ -19,7 +19,14 @@
 //  USA
 //
 
+#include <QDir>
+#include <QKeySequence>
+#include <QApplication>
+#include <QSignalMapper>
+
 #include "menubar.h"
+#include "platform.h"
+#include "assembly_info.h"
 
 MenuBar::MenuBar (Window *parent) : QMenuBar (parent)
 {
@@ -50,7 +57,7 @@ void MenuBar::initialize (Window *window)
     connect (f_save, SIGNAL (triggered()), window->editor(), SLOT (save()));
     connect (f_save_as, SIGNAL (triggered()), window->editor(), SLOT (saveAs()));
     connect (export_html, SIGNAL (triggered()), window->editor(), SLOT (exportHtml()));
-    connect (export_pdf, SIGNAL (triggered()), window->editor(), SLOT (exportPdf()));
+    connect (export_pdf, SIGNAL (triggered()), window, SLOT (exportPdf()));
     connect (f_print, SIGNAL (triggered()), window->editor(), SLOT (print()));
     connect (f_close, SIGNAL (triggered()), window, SLOT (close()));
     connect (f_quit, SIGNAL (triggered()), qApp, SLOT (closeAllWindows()));
@@ -78,13 +85,15 @@ void MenuBar::initialize (Window *window)
     // Connect slots from the view menu
     connect (v_toolbar, SIGNAL (triggered (bool)), window, SLOT (setToolbarEnabled (bool)));
     connect (v_statusbar, SIGNAL (triggered (bool)), window, SLOT (setStatusBarEnabled (bool)));
+    connect (v_zoom_in, SIGNAL (triggered()), window->editor(), SLOT (zoomIn()));
+    connect (v_zoom_out, SIGNAL (triggered()), window->editor(), SLOT (zoomOut()));
+    connect (v_zoom_reset, SIGNAL (triggered()), window->editor(), SLOT (resetZoom()));
     connect (v_highlight_current_line, SIGNAL (triggered (bool)), window, SLOT (setHCLineEnabled (bool)));
     connect (v_line_numbers, SIGNAL (triggered (bool)), window, SLOT (setLineNumbersEnabled (bool)));
     connect (v_toolbar_text, SIGNAL (triggered (bool)), window, SLOT (setToolbarText (bool)));
     connect (v_large_toolbar_icons, SIGNAL (triggered (bool)), window, SLOT (setUseLargeIcons (bool)));
     connect (this, SIGNAL (change_color (QString)), window, SLOT (setColorscheme (QString)));
     connect (this, SIGNAL (change_icons (QString)), window, SLOT (setIconTheme (QString)));
-    connect (this, SIGNAL (change_syntax (QString)), window->editor(), SLOT (setSyntaxLanguage (QString)));
 
     // Connect the slots for the help menu
     connect (h_about_qt, SIGNAL (triggered()), qApp, SLOT (aboutQt()));
@@ -143,6 +152,9 @@ void MenuBar::createActions (void)
     // Create the view menu actions
     v_toolbar = new QAction (tr ("Toolbar"), this);
     v_statusbar = new QAction (tr ("Statusbar"), this);
+    v_zoom_in = new QAction (tr ("Zoom in"), this);
+    v_zoom_out = new QAction (tr ("Zoom out"), this);
+    v_zoom_reset = new QAction (tr ("Reset zoom"), this);
     v_highlight_current_line = new QAction (tr ("Highlight current line"), this);
     v_line_numbers = new QAction (tr ("Show line numbers"), this);
     v_large_toolbar_icons = new QAction (tr ("Large toolbar icons"), this);
@@ -194,6 +206,9 @@ void MenuBar::configureActions (void)
     v_toolbar->setShortcut (QKeySequence (Qt::CTRL + Qt::ALT + Qt::Key_T));
     v_statusbar->setShortcut (QKeySequence (Qt::CTRL + Qt::ALT + Qt::Key_S));
     h_v_help->setShortcut (QKeySequence::HelpContents);
+    v_zoom_in->setShortcut (QKeySequence::ZoomIn);
+    v_zoom_out->setShortcut (QKeySequence::ZoomOut);
+    v_zoom_reset->setShortcut (QKeySequence (Qt::CTRL + Qt::Key_0));
 
     // Configure checkable actions
     v_toolbar->setCheckable (true);
@@ -261,29 +276,35 @@ void MenuBar::createMenubar (void)
     m_view->addAction (v_statusbar);
     m_view->addSeparator();
 
-    // Create the advanced menu
-    v_advanced = m_view->addMenu (tr ("Advanced"));
-    v_advanced->addAction (v_highlight_current_line);
-    v_advanced->addAction (v_line_numbers);
-    v_advanced->addSeparator();
-    v_advanced->addAction (v_large_toolbar_icons);
+    // Create the zoom menu
+    v_zoom = m_view->addMenu (tr ("Zoom"));
+    v_zoom->addAction (v_zoom_in);
+    v_zoom->addAction (v_zoom_out);
+    v_zoom->addSeparator();
+    v_zoom->addAction (v_zoom_reset);
+    m_view->addSeparator();
 
-    // Create the appearance menu
+    // Create the advanced menu
     v_appearance = m_view->addMenu (tr ("Appearance"));
+    v_appearance->addAction (v_highlight_current_line);
+    v_appearance->addAction (v_line_numbers);
+    v_appearance->addSeparator();
+    v_appearance->addAction (v_large_toolbar_icons);
+    v_appearance->addAction (v_toolbar_text);
 
     // Create the icon theme menu
-    v_icon_theme = v_appearance->addMenu (tr ("Icon themes"));
+    v_icon_theme = m_view->addMenu (tr ("Icon themes"));
     QActionGroup *icon_themes_group = new QActionGroup (this);
     QSignalMapper *icon_themes_mapper = new QSignalMapper (this);
     connect (icon_themes_mapper, SIGNAL (mapped (QString)), this, SIGNAL (change_icons (QString)));
 
     // Read all the registered icons in the resources
-    QDir icon_themes_dir (":/icons/themes/");
+    QDir icon_themes_dir (":/images/themes/");
     QStringList icon_themes_list = icon_themes_dir.entryList();
 
     // Create a new action for each registered icon theme
     for (int i = 0; icon_themes_list.count() > i; ++i)
-        {
+    {
         // Get the name of the current theme and create the action
         QAction *_action = new QAction (icon_themes_list.at (i), this);
 
@@ -297,86 +318,7 @@ void MenuBar::createMenubar (void)
         // Check the icon if necessary
         if (m_settings->value ("icon-theme", "Silk").toString() == _action->text())
             _action->setChecked (true);
-        }
-
-
-    // Create the color schemes menu
-    color_schemes = v_appearance->addMenu (tr ("Color schemes"));
-    QActionGroup *color_schemes_group = new QActionGroup (this);
-    QSignalMapper *color_schemes_mapper = new QSignalMapper (this);
-
-    // Read all the registered color schemes in the resources
-    QDir color_schemes_dir (":/color-schemes/");
-    QStringList color_schemes_list =  color_schemes_dir.entryList (QStringList ("*.xml"));
-    connect (color_schemes_mapper, SIGNAL (mapped (QString)), this, SIGNAL (change_color (QString)));
-
-    // Create a new action for each registered color scheme
-    for (int i = 0; color_schemes_list.count() > i; ++i)
-        {
-        // Get the name of the color scheme
-        QString _name = color_schemes_list.at (i);
-        _name.replace (".xml", "");
-
-        // Create a new action
-        QAction *_action = new QAction (_name, this);
-
-        // Configure the action
-        _action->setCheckable (true);
-        color_schemes->addAction (_action);
-        color_schemes_group->addAction (_action);
-        color_schemes_mapper->setMapping (_action, _action->text());
-        connect (_action, SIGNAL (triggered()), color_schemes_mapper, SLOT (map()));
-
-        // Check the icon if necessary
-        if (m_settings->value ("color-scheme", "Light").toString() == _name)
-            _action->setChecked (true);
-        }
-
-    // Add the toolbar text action
-    v_appearance->addSeparator();
-    v_appearance->addAction (v_toolbar_text);
-
-    // Create the syntax highlighter menu in a process similar to the color
-    // schemes menu
-    syntax_languages = m_view->addMenu (tr ("Highlighting mode"));
-    QActionGroup *syntax_languages_group = new QActionGroup (this);
-    QSignalMapper *syntax_languages_mapper = new QSignalMapper (this);
-    connect (syntax_languages_mapper, SIGNAL (mapped (QString)), this,
-             SIGNAL (change_syntax (QString)));
-
-    // Add the "plain text" option to the syntax highlighting options
-    QAction *_plain_text = new QAction (tr ("Plain text"), this);
-    syntax_languages->addAction (_plain_text);
-    syntax_languages->addSeparator();
-
-    _plain_text->setCheckable (true);
-    _plain_text->setChecked (true);
-    syntax_languages_group->addAction (_plain_text);
-    syntax_languages_mapper->setMapping (_plain_text, _plain_text->text());
-    connect (_plain_text, SIGNAL (triggered()), syntax_languages_mapper, SLOT (map()));
-
-    // Read all the registered color schemes in the resources
-    QDir syntax_languages_dir (":/languages/");
-    QStringList syntax_languages_list = syntax_languages_dir.entryList (QStringList ("*.xml"));
-
-    // Create a new action for each registered language
-    for (int i = 0; syntax_languages_list.count() > i; ++i)
-        {
-
-        // Get the name of the color scheme
-        QString _name = syntax_languages_list.at (i);
-        _name.replace (".xml", "");
-
-        // Create a new action
-        QAction *_action = new QAction (_name, this);
-
-        // Configure the action
-        _action->setCheckable (true);
-        syntax_languages->addAction (_action);
-        syntax_languages_group->addAction (_action);
-        syntax_languages_mapper->setMapping (_action, _action->text());
-        connect (_action, SIGNAL (triggered()), syntax_languages_mapper, SLOT (map()));
-        }
+    }
 
     // Create the tools menu
     m_tools->addAction (t_sort_selection);

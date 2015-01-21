@@ -26,6 +26,7 @@
 #include <QToolBar>
 #include <QSettings>
 
+#include "editor.h"
 #include "window.h"
 
 /*!

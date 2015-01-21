@@ -22,17 +22,14 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <QFile>
 #include <QSettings>
 #include <QCloseEvent>
 #include <QMainWindow>
-#include <QApplication>
-#include <QSimpleUpdater>
-#include <QDesktopServices>
 
 #include "editor.h"
-#include "assembly_info.h"
 
+class ToolBar;
+class MenuBar;
 class ToolBar;
 class MenuBar;
 class StatusBar;
@@ -49,9 +46,6 @@ class SearchDialog;
  * Finally, the \c Window allows the \c Application class to create a new window
  * and open a file using the configureWindow() function.
  */
-
-class MenuBar;
-class ToolBar;
 
 class Window : public QMainWindow
 {
@@ -78,7 +72,7 @@ class Window : public QMainWindow
     public slots:
         void newFile (void);
         void open (void);
-
+        void exportPdf (void);
         void setReadOnly (bool ro);
         void setWordWrap (bool ww);
         void setToolbarText (bool tt);
@@ -89,9 +83,7 @@ class Window : public QMainWindow
         void setLineNumbersEnabled (bool ln);
         void setIconTheme (const QString &theme);
         void setColorscheme (const QString &colorscheme);
-
         void showFindReplaceDialog (void);
-
         void aboutThunderpad (void);
         void license (void);
         void donate (void);
@@ -105,6 +97,7 @@ class Window : public QMainWindow
         void updateTitle (void);
         void syncSettings (void);
         void saveWindowState (void);
+        QString shortFileName (const QString &file);
 
     private:
         MenuBar *m_menu;
@@ -113,9 +106,6 @@ class Window : public QMainWindow
         QSettings *m_settings;
         StatusBar *m_statusbar;
         SearchDialog *m_search_dialog;
-
-        QSimpleUpdater *m_updater;
-        QString shortFileName (const QString &file);
 };
 
 #endif
