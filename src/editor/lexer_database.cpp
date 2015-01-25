@@ -31,13 +31,13 @@
  */
 
 /*! \internal
- * Initializes the class by doing nothing
+ * Initializes the class by doing nothing.
  */
 
 LexerDatabase::LexerDatabase (void) {}
 
 /*!
- * Returns an appropiate QsciLexer given the \a file_name
+ * Returns an appropiate QsciLexer given the \a {file_name}.
  */
 
 QsciLexer *LexerDatabase::getLexer (const QString &file_name)
