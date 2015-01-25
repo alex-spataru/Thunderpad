@@ -27,9 +27,29 @@
 
 #define COLOR_SCHEMES_PATH ":/color-schemes/"
 
+/*!
+ * \class Theme
+ * \brief Loads theme definitions into the text editor
+ *
+ * The \c Theme class is in charge of reading the specified colors
+ * of an inputed XML theme and returning the individual values of
+ * each color used to theme the \c Editor widget.
+ */
+
+
+/*! \internal
+ * Initializes the class by doing nothing
+ */
+
 Theme::Theme (QObject *parent) : QObject (parent)
 {
 }
+
+/*!
+ * Applies the fallback colors.
+ * Its only called in the case that a color theme
+ * cannot be loaded during run-time.
+ */
 
 void Theme::useFallbackColors (void)
 {
@@ -41,6 +61,11 @@ void Theme::useFallbackColors (void)
     m_line_numbers_foreground = "#a8a8a8";
     m_current_line_background = "#ffffd1";
 }
+
+/*!
+ * Reads data values from the specified theme definition
+ * and loads them into the program.
+ */
 
 void Theme::readTheme (const QString &theme)
 {
@@ -92,61 +117,129 @@ void Theme::readTheme (const QString &theme)
         m_current_line_background = _values.at (_types.indexOf ("current_line_background"));
 
         m_others = _values.at (_types.indexOf ("others"));
+        m_numbers = _values.at (_types.indexOf ("numbers"));
+        m_strings = _values.at (_types.indexOf ("strings"));
         m_keywords = _values.at (_types.indexOf ("keywords"));
         m_comments = _values.at (_types.indexOf ("comments"));
         m_functions = _values.at (_types.indexOf ("functions"));
     }
 }
 
+/* General text editor colors */
+
+/*!
+ * The background color of the text editor
+ */
+
 QColor Theme::background (void) const
 {
     return QColor (m_background);
 }
+
+/*!
+ * The foreground color of the text editor
+ */
 
 QColor Theme::foreground (void) const
 {
     return QColor (m_foreground);
 }
 
+/*!
+ * The highlight background color of the text editor
+ */
+
 QColor Theme::highlightBackground (void) const
 {
     return QColor (m_highlight_background);
 }
+
+/*!
+ * The highlight foreground color of the text editor
+ */
 
 QColor Theme::highlightForeground (void) const
 {
     return QColor (m_highlight_foreground);
 }
 
+/*!
+ * The caret line background color of the text editor
+ */
+
 QColor Theme::currentLineBackground (void) const
 {
     return QColor (m_current_line_background);
 }
+
+/*!
+ * The line numbers margin background color of the text editor
+ */
 
 QColor Theme::lineNumbersBackground (void) const
 {
     return QColor (m_line_numbers_background);
 }
 
+/*!
+ * The line numbers margin foreground color of the text editor
+ */
+
 QColor Theme::lineNumbersForeground (void) const
 {
     return QColor (m_line_numbers_foreground);
 }
+
+/* Syntax highlighter colors */
+
+/*!
+ * The color used to highlight other shit in the text editor
+ */
 
 QColor Theme::others (void) const
 {
     return QColor (m_others);
 }
 
+/*!
+ * The color used to highlight numbers in the text editor
+ */
+
+QColor Theme::numbers (void) const
+{
+    return QColor (m_numbers);
+}
+
+/*!
+ * The color used to highlight strings in the text editor
+ */
+
+QColor Theme::strings (void) const
+{
+    return QColor (m_strings);
+}
+
+/*!
+ * The color used to highlight keywords in the text editor
+ */
+
 QColor Theme::keywords (void) const
 {
     return QColor (m_keywords);
 }
 
+/*!
+ * The color used to highlight comments in the text editor
+ */
+
 QColor Theme::comments (void) const
 {
     return QColor (m_comments);
 }
+
+/*!
+ * The color used to highlight functions in the text editor
+ */
 
 QColor Theme::functions (void) const
 {

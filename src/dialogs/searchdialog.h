@@ -27,7 +27,6 @@
 #include <QCheckBox>
 #include <QLineEdit>
 #include <QPushButton>
-#include <QSpacerItem>
 #include <QGridLayout>
 
 #include "editor.h"
@@ -41,7 +40,8 @@ class SearchDialog : public QDialog
         SearchDialog (Window *parent = 0);
 
     private slots:
-        void search (void);
+        bool search (void);
+        void findNext (void);
         void replaceAll (void);
         void replaceFirstOccurrence (void);
 
@@ -53,11 +53,12 @@ class SearchDialog : public QDialog
         QLabel *ui_replace_label;
         QLineEdit *ui_find_lineedit;
         QPushButton *ui_done_button;
+        QPushButton *ui_next_button;
         QPushButton *ui_replace_button;
         QLineEdit *ui_replace_lineedit;
-        QSpacerItem *ui_vertical_spacer;
         QCheckBox *ui_match_case_checkbox;
         QCheckBox *ui_whole_words_checkbox;
+        QCheckBox *ui_regex_search_checkbox;
         QPushButton *ui_replace_all_button;
 };
 

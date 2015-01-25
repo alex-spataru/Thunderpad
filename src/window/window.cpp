@@ -39,29 +39,23 @@
 
 #define CURRENT_YEAR QDateTime::currentDateTime().toString("yyyy")
 
-#define GNU_WARRANTY_WARNING "The program is provided AS IS with NO WARRANTY \
-OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, \
-MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE."
-
-#define HELP_LINK "http://thunderpad.sf.net/support"
-#define DONATE_LINK "http://thunderpad.sf.net/donate"
-#define FEED_BACK_LINK "mailto:alex_spataru@outlook.com"
-#define WEBSITE_LINK "http://thunderpad.sourceforge.net"
-#define LICENSE_LINK "http://www.gnu.org/copyleft/gpl.html"
-#define CONTRIBUTE_LINK "http://thunderpad.sf.net/contribute"
-#define REPORT_ISSUES_LINK "http://github.com/alex-97/thunderpad/issues"
-
 Window::Window (void)
 {
+    // Allow other instances of Window
+    // to communicate with each other
     setObjectName ("window");
-    setAttribute (Qt::WA_DeleteOnClose);
+
+    // The application crashes on Mac OS X if
+    // WA_DeleteOnClose attribute is defined
+    if (!MAC_OS_X)
+        setAttribute (Qt::WA_DeleteOnClose);
 
     // Create the core components
     m_editor = new Editor (this);
-    m_menu = new MenuBar (this);
     m_toolbar = new ToolBar (this);
     m_statusbar = new StatusBar (this);
     m_search_dialog = new SearchDialog (this);
+    m_menu = new MenuBar (this);
     m_settings = new QSettings (APP_COMPANY, APP_NAME);
 
     // Change the title of the window when a new file is loaded
@@ -138,12 +132,13 @@ void Window::open (void)
 
 void Window::exportPdf (void)
 {
-    QString _path = QFileDialog::getSaveFileName(this,
-                                                 tr("Export PDF"),
-                                                 QDir::homePath(),
-                                                 tr("PDF Document") + " (*.pdf)");
+    QString _path = QFileDialog::getSaveFileName (this,
+                    tr ("Export PDF"),
+                    QDir::homePath(),
+                    tr ("PDF Document") + " (*.pdf)");
 
-    if (!_path.isEmpty()) {
+    if (!_path.isEmpty())
+    {
         QsciPrinter printer (QPrinter::HighResolution);
 
         printer.setOutputFileName (_path);
@@ -162,8 +157,8 @@ void Window::exportPdf (void)
         _message.setInformativeText (tr ("Do you want to open it?"));
         _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No);
         _message.setText (
-                    "<b>" + tr ("The PDF document was successfully generated!") +
-                    "</b>");
+            "<b>" + tr ("The PDF document was successfully generated!") +
+            "</b>");
 
         if (_message.exec() == QMessageBox::Yes)
             QDesktopServices::openUrl (QUrl (_path));
@@ -241,10 +236,10 @@ void Window::aboutThunderpad (void)
 {
     // Show a nice about dialog with application information
     QString _message = QString ("<h%1>%2 %3</h%1>").arg (MAC_OS_X ? "3" : "2", APP_NAME, APP_VERSION) +
-            QString ("<span style='font-weight:normal;'><font size=%1>").arg (MAC_OS_X ? "2" : "3") +
-            "<p>" + tr ("Built on %1 at %2").arg (__DATE__, __TIME__) + "</p>" +
-            "<p>" + tr ("Copyright &copy; 2013-%1 %2").arg (CURRENT_YEAR, APP_COMPANY) + "</p>" +
-            "<p>" + tr (GNU_WARRANTY_WARNING) + "</p></font></span>";
+                       QString ("<span style='font-weight:normal;'><font size=%1>").arg (MAC_OS_X ? "2" : "3") +
+                       "<p>" + tr ("Built on %1 at %2").arg (__DATE__, __TIME__) + "</p>" +
+                       "<p>" + tr ("Copyright &copy; 2013-%1 %2").arg (CURRENT_YEAR, APP_COMPANY) + "</p>" +
+                       "<p>" + tr (GNU_WARRANTY_WARNING) + "</p></font></span>";
 
     QMessageBox::about (this, tr ("About %1").arg (APP_NAME), _message);
 }
@@ -288,8 +283,8 @@ void Window::updateTitle (void)
 {
     // Use "Untitled" while editing new documents
     QString _title = editor()->documentTitle().isEmpty() ?
-                tr ("Untitled") :
-                shortFileName (editor()->documentTitle());
+                     tr ("Untitled") :
+                     shortFileName (editor()->documentTitle());
 
     // Add a "*" if the document was modifed
     QString _star = editor()->isModified() ?  "* - " : " - ";

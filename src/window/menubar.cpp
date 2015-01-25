@@ -26,6 +26,7 @@
 
 #include "menubar.h"
 #include "platform.h"
+#include "settings.h"
 #include "assembly_info.h"
 
 MenuBar::MenuBar (Window *parent) : QMenuBar (parent)
@@ -77,6 +78,7 @@ void MenuBar::initialize (Window *window)
     connect (t_goto_line, SIGNAL (triggered()), window->editor(), SLOT (goToLine()));
     connect (t_sort_selection, SIGNAL (triggered()), window->editor(), SLOT (sortSelection()));
     connect (t_insert_date_time, SIGNAL (triggered()), window->editor(), SLOT (insertDateTime()));
+    connect (t_document_information, SIGNAL (triggered()), window->editor(), SLOT (documentInfo()));
 
     // Connect slots for the format menu
     connect (format_font, SIGNAL (triggered()), window->editor(), SLOT (selectFonts()));
@@ -113,13 +115,13 @@ void MenuBar::initialize (Window *window)
 
 void MenuBar::updateSettings (void)
 {
-    v_toolbar->setChecked (m_settings->value ("toolbar-enabled", true).toBool());
-    v_statusbar->setChecked (m_settings->value ("statusbar-enabled", true).toBool());
-    v_toolbar_text->setChecked (m_settings->value ("toolbar-text", false).toBool());
-    format_word_wrap->setChecked (m_settings->value ("wordwrap-enabled", true).toBool());
-    v_large_toolbar_icons->setChecked (m_settings->value ("large-icons", MAC_OS_X).toBool());
-    v_line_numbers->setChecked (m_settings->value ("line-numbers-enabled", true).toBool());
-    v_highlight_current_line->setChecked (m_settings->value ("hc-line-enabled", true).toBool());
+    v_toolbar->setChecked (m_settings->value ("toolbar-enabled", SETTINGS_TOOLBAR_ENABLED).toBool());
+    v_toolbar_text->setChecked (m_settings->value ("toolbar-text", SETTINGS_TOOLBAR_TEXT).toBool());
+    v_statusbar->setChecked (m_settings->value ("statusbar-enabled", SETTINGS_STATUSBAR_ENABLED).toBool());
+    format_word_wrap->setChecked (m_settings->value ("wordwrap-enabled", SETTINGS_WORD_WRAP_ENABLED).toBool());
+    v_large_toolbar_icons->setChecked (m_settings->value ("large-icons", SETTINGS_LARGE_ICONS).toBool());
+    v_line_numbers->setChecked (m_settings->value ("line-numbers-enabled", SETTINGS_LINE_NUMBERS).toBool());
+    v_highlight_current_line->setChecked (m_settings->value ("hc-line-enabled", SETTINGS_CARET_LINE).toBool());
 }
 
 void MenuBar::createActions (void)
@@ -164,6 +166,7 @@ void MenuBar::createActions (void)
     t_sort_selection = new QAction (tr ("Sort selection"), this);
     t_goto_line = new QAction (tr ("Go to line") + "...", this);
     t_insert_date_time = new QAction (tr ("Insert date/time"), this);
+    t_document_information = new QAction (tr ("Document information"), this);
 
     // Create the help menu actions
     h_about_qt = new QAction (tr ("About Qt") + "...", this);
@@ -316,7 +319,7 @@ void MenuBar::createMenubar (void)
         connect (_action, SIGNAL (triggered()), icon_themes_mapper, SLOT (map()));
 
         // Check the icon if necessary
-        if (m_settings->value ("icon-theme", "Silk").toString() == _action->text())
+        if (m_settings->value ("icon-theme", SETTINGS_ICON_THEME).toString() == _action->text())
             _action->setChecked (true);
     }
 
@@ -325,6 +328,7 @@ void MenuBar::createMenubar (void)
     m_tools->addAction (t_goto_line);
     m_tools->addSeparator();
     m_tools->addAction (t_insert_date_time);
+    m_tools->addAction (t_document_information);
 
     // Create the help menu
     m_help->addAction (h_about_qt);

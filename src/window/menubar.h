@@ -150,6 +150,7 @@ class MenuBar : public QMenuBar
         QAction *t_sort_selection;
         QAction *t_goto_line;
         QAction *t_insert_date_time;
+        QAction *t_document_information;
 
         QAction *h_about_thunderpad;
         QAction *h_about_qt;

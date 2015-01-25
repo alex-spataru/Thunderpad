@@ -26,47 +26,16 @@
 #include <QApplication>
 #include <QPrintDialog>
 
+#include <math.h>
 #include <Qsci/qsciprinter.h>
-#include <Qsci/qscilexer.h>
-#include <Qsci/qscilexeravs.h>
-#include <Qsci/qscilexerbash.h>
-#include <Qsci/qscilexerbatch.h>
-#include <Qsci/qscilexercmake.h>
-#include <Qsci/qscilexercoffeescript.h>
-#include <Qsci/qscilexercpp.h>
-#include <Qsci/qscilexercsharp.h>
-#include <Qsci/qscilexercss.h>
-#include <Qsci/qscilexerd.h>
-#include <Qsci/qscilexerdiff.h>
-#include <Qsci/qscilexerfortran.h>
-#include <Qsci/qscilexerfortran77.h>
-#include <Qsci/qscilexerhtml.h>
-#include <Qsci/qscilexeridl.h>
-#include <Qsci/qscilexerjava.h>
-#include <Qsci/qscilexerjavascript.h>
-#include <Qsci/qscilexerlua.h>
-#include <Qsci/qscilexermakefile.h>
-#include <Qsci/qscilexermatlab.h>
-#include <Qsci/qscilexeroctave.h>
-#include <Qsci/qscilexerpascal.h>
-#include <Qsci/qscilexerperl.h>
-#include <Qsci/qscilexerpo.h>
-#include <Qsci/qscilexerpostscript.h>
-#include <Qsci/qscilexerpov.h>
-#include <Qsci/qscilexerpython.h>
-#include <Qsci/qscilexerruby.h>
-#include <Qsci/qscilexerspice.h>
-#include <Qsci/qscilexersql.h>
-#include <Qsci/qscilexertcl.h>
-#include <Qsci/qscilexertex.h>
-#include <Qsci/qscilexerverilog.h>
-#include <Qsci/qscilexervhdl.h>
-#include <Qsci/qscilexerxml.h>
-#include <Qsci/qscilexeryaml.h>
 
 #include "editor.h"
+#include "settings.h"
 #include "platform.h"
 #include "assembly_info.h"
+
+#define KILOBYTE 1024
+#define MEGABYTE 1048576
 
 Editor::Editor (QWidget *parent) : QsciScintilla (parent)
 {
@@ -75,15 +44,14 @@ Editor::Editor (QWidget *parent) : QsciScintilla (parent)
     m_theme = new Theme (this);
     m_settings = new QSettings (APP_COMPANY, APP_NAME);
 
-    setIndentationWidth(4);
-    setIndentationGuides(true);
-    setFolding(QsciScintilla::BoxedTreeFoldStyle, 2);
+    setUtf8 (true);
+    setIndentationWidth (4);
+    setIndentationGuides (true);
+    setFolding (QsciScintilla::BoxedTreeFoldStyle, 2);
     setBraceMatching (QsciScintilla::SloppyBraceMatch);
 
     connect (this, SIGNAL (textChanged()), this, SLOT (updateLineNumbers()));
     connect (this, SIGNAL (settingsChanged()), this, SLOT (updateSettings()));
-
-    m_current_language = PlainText;
 }
 
 bool Editor::maybeSave (void)
@@ -133,6 +101,39 @@ bool Editor::maybeSave (void)
     return false;
 }
 
+int Editor::wordCount (void)
+{
+    return text().split
+           (QRegExp ("(\\s|\\n|\\r)+"),
+            QString::SkipEmptyParts).count();
+}
+
+QString Editor::calculateSize (void)
+{
+    QString _units;
+    float _length = length();
+
+    // File is less than one KB
+    if (_length < KILOBYTE)
+        _units = " " + tr ("bytes");
+
+    // File is one KB or greater, but smaller than one MB
+    else if (_length < MEGABYTE)
+    {
+        _length /= KILOBYTE;
+        _units = " " + tr ("KB");
+    }
+
+    // File is one MB or greater
+    else
+    {
+        _length /= MEGABYTE;
+        _units = " " + tr ("MB");
+    }
+
+    return QString::number (floorf (_length * 100 + 0.5) / 100) + _units;
+}
+
 QString Editor::documentTitle (void) const
 {
     return m_document_title;
@@ -140,7 +141,7 @@ QString Editor::documentTitle (void) const
 
 void Editor::resetZoom (void)
 {
-    zoomTo(0);
+    zoomTo (0);
 }
 
 void Editor::documentInfo (void)
@@ -175,23 +176,12 @@ void Editor::updateSettings (void)
     m_font.setPointSize (m_settings->value ("font-size", _default_size).toInt());
     m_font.setFamily (m_settings->value ("font-family", _default_font).toString());
 
-    // Use the same font in the editor
-    setFont (m_font);
-    setMarginsFont (m_font);
-
     // Enable/disable word wrapping based on the saved settings
-    setWordWrap (m_settings->value ("wordwrap-enabled", true).toBool());
+    setWordWrap (m_settings->value ("wordwrap-enabled", SETTINGS_WORD_WRAP_ENABLED).toBool());
 
-    // Update the colors of the text editor
-    m_theme->readTheme (m_settings->value ("color-scheme", "Light").toString());
-    setMarginsBackgroundColor (m_theme->lineNumbersBackground());
-    setMarginsForegroundColor (m_theme->lineNumbersForeground());
-    setCaretLineBackgroundColor (m_theme->currentLineBackground());
-
-    // Enable the caret line (highlight the current line)
-    setCaretLineVisible (m_settings->value ("hc-line-enabled", true).toBool());
-
-    m_line_numbers = m_settings->value ("line-numbers-enabled", true).toBool();
+    // Update caret line & line numbers
+    setCaretLineVisible (m_settings->value ("hc-line-enabled", SETTINGS_CARET_LINE).toBool());
+    m_line_numbers = m_settings->value ("line-numbers-enabled", SETTINGS_LINE_NUMBERS).toBool();
 
     // Enable line numbers
     if (m_line_numbers)
@@ -207,8 +197,18 @@ void Editor::updateSettings (void)
         setMarginLineNumbers (1, false);
     }
 
+    // Use the same font in the editor
+    setFont (m_font);
+    setMarginsFont (m_font);
+
+    // Update the colors of the text editor
+    m_theme->readTheme (m_settings->value ("color-scheme", "Light").toString());
+    setMarginsBackgroundColor (m_theme->lineNumbersBackground());
+    setMarginsForegroundColor (m_theme->lineNumbersForeground());
+    setCaretLineBackgroundColor (m_theme->currentLineBackground());
+
     // Basically, re-highlight the document
-    configureLexer ();
+    updateLexer();
 }
 
 bool Editor::save (void)
@@ -356,26 +356,17 @@ bool Editor::writeFile (const QString &file)
     return false;
 }
 
-void Editor::configureLexer (void)
+void Editor::updateLexer (void)
 {
-    QsciLexer *_lexer;
+    QsciLexer *_lexer = m_lexer_db.getLexer (documentTitle());
 
-    switch (m_current_language)
-    {
-        case Cpp:
-            _lexer = new QsciLexerCPP (this);
-            break;
-
-        default:
-            _lexer = new QsciLexerCPP (this);
-    }
+    _lexer->setFont (m_font);
+    _lexer->setDefaultFont (m_font);
+    _lexer->setDefaultColor (m_theme->foreground());
+    _lexer->setDefaultPaper (m_theme->background());
+    _lexer->setAutoIndentStyle (QsciScintilla::AiMaintain);
 
     setLexer (_lexer);
-
-    lexer()->setFont (m_font);
-    lexer()->setDefaultColor (m_theme->foreground());
-    lexer()->setDefaultPaper (m_theme->background());
-    lexer()->setAutoIndentStyle (QsciScintilla::AiMaintain);
 }
 
 void Editor::updateLineNumbers (void)
@@ -394,17 +385,9 @@ void Editor::onMarginClicked (void)
 
 void Editor::configureDocument (const QString &file)
 {
-    setModified (false);
     m_document_title = file;
-    getProgrammingLanguage (file);
 
+    updateLexer();
+    setModified (0);
     emit updateTitle();
-}
-
-void Editor::getProgrammingLanguage (const QString &file)
-{
-    Q_UNUSED (file);
-
-    m_current_language = Cpp;
-    configureLexer();
 }

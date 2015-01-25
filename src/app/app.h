@@ -26,10 +26,7 @@ class Application : public QApplication
 
     private slots:
         void setupUpdater (void);
-        void showLatestVersion (void);
-        void onCheckingFinished (void);
         void showWelcomeMessages (void);
-        void showUpdateAvailable (void);
 
     protected:
         bool event (QEvent *_event);

@@ -62,7 +62,10 @@ HEADERS += \
     $$PWD/src/window/statusbar.h \
     $$PWD/src/shared/platform.h \
     $$PWD/src/editor/theme.h \
-    $$PWD/src/shared/assembly_info.h
+    $$PWD/src/shared/assembly_info.h \
+    $$PWD/src/shared/settings.h \
+    $$PWD/src/editor/lexers/plain_text.h \
+    src/editor/lexer_database.h
 
 SOURCES += \
     $$PWD/src/app/app.cpp \
@@ -73,4 +76,6 @@ SOURCES += \
     $$PWD/src/window/window.cpp \
     $$PWD/src/main.cpp \
     $$PWD/src/window/statusbar.cpp \
-    $$PWD/src/editor/theme.cpp
+    $$PWD/src/editor/theme.cpp \
+    $$PWD/src/editor/lexers/plain_text.cpp \
+    src/editor/lexer_database.cpp

@@ -23,8 +23,35 @@
 #include <QMessageBox>
 
 #include "app.h"
+#include "settings.h"
 #include "platform.h"
 #include "assembly_info.h"
+
+/*!
+ * \class Application
+ * \brief Provides a bridge between the system and the main window
+ *
+ * The \c Application class is in charge of creating and configuring the following:
+ *
+ * \list
+ * \o The main window (using the \c Window class)
+ * \o The auto-updater system (using the \c QSimpleUpdater class)
+ * \endlist
+ *
+ * Additionally, the \c Application class communicated with the operating system
+ * in order to create new files and/or open files from another programs.
+ */
+
+/*!
+ * Initializes the \c Application class, and then:
+ *
+ * \list
+ * \ol Reads system arguments
+ * \ol Creates the main window
+ * \ol Configures the auto-updater system
+ * \ol Shows welcome messages
+ * \endlist
+ */
 
 Application::Application (int &argc, char **argv) : QApplication (argc, argv),
     m_show_all_updater_messages (false)
@@ -67,13 +94,22 @@ Application::Application (int &argc, char **argv) : QApplication (argc, argv),
     showWelcomeMessages();
 }
 
-void Application::checkForUpdates (void)
-{
-    m_updater->checkForUpdates();
+/*!
+ * Re-configures the updater system to show all messages and
+ * tells it to check for updates.
+ */
 
-    // Allow the "you have the newest version installed" message to show up
-    m_show_all_updater_messages = true;
+void Application::checkForUpdates()
+{
+    m_updater->setSilent (false);
+    m_updater->setShowNewestVersionMessage (true);
+    m_updater->checkForUpdates();
 }
+
+/*!
+ * Configures the updater system based on target operating system
+ * and checks for updates automatically (if user wants to).
+ */
 
 void Application::setupUpdater (void)
 {
@@ -95,62 +131,21 @@ void Application::setupUpdater (void)
     m_updater->setApplicationVersion (applicationVersion());
     m_updater->setReferenceUrl (base_repo_url + "latest.txt");
     m_updater->setChangelogUrl (base_repo_url + "changelog.txt");
-    connect (m_updater, SIGNAL (checkingFinished()), this, SLOT (onCheckingFinished()));
 
     // Check for updates automatically
-    if (m_settings->value ("check-for-updates", true).toBool())
-        m_updater->checkForUpdates();
-}
-
-void Application::showLatestVersion (void)
-{
-    QMessageBox _message;
-    _message.setStandardButtons (QMessageBox::Ok);
-    _message.setIconPixmap (QPixmap (":/images/others/logo.png"));
-
-    _message.setInformativeText (
-        tr ("The latest release of Thunderpad is version %1")
-        .arg (qApp->applicationVersion()));
-
-    _message.setText ("<b>" + tr ("Congratulations! You are running the latest "
-                                  "version of Thunderpad!") + "</b>");
-
-    _message.exec();
-}
-
-void Application::showUpdateAvailable (void)
-{
-    QMessageBox _message;
-    _message.setDetailedText (m_updater->changeLog());
-    _message.setIconPixmap (QPixmap (":/images/others/logo.png"));
-    _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No);
-
-    _message.setText ("<b>" + tr ("There's a new version of Thunderpad!") + " (" +
-                      m_updater->latestVersion() + ")</b>");
-
-    _message.setInformativeText (
-        tr ("Do you want to download the newest version?"));
-
-    // The user wants to download the latest version...
-    if (_message.exec() == QMessageBox::Yes)
-        m_updater->downloadLatestVersion();
-}
-
-void Application::onCheckingFinished (void)
-{
-    // There's a newer version of the application available to download
-    if (m_updater->newerVersionAvailable())
-        showUpdateAvailable();
-
-    // Well, the developers are somewhat lazy and haven't released
-    // a newer version of the application...should we ask the user
-    // to give them some coffee?
-    else if (m_show_all_updater_messages)
+    if (m_settings->value ("check-for-updates", SETTINGS_AUTO_CHECK_UPDATES).toBool())
     {
-        showLatestVersion();
-        m_show_all_updater_messages = false;
+        m_updater->setSilent (true);
+        m_updater->checkForUpdates();
     }
 }
+
+/*!
+ * \list
+ * \o Welcomes the user on first launch
+ * \o Asks the user to check for updates automatically on second launch
+ * \endlist
+ */
 
 void Application::showWelcomeMessages (void)
 {
@@ -185,15 +180,19 @@ void Application::showWelcomeMessages (void)
     {
         _message.setDefaultButton (QMessageBox::Yes);
         _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No);
-        _message.setText (
-            "<b>" + tr ("Do you want to check for updates automatically?") + "</b>");
-        _message.setInformativeText (tr ("You can always check for updates from the "
-                                         "Help menu"));
+        _message.setText ("<b>" + tr ("Check for updates automatically?") + "</b>");
+        _message.setInformativeText (tr ("Should %1 automatically check for updates? "
+                                         "You can always check for updates manually "
+                                         "from the %1 menu.").arg (APP_NAME));
 
         m_settings->setValue ("second-launch", false);
         m_settings->setValue ("check-for-updates", _message.exec() == QMessageBox::Yes);
     }
 }
+
+/*!
+ * Asks the main window to open a file requested by the operating system
+ */
 
 bool Application::event (QEvent *_event)
 {

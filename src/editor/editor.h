@@ -26,55 +26,19 @@
 #include <Qsci/qsciscintilla.h>
 
 #include "theme.h"
+#include "lexer_database.h"
 
 class Editor : public QsciScintilla
 {
         Q_OBJECT
 
     public:
-
-        enum ProgrammingLanguage
-        {
-            Avs,
-            Bash,
-            Batch,
-            Cmake,
-            Coffeescript,
-            Cpp,
-            CSharp,
-            CSS,
-            D,
-            Diff,
-            Fortran,
-            Fortran77,
-            Html,
-            Idl,
-            Java,
-            Javascript,
-            Lua,
-            Makefile,
-            Matlab,
-            Octave,
-            Pascal,
-            Perl,
-            Po,
-            Pov,
-            Python,
-            Ruby,
-            Spice,
-            Sql,
-            Tcl,
-            Tex,
-            Verilog,
-            Vhdl,
-            Xml,
-            Yaml,
-            PlainText
-        };
-
         explicit Editor (QWidget *parent = 0);
 
         bool maybeSave (void);
+
+        int wordCount (void);
+        QString calculateSize (void);
         QString documentTitle (void) const;
 
     signals:
@@ -97,13 +61,12 @@ class Editor : public QsciScintilla
         void setWordWrap (bool ww);
         void readFile (const QString &file);
         bool writeFile (const QString &file);
-        void configureLexer ();
 
     private slots:
+        void updateLexer (void);
         void updateLineNumbers (void);
         void onMarginClicked (void);
         void configureDocument (const QString &file);
-        void getProgrammingLanguage (const QString &file);
 
     private:
         Theme *m_theme;
@@ -112,8 +75,7 @@ class Editor : public QsciScintilla
         QFont m_font;
         bool m_line_numbers;
         QString m_document_title;
-
-        ProgrammingLanguage m_current_language;
+        LexerDatabase m_lexer_db;
 };
 
 #endif
