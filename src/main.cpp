@@ -21,6 +21,13 @@
 
 #include "app/app.h"
 
+/*!
+ * \internal
+ * Creates the \c {Application} and decides whenever
+ * to create a new instance of Thunderpad or send data
+ * to the existing instance.
+ */
+
 int main (int argc, char *argv[])
 {
     Application app (argc, argv);
