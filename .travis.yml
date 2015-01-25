@@ -1,7 +1,7 @@
 language: cpp
 
 before_install:
-    - sudo apt-get install -qq libqscintilla2-dev libqt4-core libqt4-dev libqt4-gui qt4-dev-tools libssl-dev
+    - sudo apt-get install -qq libqscintilla2-8 libc6 libstdc++6 libqscintilla2-dev libqt4-core libqt4-dev libqt4-gui qt4-dev-tools libssl-dev
 
 script:
     - mkdir build
