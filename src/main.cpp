@@ -25,7 +25,7 @@
  * \internal
  * Creates the \c {Application} and decides whenever
  * to create a new instance of Thunderpad or send data
- * to the existing instance.
+ * to the existing instance and quit.
  */
 
 int main (int argc, char *argv[])
