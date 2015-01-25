@@ -20,7 +20,6 @@
 //
 
 #include "searchdialog.h"
-#include <QMessageBox>
 
 /*!
  * \class SearchDialog
@@ -77,17 +76,17 @@ SearchDialog::SearchDialog (Window *parent) : QDialog (parent)
 
     // Arrange the widgets in a nice layout...
     ui_layout->setSpacing (10);
-    ui_layout->addWidget (ui_find_label,            1, 1, 1, 1);
-    ui_layout->addWidget (ui_done_button,           8, 4, 3, 4);
-    ui_layout->addWidget (ui_find_lineedit,         1, 2, 1, 2);
-    ui_layout->addWidget (ui_replace_label,         2, 1, 2, 1);
-    ui_layout->addWidget (ui_next_button,           1, 4, 1, 4);
-    ui_layout->addWidget (ui_replace_button,        2, 4, 2, 4);
-    ui_layout->addWidget (ui_replace_lineedit,      2, 2, 2, 2);
-    ui_layout->addWidget (ui_replace_all_button,    4, 4, 3, 4);
-    ui_layout->addWidget (ui_match_case_checkbox,   4, 1, 3, 1);
-    ui_layout->addWidget (ui_whole_words_checkbox,  8, 1, 3, 1);
-    ui_layout->addWidget (ui_regex_search_checkbox, 6, 1, 3, 1);
+    ui_layout->addWidget (ui_find_label,              1, 1, 1, 1);
+    ui_layout->addWidget (ui_find_lineedit,           1, 2, 1, 2);
+    ui_layout->addWidget (ui_replace_label,           2, 1, 2, 1);
+    ui_layout->addWidget (ui_next_button,             1, 4, 1, 4);
+    ui_layout->addWidget (ui_replace_button,          2, 4, 2, 4);
+    ui_layout->addWidget (ui_replace_lineedit,        2, 2, 2, 2);
+    ui_layout->addWidget (ui_replace_all_button,      4, 4, 3, 4);
+    ui_layout->addWidget (ui_match_case_checkbox,     4, 1, 3, 1);
+    ui_layout->addWidget (ui_whole_words_checkbox,    8, 1, 3, 1);
+    ui_layout->addWidget (ui_regex_search_checkbox,   6, 1, 3, 1);
+    ui_layout->addWidget (ui_done_button,             8, 4, 4, 4);
 
     // Inhibit resizing
     layout()->setSizeConstraint (QLayout::SetFixedSize);
@@ -102,18 +101,25 @@ SearchDialog::SearchDialog (Window *parent) : QDialog (parent)
     connect (ui_next_button, SIGNAL (clicked()), this, SLOT (findNext()));
     connect (ui_match_case_checkbox, SIGNAL (clicked()), this, SLOT (search()));
     connect (ui_whole_words_checkbox, SIGNAL (clicked()), this, SLOT (search()));
+    connect (ui_regex_search_checkbox, SIGNAL (clicked()), this, SLOT (search()));
     connect (ui_replace_all_button, SIGNAL (clicked()), this, SLOT (replaceAll()));
     connect (ui_find_lineedit, SIGNAL (textChanged (QString)), this, SLOT (search()));
     connect (ui_replace_button, SIGNAL (clicked()), this, SLOT (replaceFirstOccurrence()));
 }
 
+/*!
+ * Searches the text editor with the given options by the user and
+ * adapts the UI interface based on the search results
+ */
+
 bool SearchDialog::search (void)
 {
-    bool _found = m_text_edit->findFirst (ui_find_lineedit->text(),
-                                          ui_regex_search_checkbox->isChecked(),
-                                          ui_match_case_checkbox->isChecked(),
-                                          ui_whole_words_checkbox->isChecked(),
-                                          m_text_edit->wrapMode() == QsciScintilla::WrapWord);
+    bool _found = m_text_edit->findFirst (ui_find_lineedit->text(),               // Search query
+                                          ui_regex_search_checkbox->isChecked(),  // Regex searching
+                                          ui_match_case_checkbox->isChecked(),    // Match case
+                                          ui_whole_words_checkbox->isChecked(),   // Find whole words
+                                          true                                    // Search with word-wrap
+                                         );
 
     ui_replace_button->setEnabled (_found);
     ui_replace_lineedit->setEnabled (_found);
@@ -122,23 +128,45 @@ bool SearchDialog::search (void)
     return _found;
 }
 
+/*!
+ * Highlights the next match of the search query
+ */
+
 void SearchDialog::findNext (void)
 {
     m_text_edit->findNext();
 }
 
+/*!
+ * Replaces all matches of the search query
+ */
+
 void SearchDialog::replaceAll (void)
 {
-    while (search())
-        replaceFirstOccurrence();
+    if (!m_text_edit->isReadOnly())
+    {
+        while (search())
+            replaceFirstOccurrence();
 
-    QMessageBox::information (this, windowTitle(),
-                              tr ("All instances of \"%1\" have been replaced with \"%2\"")
-                              .arg (ui_find_lineedit->text())
-                              .arg (ui_replace_lineedit->text()));
+        QMessageBox::information (this, windowTitle(),
+                                  tr ("All instances of \"%1\" have been replaced with \"%2\"")
+                                  .arg (ui_find_lineedit->text())
+                                  .arg (ui_replace_lineedit->text()));
+    }
+
+    else
+        QMessageBox::warning (this, tr ("Find/Replace"), tr ("Document is read-only!"));
 }
+
+/*!
+ * Replaces the selected match of the search query
+ */
 
 void SearchDialog::replaceFirstOccurrence (void)
 {
-    m_text_edit->replaceSelectedText (ui_replace_lineedit->text());
+    if (!m_text_edit->isReadOnly())
+        m_text_edit->replaceSelectedText (ui_replace_lineedit->text());
+
+    else
+        QMessageBox::warning (this, tr ("Find/Replace"), tr ("Document is read-only!"));
 }

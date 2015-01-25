@@ -34,13 +34,13 @@ Thunderpad is released with the GNU 3.0 license, you can read a copy of it [here
 9. Build and run Thudnerpad by pressing CMD + R.
 10. To install, navigate to the directory where you extracted the source code and locate a folder similar to "build-thunderpad-Desktop_Qt_4_8_clang_64bit-Release" and copy the Thunderpad.app to your Applications folder.
 
-### Ubuntu-based distros
+### Debian-based distros
 
 1. [Download](https://github.com/alex-97/thunderpad/archive/master.zip) the source code.
 
 2. Run the following commands to install the required packages for compiling
 
-        sudo apt-get install qt4-default
+        sudo apt-get install qt4-default libqscintilla2-dev
 
 3. Then, go to your downloads folder and unzip the current commit.
 

@@ -28,6 +28,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QGridLayout>
+#include <QMessageBox>
 
 #include "editor.h"
 #include "window.h"

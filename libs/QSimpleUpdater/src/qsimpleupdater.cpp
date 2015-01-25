@@ -349,8 +349,11 @@ void QSimpleUpdater::cancel (void)
 void QSimpleUpdater::showErrorMessage (void)
 {
     if (!silent())
+    {
+        m_progressDialog->hide();
         QMessageBox::warning (NULL, tr ("Software Updater"),
                               tr ("An unknown error occured while checking for updates"));
+    }
 }
 
 /*! \internal
@@ -362,6 +365,9 @@ void QSimpleUpdater::showErrorMessage (void)
 
 void QSimpleUpdater::onCheckingFinished (void)
 {
+    // Hide the progress dialog
+    m_progressDialog->hide();
+
     // Get the application icon as a pixmap
     QPixmap _icon = qApp->windowIcon().pixmap (
                         qApp->windowIcon().actualSize (QSize (96, 96)));
@@ -416,7 +422,6 @@ void QSimpleUpdater::onCheckingFinished (void)
 void QSimpleUpdater::checkDownloadedVersion (QNetworkReply *reply)
 {
     bool _new_update = false;
-    m_progressDialog->hide();
 
     QString _reply = QString::fromUtf8 (reply->readAll());
     _reply.replace (" ", "");

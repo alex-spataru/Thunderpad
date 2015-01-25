@@ -58,7 +58,8 @@ Application::Application (int &argc, char **argv) : QtSingleApplication (argc, a
  * and shows welcome messages.
  */
 
-int Application::start(const QString &arguments) {
+int Application::start (const QString &arguments)
+{
     m_window = new Window();
     m_updater = new QSimpleUpdater();
     m_settings = new QSettings (APP_COMPANY, APP_NAME);
@@ -66,7 +67,7 @@ int Application::start(const QString &arguments) {
     m_window->openFile (arguments);
 
     connect (m_window, SIGNAL (checkForUpdates()), this, SLOT (checkForUpdates()));
-    connect (this, SIGNAL (messageReceived(QString)), this, SLOT (onMessageReceived(QString)));
+    connect (this, SIGNAL (messageReceived (QString)), this, SLOT (onMessageReceived (QString)));
 
     QTimer *timer = new QTimer (this);
     timer->singleShot (250, this, SLOT (setupUpdater()));
@@ -83,8 +84,8 @@ int Application::start(const QString &arguments) {
 
 void Application::checkForUpdates (void)
 {
-    m_updater->setSilent(false);
-    m_updater->setShowNewestVersionMessage(true);
+    m_updater->setSilent (false);
+    m_updater->setShowNewestVersionMessage (true);
     m_updater->checkForUpdates();
 }
 
@@ -97,7 +98,7 @@ void Application::setupUpdater (void)
     QString download_package_url;
     QString base_repo_url = "https://raw.githubusercontent.com/"
                             "alex-97/thunderpad/updater/";
-    
+
     // Decide which file should we download based on current OS
 #if MAC_OS_X
     download_package_url = base_repo_url + "files/thunderpad-latest.dmg";
@@ -106,14 +107,14 @@ void Application::setupUpdater (void)
 #else
     download_package_url = base_repo_url + "files/thunderpad-latest.tar.gz";
 #endif
-    
+
     // The following code is very obvious...
-    m_updater->setSilent(true);
+    m_updater->setSilent (true);
     m_updater->setDownloadUrl (download_package_url);
     m_updater->setApplicationVersion (applicationVersion());
     m_updater->setReferenceUrl (base_repo_url + "latest.txt");
     m_updater->setChangelogUrl (base_repo_url + "changelog.txt");
-    
+
     // Check for updates automatically
     if (m_settings->value ("check-for-updates", SETTINGS_AUTO_CHECK_UPDATES).toBool())
         m_updater->checkForUpdates();
@@ -132,28 +133,28 @@ void Application::showWelcomeMessages (void)
     QMessageBox _message;
     _message.setWindowModality (Qt::WindowModal);
     _message.setIconPixmap (QPixmap (":/images/others/logo.png"));
-    
+
     // Its the first launch, welcome the user to the application
     if (m_settings->value ("first-launch", true).toBool())
     {
         _message.setStandardButtons (QMessageBox::Close);
         _message.setText ("<b>" + tr ("Thank you for downloading Thunderpad!") +
                           "</b>           ");
-        
+
         _message.setInformativeText (
-                    tr ("If you find this program useful and would like to help "
-                        "contribute to future development, please consider "
-                        "a small donation. You can  use the Donate item in the "
-                        "Help menu to send your much needed assistance via BitCoins.\n\n"
-                        "Please share Thunderpad with your friends and colleagues, "
-                        "and feel free to send me feedback!"));
-        
+            tr ("If you find this program useful and would like to help "
+                "contribute to future development, please consider "
+                "a small donation. You can  use the Donate item in the "
+                "Help menu to send your much needed assistance via BitCoins.\n\n"
+                "Please share Thunderpad with your friends and colleagues, "
+                "and feel free to send me feedback!"));
+
         _message.exec();
-        
+
         m_settings->setValue ("first-launch", false);
         m_settings->setValue ("second-launch", true);
     }
-    
+
     // Its the second launch, ask the user if he/she wants to allow the application
     // to check for updates automatically
     else if (m_settings->value ("second-launch", false).toBool())
@@ -161,10 +162,10 @@ void Application::showWelcomeMessages (void)
         _message.setDefaultButton (QMessageBox::Yes);
         _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No);
         _message.setText (
-                    "<b>" + tr ("Do you want to check for updates automatically?") + "</b>");
+            "<b>" + tr ("Do you want to check for updates automatically?") + "</b>");
         _message.setInformativeText (tr ("You can always check for updates from the "
                                          "Help menu"));
-        
+
         m_settings->setValue ("second-launch", false);
         m_settings->setValue ("check-for-updates", _message.exec() == QMessageBox::Yes);
     }
@@ -175,9 +176,10 @@ void Application::showWelcomeMessages (void)
  * acts accordingly (ex: open a file or create a new one)
  */
 
-void Application::onMessageReceived(const QString &msg) {
+void Application::onMessageReceived (const QString &msg)
+{
     if (!msg.isEmpty())
-        m_window->openFile(msg);
+        m_window->openFile (msg);
 
     else
         m_window->newFile();
@@ -192,9 +194,9 @@ bool Application::event (QEvent *_event)
 {
     if (_event->type() == QEvent::FileOpen)
         m_window->openFile (static_cast<QFileOpenEvent *> (_event)->file());
-    
+
     else
         return QApplication::event (_event);
-    
+
     return true;
 }

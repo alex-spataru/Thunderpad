@@ -32,8 +32,8 @@ int main (int argc, char *argv[])
             arguments = argv[i];
     }
 
-    if (app.isRunning() && app.sendMessage(arguments))
+    if (app.isRunning() && app.sendMessage (arguments))
         return 0;
 
-    return app.start(arguments);
+    return app.start (arguments);
 }
