@@ -63,7 +63,7 @@ HEADERS += \
     $$PWD/src/shared/platform.h \
     $$PWD/src/editor/theme.h \
     $$PWD/src/shared/assembly_info.h \
-    $$PWD/src/shared/settings.h \
+    $$PWD/src/shared/defaults.h \
     $$PWD/src/editor/lexers/plain_text.h \
     src/editor/lexer_database.h
 

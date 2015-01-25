@@ -19,7 +19,7 @@
 //  USA
 //
 
-#include "settings.h"
+#include "defaults.h"
 #include "statusbar.h"
 #include "assembly_info.h"
 

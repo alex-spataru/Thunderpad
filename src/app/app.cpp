@@ -23,7 +23,7 @@
 #include <QMessageBox>
 
 #include "app.h"
-#include "settings.h"
+#include "defaults.h"
 #include "platform.h"
 #include "assembly_info.h"
 
