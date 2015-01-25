@@ -24,5 +24,16 @@
 int main (int argc, char *argv[])
 {
     Application app (argc, argv);
-    return app.exec();
+    QString arguments;
+
+    if (argc != 1)
+    {
+        for (int i = 0; i < argc; i++)
+            arguments = argv[i];
+    }
+
+    if (app.isRunning() && app.sendMessage(arguments))
+        return 0;
+
+    return app.start(arguments);
 }

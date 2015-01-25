@@ -27,43 +27,59 @@
 #include "platform.h"
 #include "assembly_info.h"
 
-Application::Application (int &argc, char **argv) : QApplication (argc, argv)
+/*!
+ * \class Application
+ * \brief Creates a bridge between the operating system and the main window
+ *
+ * The \c Application class is in charge of creating the main window
+ * and communicating with the operating system in order to:
+ *
+ * \list
+ * \o Implement a single instance application
+ * \o Load files requested by the operating system (ex: from the file manager)
+ * \endlist
+ */
+
+/*!
+ * \internal
+ * Initializes the application and sets the application information
+ */
+
+Application::Application (int &argc, char **argv) : QtSingleApplication (argc, argv)
 {
     setApplicationName (APP_NAME);
     setOrganizationName (APP_COMPANY);
     setApplicationVersion (APP_VERSION);
     setWindowIcon (QIcon (":/images/others/logo.png"));
-    
-    QString arguments;
-    
-    // Construct a string with the arguments provided by the system
-    if (argc != 1)
-    {
-        for (int i = 0; i < argc; i++)
-            arguments = argv[i];
-    }
-    
-    // Create core components
+}
+
+/*!
+ * Creates and configures the main window, configures the auto-updater
+ * and shows welcome messages.
+ */
+
+int Application::start(const QString &arguments) {
     m_window = new Window();
     m_updater = new QSimpleUpdater();
     m_settings = new QSettings (APP_COMPANY, APP_NAME);
-    
-    // Open the requested file (or create blank file)
+
     m_window->openFile (arguments);
 
-    // Enable manual check for updates
     connect (m_window, SIGNAL (checkForUpdates()), this, SLOT (checkForUpdates()));
-    
-    // Setup the updater after an interval...for some unknown reason if we call
-    // setupUpdater() directly, the application will delay about 400 ms on Windows
+    connect (this, SIGNAL (messageReceived(QString)), this, SLOT (onMessageReceived(QString)));
+
     QTimer *timer = new QTimer (this);
     timer->singleShot (250, this, SLOT (setupUpdater()));
-    
-    // Show a welcome message on the first launch of the application,
-    // in the second launch ask the user if he/she wants to allow the application
-    // to check for updates automatically.
+
     showWelcomeMessages();
+
+    return exec();
 }
+
+/*!
+ * Changes the configuration of the updater system to show all
+ * messages and checks for updates
+ */
 
 void Application::checkForUpdates (void)
 {
@@ -71,6 +87,10 @@ void Application::checkForUpdates (void)
     m_updater->setShowNewestVersionMessage(true);
     m_updater->checkForUpdates();
 }
+
+/*!
+ * Configures the auto-updater system and checks for updates automatically
+ */
 
 void Application::setupUpdater (void)
 {
@@ -98,6 +118,14 @@ void Application::setupUpdater (void)
     if (m_settings->value ("check-for-updates", SETTINGS_AUTO_CHECK_UPDATES).toBool())
         m_updater->checkForUpdates();
 }
+
+/*!
+ * \list
+ * \o Welcomes the user to Thunderpad during first launch
+ * \o Prompts the user to allow the software to check for updates
+ * automatically during second launch
+ * \endlist
+ */
 
 void Application::showWelcomeMessages (void)
 {
@@ -141,6 +169,24 @@ void Application::showWelcomeMessages (void)
         m_settings->setValue ("check-for-updates", _message.exec() == QMessageBox::Yes);
     }
 }
+
+/*!
+ * Gets data from other instances of the application and
+ * acts accordingly (ex: open a file or create a new one)
+ */
+
+void Application::onMessageReceived(const QString &msg) {
+    if (!msg.isEmpty())
+        m_window->openFile(msg);
+
+    else
+        m_window->newFile();
+}
+
+/*!
+ * Allows to open files specified by an operating system event
+ * (ex: when you open a file from the file manager)
+ */
 
 bool Application::event (QEvent *_event)
 {

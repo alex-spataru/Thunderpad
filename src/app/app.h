@@ -9,17 +9,19 @@
 #define APP_H
 
 #include <QSettings>
-#include <QApplication>
 #include <QSimpleUpdater>
+#include <qtsingleapplication.h>
 
 #include "window.h"
 
-class Application : public QApplication
+class Application : public QtSingleApplication
 {
         Q_OBJECT
 
     public:
         Application (int &argc, char **argv);
+
+        int start (const QString &arguments);
 
     public slots:
         void checkForUpdates (void);
@@ -27,6 +29,7 @@ class Application : public QApplication
     private slots:
         void setupUpdater (void);
         void showWelcomeMessages (void);
+        void onMessageReceived (const QString &msg);
 
     protected:
         bool event (QEvent *_event);
