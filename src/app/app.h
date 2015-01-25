@@ -35,8 +35,6 @@ class Application : public QApplication
         Window *m_window;
         QSettings *m_settings;
         QSimpleUpdater *m_updater;
-
-        bool m_show_all_updater_messages;
 };
 
 #endif
