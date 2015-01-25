@@ -63,7 +63,7 @@ void Theme::useFallbackColors (void)
 }
 
 /*!
- * Reads data values from the specified theme definition
+ * Reads data values from the specified \a {theme} definition
  * and loads them into the program.
  */
 
