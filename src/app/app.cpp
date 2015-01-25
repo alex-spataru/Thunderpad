@@ -48,8 +48,10 @@ Application::Application (int &argc, char **argv) : QApplication (argc, argv)
     m_updater = new QSimpleUpdater();
     m_settings = new QSettings (APP_COMPANY, APP_NAME);
     
+    // Open the requested file (or create blank file)
     m_window->openFile (arguments);
-    
+
+    // Enable manual check for updates
     connect (m_window, SIGNAL (checkForUpdates()), this, SLOT (checkForUpdates()));
     
     // Setup the updater after an interval...for some unknown reason if we call
