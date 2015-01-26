@@ -37,29 +37,21 @@ Thunderpad is released with the GNU 3.0 license, you can read a copy of it [here
  
  1. Run the following command to install the required packages for compiling (Debian-based distros only)
  
-        sudo apt-get install build-essential libqt4-core libqt4-dev libqt4-gui qt4-dev-tools libssl-dev
+        sudo apt-get install build-essential libqt4-core libqt4-dev libqt4-gui qt4-dev-tools libssl-dev libqscintilla2-dev
  
- 2. [Download](http://www.riverbankcomputing.com/software/qscintilla/download), compile and install QScintilla (2.8 or later is recommended). You can use the following commands
+ 2. [Download](https://github.com/alex-97/thunderpad/archive/master.zip) the source code of Thunderpad. 
  
-        cd ~/Downloads
-        tar -xzvf QScintilla-gpl-*.tar.gz
-        cd QScintilla-gpl-*/Qt4Qt5
-        qmake && make -j4 && sudo make install
- 
- 
- 3. [Download](https://github.com/alex-97/thunderpad/archive/master.zip) the source code of Thunderpad. 
- 
- 4. Then, go to your downloads folder and unzip the current commit.
+ 3. Then, go to your downloads folder and unzip the current commit.
  
         unzip thunderpad-master.zip -d thunderpad-master
         cd thunderpad-master
  
- 5. Make a directory to build the software
+ 4. Make a directory to build the software
  
         mkdir build
         cd build
  
- 6. Compile the application
+ 5. Compile the application
  
         qmake ../thunderpad.pro CONFIG+=release
         make -j4
