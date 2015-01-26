@@ -267,5 +267,27 @@
         <file>images/themes/High Contrast/24x24/search.png</file>
         <file>images/themes/High Contrast/24x24/undo.png</file>
         <file>images/others/logo.png</file>
+        <file>images/themes/Nimbus/16x16/copy.png</file>
+        <file>images/themes/Nimbus/16x16/cut.png</file>
+        <file>images/themes/Nimbus/16x16/print.png</file>
+        <file>images/themes/Nimbus/16x16/save.png</file>
+        <file>images/themes/Nimbus/16x16/read-only.png</file>
+        <file>images/themes/Nimbus/16x16/new.png</file>
+        <file>images/themes/Nimbus/16x16/open.png</file>
+        <file>images/themes/Nimbus/16x16/paste.png</file>
+        <file>images/themes/Nimbus/16x16/redo.png</file>
+        <file>images/themes/Nimbus/16x16/search.png</file>
+        <file>images/themes/Nimbus/16x16/undo.png</file>
+        <file>images/themes/Nimbus/24x24/copy.png</file>
+        <file>images/themes/Nimbus/24x24/cut.png</file>
+        <file>images/themes/Nimbus/24x24/read-only.png</file>
+        <file>images/themes/Nimbus/24x24/new.png</file>
+        <file>images/themes/Nimbus/24x24/open.png</file>
+        <file>images/themes/Nimbus/24x24/paste.png</file>
+        <file>images/themes/Nimbus/24x24/print.png</file>
+        <file>images/themes/Nimbus/24x24/redo.png</file>
+        <file>images/themes/Nimbus/24x24/save.png</file>
+        <file>images/themes/Nimbus/24x24/search.png</file>
+        <file>images/themes/Nimbus/24x24/undo.png</file>
     </qresource>
 </RCC>

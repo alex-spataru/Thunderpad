@@ -57,6 +57,7 @@ Window::Window (void)
     m_search_dialog = new SearchDialog (this);
     m_menu = new MenuBar (this);
     m_settings = new QSettings (APP_COMPANY, APP_NAME);
+    m_settings->clear();
 
     // Change the title of the window when a new file is loaded
     connect (editor(), SIGNAL (updateTitle()), this, SLOT (updateTitle()));
