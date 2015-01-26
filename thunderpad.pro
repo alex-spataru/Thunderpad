@@ -48,6 +48,7 @@ unix:!macx {
     desktop.path   = /usr/share/applications
     desktop.files += $$PWD/data/linux/thunderpad.desktop
     INSTALLS      += target desktop
+    LIBS          += -lqscintilla2
 }
 
 RESOURCES += $$PWD/res/res.qrc
