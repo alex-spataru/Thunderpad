@@ -43,6 +43,7 @@ Thunderpad is released with the GNU 3.0 license, you can read a copy of it [here
  
  3. Then, go to your downloads folder and unzip the current commit.
  
+        cd ~/Downloads
         unzip thunderpad-master.zip -d thunderpad-master
         cd thunderpad-master
  
