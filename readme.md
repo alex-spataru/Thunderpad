@@ -8,11 +8,11 @@
  
  Thunderpad is released with the GNU 3.0 license, you can read a copy of it [here](http://www.gnu.org/copyleft/gpl.html).
  
- ## Setup/Compiling
+## Setup/Compiling
  
  **Note: The development state of Thunderpad is still not complete, do not expect anything great for the moment**
  
- ### Windows
+### Windows
  
  1. Install the Qt SDK from [http://qt-project.org/downloads](http://qt-project.org/downloads).
  2. [Download](https://github.com/alex-97/thunderpad/archive/master.zip) the source code and extract it with your favorite ZIP utility.
@@ -21,7 +21,7 @@
  5. Select the "release" build option.
  5. Build and run Thunderpad by pressing CTRL + R.
  
- ### Mac OS X
+### Mac OS X
  
  1. Download Xcode from the App Store.
  2. Open Xcode and accept the license agreement.
@@ -34,7 +34,7 @@
  9. Build and run Thudnerpad by pressing CMD + R.
  10. To install, navigate to the directory where you extracted the source code and locate a folder similar to "build-thunderpad-Desktop_Qt_4_8_clang_64bit-Release" and copy the Thunderpad.app to your Applications folder.
  
- ### Linux
+### Linux
  
  1. Run the following command to install the required packages for compiling (Debian-based distros only)
  
