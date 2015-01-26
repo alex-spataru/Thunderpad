@@ -20,6 +20,7 @@
 //
 
 #include <QIcon>
+#include <QMutex>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <QFontDialog>
@@ -289,14 +290,17 @@ void Editor::readFile (const QString &file)
 
     if (!file.isEmpty())
     {
+        QMutex _mutex;
         QFile _file (file);
 
         if (_file.open (QIODevice::ReadOnly))
         {
+            _mutex.lock();
             setText (QString::fromUtf8 (_file.readAll()));
             configureDocument (file);
 
             _file.close();
+            _mutex.unlock();
         }
 
         else
@@ -317,14 +321,17 @@ bool Editor::writeFile (const QString &file)
     if (!file.isEmpty())
     {
         QFile _file (file);
+        QMutex _mutex;
 
         if (_file.open (QIODevice::WriteOnly))
         {
             qApp->setOverrideCursor (Qt::WaitCursor);
 
+            _mutex.lock();
             configureDocument (file);
             _file.write (text().toUtf8());
             _file.close();
+            _mutex.unlock();
 
             qApp->restoreOverrideCursor();
             return true;
