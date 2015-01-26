@@ -1,12 +1,11 @@
 ## Thunderpad
 
-<!--Remove build status until we get Travis CI to work-->
-<!--[![Build Status](https://travis-ci.org/alex-97/Thunderpad.svg)](https://travis-ci.org/alex-97/Thunderpad)-->
- [![OpenHub](https://www.openhub.net/p/thunderpad/widgets/project_thin_badge.gif)](http://openhub.net/p/thunderpad)
+[![Build Status](https://travis-ci.org/alex-97/Thunderpad.svg)](https://travis-ci.org/alex-97/Thunderpad)
+[![OpenHub](https://www.openhub.net/p/thunderpad/widgets/project_thin_badge.gif)](http://openhub.net/p/thunderpad)
  
- Thunderpad is a simple and lightweight text editor designed for general-purpose usage and casual programming. 
+Thunderpad is a simple and lightweight text editor designed for general-purpose usage and casual programming. 
  
- Thunderpad is released with the GNU 3.0 license, you can read a copy of it [here](http://www.gnu.org/copyleft/gpl.html).
+Thunderpad is released with the GNU 3.0 license, you can read a copy of it [here](http://www.gnu.org/copyleft/gpl.html).
  
 ## Setup/Compiling
  
