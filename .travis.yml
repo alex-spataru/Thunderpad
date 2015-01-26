@@ -1,11 +1,7 @@
 language: cpp
 
 before_install:
-    - sudo apt-get install build-essential libqt4-core libqt4-dev libqt4-gui qt4-dev-tools libssl-dev
-    - wget http://iweb.dl.sourceforge.net/project/pyqt/QScintilla2/QScintilla-2.8.4/QScintilla-gpl-2.8.4.tar.gz
-    - tar -xzvf QScintilla-gpl-*.tar.gz
-    - cd QScintilla-gpl-*/Qt4Qt5
-    - qmake && make -j4 && sudo make install
+    - sudo apt-get install build-essential libqt4-core libqt4-dev libqt4-gui qt4-dev-tools libssl-dev libqscintilla2-dev
 
 script:
     - qmake
