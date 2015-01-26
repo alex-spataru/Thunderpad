@@ -165,7 +165,10 @@ void SearchDialog::replaceAll (void)
 void SearchDialog::replaceFirstOccurrence (void)
 {
     if (!m_text_edit->isReadOnly())
+    {
         m_text_edit->replaceSelectedText (ui_replace_lineedit->text());
+        search();
+    }
 
     else
         QMessageBox::warning (this, tr ("Find/Replace"), tr ("Document is read-only!"));
