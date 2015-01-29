@@ -54,9 +54,9 @@
 #include <Qsci/qscilexertcl.h>
 #include <Qsci/qscilexertex.h>
 #include <Qsci/qscilexerverilog.h>
-#include <qsci/qscilexervhdl.h>
-#include <qsci/qscilexerxml.h>
-#include <qsci/qscilexeryaml.h>
+#include <Qsci/qscilexervhdl.h>
+#include <Qsci/qscilexerxml.h>
+#include <Qsci/qscilexeryaml.h>
 
 /*!
  * \class LexerDatabase
