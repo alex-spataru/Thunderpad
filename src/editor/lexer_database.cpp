@@ -25,8 +25,8 @@
 #include <QFile>
 #include <QFileInfo>
 
-#include <qsci/qscilexerbash.h>
-#include <qsci/qscilexerbatch.h>
+#include <Qsci/qscilexerbash.h>
+#include <Qsci/qscilexerbatch.h>
 #include <Qsci/qscilexercmake.h>
 #include <Qsci/qscilexercoffeescript.h>
 #include <Qsci/qscilexercpp.h>
