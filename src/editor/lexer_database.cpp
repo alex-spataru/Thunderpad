@@ -25,7 +25,6 @@
 #include <QFile>
 #include <QFileInfo>
 
-#include <Qsci/qscilexeravs.h>
 #include <qsci/qscilexerbash.h>
 #include <qsci/qscilexerbatch.h>
 #include <Qsci/qscilexercmake.h>
@@ -95,12 +94,6 @@ QsciLexer *LexerDatabase::_guessByName(const QString &file)
     QsciLexer *lexer;
     QString s = QFileInfo(QFile(file)).suffix().toLower();
     QString n = QFileInfo(QFile(file)).baseName().toLower();
-
-    //
-    // Avs files
-    //
-    if (s == "avs")
-        lexer = new QsciLexerAVS();
 
     //
     // Bash files
