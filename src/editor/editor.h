@@ -36,8 +36,8 @@ class Editor : public QsciScintilla
         explicit Editor (QWidget *parent = 0);
 
         bool maybeSave (void);
-
         int wordCount (void);
+        bool titleIsShit (void);
         QString calculateSize (void);
         QString documentTitle (void) const;
 
@@ -46,6 +46,7 @@ class Editor : public QsciScintilla
         void settingsChanged (void);
 
     public slots:
+        void exportPdf (void);
         void resetZoom (void);
         void documentInfo (void);
         void updateSettings (void);
@@ -55,8 +56,6 @@ class Editor : public QsciScintilla
         void sortSelection (void);
         void insertDateTime (void);
         void print (void);
-        void exportPdf (void);
-        void exportHtml (void);
         void selectFonts (void);
         void setWordWrap (bool ww);
         void readFile (const QString &file);

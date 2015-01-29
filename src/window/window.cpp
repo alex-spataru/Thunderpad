@@ -101,7 +101,7 @@ void Window::closeEvent (QCloseEvent *event)
 void Window::openFile (const QString &file_name)
 {
     // Open the file in the same window
-    if (m_editor->documentTitle().isEmpty() && !m_editor->isModified())
+    if (m_editor->titleIsShit() && !m_editor->isModified())
         m_editor->readFile (file_name);
 
     // Open the file in another window
@@ -128,41 +128,6 @@ void Window::open (void)
     for (int i = 0; i < _files.count(); ++i)
         if (!_files.at (i).isEmpty())
             openFile (_files.at (i));
-}
-
-void Window::exportPdf (void)
-{
-    QString _path = QFileDialog::getSaveFileName (this,
-                    tr ("Export PDF"),
-                    QDir::homePath(),
-                    tr ("PDF Document") + " (*.pdf)");
-
-    if (!_path.isEmpty())
-    {
-        QsciPrinter printer (QPrinter::HighResolution);
-
-        printer.setOutputFileName (_path);
-        printer.setWrapMode (editor()->wrapMode());
-        printer.setCreator (qApp->applicationName());
-        printer.setOutputFormat (QPrinter::PdfFormat);
-        printer.setDocName (editor()->documentTitle());
-
-        // Create the file
-        printer.printRange (editor(), 0);
-
-        // Ask user to open file
-        QMessageBox _message;
-        _message.setIcon (QMessageBox::Question);
-        _message.setWindowTitle (tr ("PDF Export"));
-        _message.setInformativeText (tr ("Do you want to open it?"));
-        _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No);
-        _message.setText (
-            "<b>" + tr ("The PDF document was successfully generated!") +
-            "</b>");
-
-        if (_message.exec() == QMessageBox::Yes)
-            QDesktopServices::openUrl (QUrl (_path));
-    }
 }
 
 void Window::setReadOnly (bool ro)
@@ -291,7 +256,7 @@ void Window::updateTitle (void)
     setWindowTitle (_title + _star + APP_NAME);
 
     // Configure the behavior of the 'smart' save actions
-    bool _save_enabled = ! (!m_editor->documentTitle().isEmpty() &&
+    bool _save_enabled = ! (!m_editor->titleIsShit() &&
                             !m_editor->isModified());
 
     m_menu->setSaveEnabled (_save_enabled);

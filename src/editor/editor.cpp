@@ -19,6 +19,7 @@
 //  USA
 //
 
+#include <QUrl>
 #include <QIcon>
 #include <QMutex>
 #include <QMessageBox>
@@ -26,6 +27,7 @@
 #include <QFontDialog>
 #include <QApplication>
 #include <QPrintDialog>
+#include <QDesktopServices>
 
 #include <math.h>
 #include <Qsci/qsciprinter.h>
@@ -62,7 +64,7 @@ bool Editor::maybeSave (void)
         return true;
 
     // The document was already saved in the hard disk, however, it has unsaved changes
-    if (!documentTitle().isEmpty() && isModified())
+    if (!titleIsShit() && isModified())
         return save();
 
     // The document was never saved in the hard disk, so ask the user if he/she wants
@@ -77,25 +79,25 @@ bool Editor::maybeSave (void)
         _message.setStandardButtons (QMessageBox::Save | QMessageBox::Cancel |
                                      QMessageBox::Discard);
         _message.setText (
-            "<b>" + tr ("This document has changes, do you want to save them?") +
-            "</b>");
+                    "<b>" + tr ("This document has changes, do you want to save them?") +
+                    "</b>");
 
         _message.setInformativeText (
-            tr ("Your changes will be lost if you close this item without saving."));
+                    tr ("Your changes will be lost if you close this item without saving."));
 
         switch (_message.exec())
         {
-            case QMessageBox::Save:
-                return save();
-                break;
+        case QMessageBox::Save:
+            return save();
+            break;
 
-            case QMessageBox::Discard:
-                return true;
-                break;
+        case QMessageBox::Discard:
+            return true;
+            break;
 
-            default:
-                return false;
-                break;
+        default:
+            return false;
+            break;
         }
     }
 
@@ -105,8 +107,13 @@ bool Editor::maybeSave (void)
 int Editor::wordCount (void)
 {
     return text().split
-           (QRegExp ("(\\s|\\n|\\r)+"),
-            QString::SkipEmptyParts).count();
+            (QRegExp ("(\\s|\\n|\\r)+"),
+             QString::SkipEmptyParts).count();
+}
+
+bool Editor::titleIsShit (void)
+{
+    return documentTitle().isEmpty();
 }
 
 QString Editor::calculateSize (void)
@@ -138,6 +145,41 @@ QString Editor::calculateSize (void)
 QString Editor::documentTitle (void) const
 {
     return m_document_title;
+}
+
+void Editor::exportPdf (void)
+{
+    QString _path = QFileDialog::getSaveFileName (this,
+                                                  tr ("Export PDF"),
+                                                  QDir::homePath(),
+                                                  tr ("PDF Document") + " (*.pdf)");
+
+    if (!_path.isEmpty())
+    {
+        QsciPrinter printer (QPrinter::HighResolution);
+
+        printer.setWrapMode (wrapMode());
+        printer.setOutputFileName (_path);
+        printer.setDocName (documentTitle());
+        printer.setCreator (qApp->applicationName());
+        printer.setOutputFormat (QPrinter::PdfFormat);
+
+        // Create the file
+        printer.printRange (this, 0);
+
+        // Ask user to open file
+        QMessageBox _message;
+        _message.setIcon (QMessageBox::Question);
+        _message.setWindowTitle (tr ("PDF Export"));
+        _message.setInformativeText (tr ("Do you want to open it?"));
+        _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No);
+        _message.setText (
+                    "<b>" + tr ("The PDF document was successfully generated!") +
+                    "</b>");
+
+        if (_message.exec() == QMessageBox::Yes)
+            QDesktopServices::openUrl (QUrl (_path));
+    }
 }
 
 void Editor::resetZoom (void)
@@ -214,13 +256,13 @@ void Editor::updateSettings (void)
 
 bool Editor::save (void)
 {
-    return documentTitle().isEmpty() ? saveAs() : writeFile (documentTitle());
+    return titleIsShit() ? saveAs() : writeFile (documentTitle());
 }
 
 bool Editor::saveAs (void)
 {
     return writeFile (QFileDialog::getSaveFileName (this, tr ("Save as") + "...",
-                      QDir::homePath()));
+                                                    QDir::homePath()));
 }
 
 void Editor::goToLine (void)
@@ -248,15 +290,6 @@ void Editor::print (void)
         printer.setWrapMode (wrapMode());
         printer.printRange (this, 0);
     }
-}
-
-void Editor::exportPdf (void)
-{
-}
-
-void Editor::exportHtml (void)
-{
-
 }
 
 void Editor::selectFonts (void)
@@ -348,7 +381,7 @@ bool Editor::writeFile (const QString &file)
             _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No | QMessageBox::Discard);
             _message.setText ("<b>" + tr ("Cannot write data to file (%1)").arg (_file.errorString()) + "</b>");
             _message.setInformativeText (
-                tr ("Do you want to save the document under a different name?"));
+                        tr ("Do you want to save the document under a different name?"));
 
             int _return = _message.exec();
 

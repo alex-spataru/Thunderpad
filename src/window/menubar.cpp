@@ -57,8 +57,7 @@ void MenuBar::initialize (Window *window)
     connect (f_open, SIGNAL (triggered()), window, SLOT (open()));
     connect (f_save, SIGNAL (triggered()), window->editor(), SLOT (save()));
     connect (f_save_as, SIGNAL (triggered()), window->editor(), SLOT (saveAs()));
-    connect (export_html, SIGNAL (triggered()), window->editor(), SLOT (exportHtml()));
-    connect (export_pdf, SIGNAL (triggered()), window, SLOT (exportPdf()));
+    connect (export_pdf, SIGNAL (triggered()), window->editor(), SLOT (exportPdf()));
     connect (f_print, SIGNAL (triggered()), window->editor(), SLOT (print()));
     connect (f_close, SIGNAL (triggered()), window, SLOT (close()));
     connect (f_quit, SIGNAL (triggered()), qApp, SLOT (closeAllWindows()));
@@ -94,8 +93,8 @@ void MenuBar::initialize (Window *window)
     connect (v_line_numbers, SIGNAL (triggered (bool)), window, SLOT (setLineNumbersEnabled (bool)));
     connect (v_toolbar_text, SIGNAL (triggered (bool)), window, SLOT (setToolbarText (bool)));
     connect (v_large_toolbar_icons, SIGNAL (triggered (bool)), window, SLOT (setUseLargeIcons (bool)));
-    connect (this, SIGNAL (change_color (QString)), window, SLOT (setColorscheme (QString)));
-    connect (this, SIGNAL (change_icons (QString)), window, SLOT (setIconTheme (QString)));
+    connect (this, SIGNAL (colorChanged (QString)), window, SLOT (setColorscheme (QString)));
+    connect (this, SIGNAL (iconsChanged (QString)), window, SLOT (setIconTheme (QString)));
 
     // Connect the slots for the help menu
     connect (h_about_qt, SIGNAL (triggered()), qApp, SLOT (aboutQt()));
@@ -299,7 +298,7 @@ void MenuBar::createMenubar (void)
     v_icon_theme = m_view->addMenu (tr ("Icon themes"));
     QActionGroup *icon_themes_group = new QActionGroup (this);
     QSignalMapper *icon_themes_mapper = new QSignalMapper (this);
-    connect (icon_themes_mapper, SIGNAL (mapped (QString)), this, SIGNAL (change_icons (QString)));
+    connect (icon_themes_mapper, SIGNAL (mapped (QString)), this, SIGNAL (iconsChanged (QString)));
 
     // Read all the registered icons in the resources
     QDir icon_themes_dir (":/images/themes/");

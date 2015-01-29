@@ -46,47 +46,12 @@ class MenuBar : public QMenuBar
 
     public:
         MenuBar (Window *parent = 0);
-
-        /*!
-        * \brief setSaveEnabled
-        * \param enabled
-        *
-        * Disables (or enables) the save action based on
-        * the current status of the document
-        */
-
         void setSaveEnabled (bool enabled);
 
     signals:
-
-        /*!
-        * \brief change_icons
-        * \param theme
-        *
-        * This signal is emitted when the user clicks
-        * any of the actions related to the "toolbar icons" section
-        */
-
-        void change_icons (const QString &theme);
-
-        /*!
-        * \brief change_color
-        * \param theme
-        *
-        * This signal is emitted when the user clicks
-        * any of the actions related to the "themes" section
-        */
-
-        void change_color (const QString &theme);
-
-        /*!
-        * \brief change_syntax
-        * \param lang
-        * This signal is emitted when the user clicks
-        * any of the actions related to the "syntax highlighter" section
-        */
-
-        void change_syntax (const QString &lang);
+        void iconsChanged (const QString &theme);
+        void colorChanged (const QString &theme);
+        void syntaxChanged (const QString &lang);
 
     private slots:
         void createActions (void);

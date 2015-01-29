@@ -72,7 +72,6 @@ class Window : public QMainWindow
     public slots:
         void newFile (void);
         void open (void);
-        void exportPdf (void);
         void setReadOnly (bool ro);
         void setWordWrap (bool ww);
         void setToolbarText (bool tt);
