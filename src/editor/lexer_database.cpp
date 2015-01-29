@@ -28,7 +28,6 @@
 #include <Qsci/qscilexerbash.h>
 #include <Qsci/qscilexerbatch.h>
 #include <Qsci/qscilexercmake.h>
-#include <Qsci/qscilexercoffeescript.h>
 #include <Qsci/qscilexercpp.h>
 #include <Qsci/qscilexercsharp.h>
 #include <Qsci/qscilexercss.h>
@@ -113,12 +112,6 @@ QsciLexer *LexerDatabase::_guessByName(const QString &file)
     //
     else if (s == "cmake" || n == "cmakelists")
         lexer = new QsciLexerCMake();
-
-    //
-    // Coffee script
-    //
-    else if (s == "coffee" || s == "litcoffee")
-        lexer = new QsciLexerCoffeeScript();
 
     //
     // C and C++ files
