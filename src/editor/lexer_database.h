@@ -25,45 +25,6 @@
 #include <QObject>
 #include <Qsci/qscilexer.h>
 
-enum Lexers
-{
-    Avs,
-    Bash,
-    Batch,
-    CMake,
-    CoffeeScript,
-    CPP,
-    CSharp,
-    CSS,
-    D,
-    Diff,
-    Fortran,
-    Fortran77,
-    Html,
-    Idl,
-    Java,
-    Javascript,
-    Lua,
-    Makefile,
-    Matlab,
-    Octave,
-    Pascal,
-    Perl,
-    Po,
-    Pov,
-    Python,
-    Ruby,
-    Spice,
-    Sql,
-    Tcl,
-    Tex,
-    Verilog,
-    Vhdl,
-    Xml,
-    Yaml,
-    PlainText
-};
-
 class LexerDatabase : public QObject
 {
         Q_OBJECT
@@ -72,10 +33,10 @@ class LexerDatabase : public QObject
         explicit LexerDatabase (void);
 
     public slots:
-        QsciLexer *getLexer (const QString &file_name);
+        QsciLexer *getLexer (const QString &file);
 
     private:
-        Lexers m_current_lexer;
+        QsciLexer *_guessByName (const QString &file);
 };
 
 #endif
