@@ -44,7 +44,6 @@
 #include <Qsci/qscilexermatlab.h>
 #include <Qsci/qscilexerpascal.h>
 #include <Qsci/qscilexerperl.h>
-#include <Qsci/qscilexerpo.h>
 #include <Qsci/qscilexerpostscript.h>
 #include <Qsci/qscilexerpov.h>
 #include <Qsci/qscilexerpython.h>
@@ -212,12 +211,6 @@ QsciLexer *LexerDatabase::_guessByName(const QString &file)
     else if (s == "pl" || s == "pm" ||
              s == "plx")
         lexer = new QsciLexerPerl();
-
-    //
-    // PO
-    //
-    else if (s == "po")
-        lexer = new QsciLexerPO();
 
     //
     // Postscript
