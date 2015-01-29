@@ -2,8 +2,8 @@ language: cpp
 
 before_install:
     - sudo apt-get install build-essential libqt4-core libqt4-dev libqt4-gui qt4-dev-tools libssl-dev libqscintilla2-dev
-	- /usr/include/qt4/Qsci
-	- ls
+    - /usr/include/qt4/Qsci
+    - ls
 
 script:
     - qmake
