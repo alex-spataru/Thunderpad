@@ -96,7 +96,7 @@ QsciLexer *LexerDatabase::_guessByName(const QString &file)
     //
     // Bash files
     //
-    else if (s == "sh" || s == "bsh")
+    if (s == "sh" || s == "bsh")
         lexer = new QsciLexerBash();
 
     //
