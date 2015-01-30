@@ -9,7 +9,6 @@
 #define APP_H
 
 #include <QSettings>
-#include <QSimpleUpdater>
 #include <qtsingleapplication.h>
 
 #include "window.h"
@@ -37,7 +36,6 @@ class Application : public QtSingleApplication
     private:
         Window *m_window;
         QSettings *m_settings;
-        QSimpleUpdater *m_updater;
 };
 
 #endif

@@ -7,7 +7,7 @@
 
 TEMPLATE   = app
 TARGET     = thunderpad
-VERSION    = 0.9.2
+VERSION    = 0.9.3
 
 CODECFORTR  = UTF-8
 CODECFORSRC = UTF-8
@@ -20,7 +20,7 @@ QT += network
 QT += widgets
 QT += printsupport
 
-include($$PWD/libs/QSimpleUpdater/QSimpleUpdater.pri)
+include($$PWD/libs/Fervor/Fervor.pri)
 include($$PWD/libs/QtSingleApplication/QtSingleApplication.pri)
 
 INCLUDEPATH += \
@@ -66,7 +66,7 @@ HEADERS += \
     $$PWD/src/shared/assembly_info.h \
     $$PWD/src/shared/defaults.h \
     $$PWD/src/editor/lexers/plain_text.h \
-    src/editor/lexer_database.h
+    $$PWD/src/editor/lexer_database.h
 
 SOURCES += \
     $$PWD/src/app/app.cpp \
@@ -79,4 +79,4 @@ SOURCES += \
     $$PWD/src/window/statusbar.cpp \
     $$PWD/src/editor/theme.cpp \
     $$PWD/src/editor/lexers/plain_text.cpp \
-    src/editor/lexer_database.cpp
+    $$PWD/src/editor/lexer_database.cpp
