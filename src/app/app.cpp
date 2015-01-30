@@ -51,7 +51,7 @@ Application::Application (int &argc, char **argv) : QtSingleApplication (argc, a
 {
     setApplicationName (APP_NAME);
     setOrganizationName (APP_COMPANY);
-    setOrganizationDomain(APP_COMPANY);
+    setOrganizationDomain (APP_COMPANY);
     setApplicationVersion (APP_VERSION);
     setWindowIcon (QIcon (":/images/others/logo.png"));
 }
@@ -94,11 +94,10 @@ void Application::checkForUpdates (void)
 
 void Application::setupUpdater (void)
 {
-    FvUpdater::sharedUpdater()->SetFeedURL ("http://github.com/alex-97/"
-                                            "Thunderpad/updater/appcast.xml");
+    FvUpdater::sharedUpdater()->SetFeedURL ("https://raw.githubusercontent.com/alex-97/Thunderpad/updater/appcast.xml");
 
     if (m_settings->value ("check-for-updates", SETTINGS_AUTO_CHECK_UPDATES).toBool())
-        FvUpdater::sharedUpdater()->CheckForUpdates(true);
+        FvUpdater::sharedUpdater()->CheckForUpdates (true);
 }
 
 /*!
@@ -142,7 +141,7 @@ void Application::showWelcomeMessages (void)
         _message.setDefaultButton (QMessageBox::Yes);
         _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No);
         _message.setText (
-                    "<b>" + tr ("Do you want to check for updates automatically?") + "</b>");
+            "<b>" + tr ("Do you want to check for updates automatically?") + "</b>");
         _message.setInformativeText (tr ("You can always check for updates from the "
                                          "Help menu"));
 

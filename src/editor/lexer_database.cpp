@@ -78,7 +78,7 @@ LexerDatabase::LexerDatabase (void) {}
 
 QsciLexer *LexerDatabase::getLexer (const QString &file)
 {
-    QsciLexer *_lexer = _guessByName(file);
+    QsciLexer *_lexer = _guessByName (file);
     return _lexer;
 }
 
@@ -87,11 +87,11 @@ QsciLexer *LexerDatabase::getLexer (const QString &file)
  * Returns a appropiate QsciLexer given the input \a {file}
  */
 
-QsciLexer *LexerDatabase::_guessByName(const QString &file)
+QsciLexer *LexerDatabase::_guessByName (const QString &file)
 {
     QsciLexer *lexer;
-    QString s = QFileInfo(QFile(file)).suffix().toLower();
-    QString n = QFileInfo(QFile(file)).baseName().toLower();
+    QString s = QFileInfo (QFile (file)).suffix().toLower();
+    QString n = QFileInfo (QFile (file)).baseName().toLower();
 
     //
     // Bash files
@@ -266,7 +266,7 @@ QsciLexer *LexerDatabase::_guessByName(const QString &file)
     //
     // VHDL
     //
-    else if (s == "vhd" || s ==" vhdl")
+    else if (s == "vhd" || s == " vhdl")
         lexer = new QsciLexerVHDL();
 
     //

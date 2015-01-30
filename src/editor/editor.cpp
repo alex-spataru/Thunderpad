@@ -79,25 +79,25 @@ bool Editor::maybeSave (void)
         _message.setStandardButtons (QMessageBox::Save | QMessageBox::Cancel |
                                      QMessageBox::Discard);
         _message.setText (
-                    "<b>" + tr ("This document has changes, do you want to save them?") +
-                    "</b>");
+            "<b>" + tr ("This document has changes, do you want to save them?") +
+            "</b>");
 
         _message.setInformativeText (
-                    tr ("Your changes will be lost if you close this item without saving."));
+            tr ("Your changes will be lost if you close this item without saving."));
 
         switch (_message.exec())
         {
-        case QMessageBox::Save:
-            return save();
-            break;
+            case QMessageBox::Save:
+                return save();
+                break;
 
-        case QMessageBox::Discard:
-            return true;
-            break;
+            case QMessageBox::Discard:
+                return true;
+                break;
 
-        default:
-            return false;
-            break;
+            default:
+                return false;
+                break;
         }
     }
 
@@ -107,8 +107,8 @@ bool Editor::maybeSave (void)
 int Editor::wordCount (void)
 {
     return text().split
-            (QRegExp ("(\\s|\\n|\\r)+"),
-             QString::SkipEmptyParts).count();
+           (QRegExp ("(\\s|\\n|\\r)+"),
+            QString::SkipEmptyParts).count();
 }
 
 bool Editor::titleIsShit (void)
@@ -150,9 +150,9 @@ QString Editor::documentTitle (void) const
 void Editor::exportPdf (void)
 {
     QString _path = QFileDialog::getSaveFileName (this,
-                                                  tr ("Export PDF"),
-                                                  QDir::homePath(),
-                                                  tr ("PDF Document") + " (*.pdf)");
+                    tr ("Export PDF"),
+                    QDir::homePath(),
+                    tr ("PDF Document") + " (*.pdf)");
 
     if (!_path.isEmpty())
     {
@@ -174,8 +174,8 @@ void Editor::exportPdf (void)
         _message.setInformativeText (tr ("Do you want to open it?"));
         _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No);
         _message.setText (
-                    "<b>" + tr ("The PDF document was successfully generated!") +
-                    "</b>");
+            "<b>" + tr ("The PDF document was successfully generated!") +
+            "</b>");
 
         if (_message.exec() == QMessageBox::Yes)
             QDesktopServices::openUrl (QUrl (_path));
@@ -262,7 +262,7 @@ bool Editor::save (void)
 bool Editor::saveAs (void)
 {
     return writeFile (QFileDialog::getSaveFileName (this, tr ("Save as") + "...",
-                                                    QDir::homePath()));
+                      QDir::homePath()));
 }
 
 void Editor::goToLine (void)
@@ -381,7 +381,7 @@ bool Editor::writeFile (const QString &file)
             _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No | QMessageBox::Discard);
             _message.setText ("<b>" + tr ("Cannot write data to file (%1)").arg (_file.errorString()) + "</b>");
             _message.setInformativeText (
-                        tr ("Do you want to save the document under a different name?"));
+                tr ("Do you want to save the document under a different name?"));
 
             int _return = _message.exec();
 
