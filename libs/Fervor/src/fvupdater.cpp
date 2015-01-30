@@ -122,6 +122,35 @@ void FvUpdater::updaterWindowWasClosed()
     m_updaterWindow = 0;
 }
 
+void FvUpdater::showNoUpdateFound()
+{
+    if (!m_silentAsMuchAsItCouldGet) {
+        // Get the application icon as a pixmap
+        QPixmap _icon = qApp->windowIcon().pixmap (
+                    qApp->windowIcon().actualSize (QSize (96, 96)));
+
+        // If the icon is invalid, use default icon
+        if (_icon.isNull())
+            _icon = QPixmap (":/icons/update.png");
+
+        // Create message box
+        QMessageBox _message;
+
+        // Configure message
+        _message.setIconPixmap (_icon);
+        _message.setStandardButtons (QMessageBox::Ok);
+        _message.setText ("<b>" + tr ("You're up-to-date!") +
+                          "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>");
+        _message.setInformativeText (
+                    tr ("%1 %2 is currently the newest version available")
+                    .arg (FV_APP_NAME)
+                    .arg (FV_APP_VERSION));
+
+        // Show message
+        _message.exec();
+    }
+}
+
 void FvUpdater::hideDownloadDialog()
 {
     if (m_download_dialog)
@@ -307,9 +336,9 @@ void FvUpdater::startDownloadFeed (QUrl url)
     //
 
     QString _agent = QString ("%1/%2 (%3)")
-                     .arg (QApplication::applicationName())
-                     .arg (QApplication::applicationVersion())
-                     .arg (QApplication::organizationName());
+            .arg (QApplication::applicationName())
+            .arg (QApplication::applicationVersion())
+            .arg (QApplication::organizationName());
 
     request.setRawHeader ("User-Agent", _agent.toUtf8());
     request.setUrl (url);
@@ -340,7 +369,7 @@ void FvUpdater::httpFeedReadyRead()
 }
 
 void FvUpdater::httpFeedUpdateDataReadProgress (qint64 bytesRead,
-        qint64 totalBytes)
+                                                qint64 totalBytes)
 {
     Q_UNUSED (bytesRead);
     Q_UNUSED (totalBytes);
@@ -535,21 +564,21 @@ bool FvUpdater::xmlParseFeed()
 
     // No updates were found if we're at this point
     // (not a single <item> element found)
-    showInformationDialog (tr ("No updates were found."), false);
+    showNoUpdateFound();
 
     return false;
 }
 
 
 bool FvUpdater::searchDownloadedFeedForUpdates (QString xmlTitle,
-        QString xmlLink,
-        QString xmlReleaseNotesLink,
-        QString xmlPubDate,
-        QString xmlEnclosureUrl,
-        QString xmlEnclosureVersion,
-        QString xmlEnclosurePlatform,
-        unsigned long xmlEnclosureLength,
-        QString xmlEnclosureType)
+                                                QString xmlLink,
+                                                QString xmlReleaseNotesLink,
+                                                QString xmlPubDate,
+                                                QString xmlEnclosureUrl,
+                                                QString xmlEnclosureVersion,
+                                                QString xmlEnclosurePlatform,
+                                                unsigned long xmlEnclosureLength,
+                                                QString xmlEnclosureType)
 {
     qDebug() << "Title:" << xmlTitle;
     qDebug() << "Link:" << xmlLink;
@@ -594,7 +623,7 @@ bool FvUpdater::searchDownloadedFeedForUpdates (QString xmlTitle,
     {
         qDebug() << "Version '" << xmlEnclosureVersion << "' is ignored, too old or something like that.";
 
-        showInformationDialog (tr ("No updates were found."), false);
+        showNoUpdateFound();
 
         return true;    // Things have succeeded when you think of it.
     }
@@ -646,7 +675,7 @@ void FvUpdater::showInformationDialog (QString message, bool showEvenInSilentMod
     {
         QMessageBox dlInformationMsgBox;
         dlInformationMsgBox.setIcon (QMessageBox::Information);
-        dlInformationMsgBox.setText (tr ("Information"));
+        dlInformationMsgBox.setText ("<b>" + tr ("Information") + "</b>");
         dlInformationMsgBox.setInformativeText (message);
         dlInformationMsgBox.exec();
     }

@@ -22,7 +22,6 @@
 #include "toolbar.h"
 #include "platform.h"
 #include "defaults.h"
-#include "assembly_info.h"
 
 #define LARGE_ICONS_SIZE "24x24"
 #define SMALL_ICONS_SIZE "16x16"

@@ -85,6 +85,7 @@ class FvUpdater : public QObject
         void hideUpdaterWindow();                                       // Hide + destroy m_updaterWindow
         void updaterWindowWasClosed();                                  // Sent by the updater window when it gets closed
 
+        void showNoUpdateFound();
         void hideDownloadDialog();                                  // Hide + destroy m_updateConfirmationDialog
         void downloadDialogWasClosed();                             // Sent by the update confirmation dialog when it gets closed
 

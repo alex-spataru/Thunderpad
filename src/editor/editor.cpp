@@ -35,7 +35,6 @@
 #include "editor.h"
 #include "defaults.h"
 #include "platform.h"
-#include "assembly_info.h"
 
 #define KILOBYTE 1024
 #define MEGABYTE 1048576

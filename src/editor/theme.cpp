@@ -23,7 +23,6 @@
 #include <QXmlStreamReader>
 
 #include "theme.h"
-#include "assembly_info.h"
 
 #define COLOR_SCHEMES_PATH ":/color-schemes/"
 

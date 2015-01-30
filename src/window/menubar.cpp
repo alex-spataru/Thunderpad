@@ -27,7 +27,6 @@
 #include "menubar.h"
 #include "platform.h"
 #include "defaults.h"
-#include "assembly_info.h"
 
 MenuBar::MenuBar (Window *parent) : QMenuBar (parent)
 {

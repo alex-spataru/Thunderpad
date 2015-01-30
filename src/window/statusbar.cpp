@@ -21,7 +21,6 @@
 
 #include "defaults.h"
 #include "statusbar.h"
-#include "assembly_info.h"
 
 StatusBar::StatusBar (Window *parent) : QStatusBar (parent)
 {

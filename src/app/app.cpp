@@ -25,7 +25,6 @@
 #include "app.h"
 #include "defaults.h"
 #include "platform.h"
-#include "assembly_info.h"
 
 #include <fvupdater.h>
 

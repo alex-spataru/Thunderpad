@@ -35,7 +35,6 @@
 #include "platform.h"
 #include "statusbar.h"
 #include "searchdialog.h"
-#include "assembly_info.h"
 
 #define CURRENT_YEAR QDateTime::currentDateTime().toString("yyyy")
 
