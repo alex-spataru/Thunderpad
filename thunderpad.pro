@@ -6,8 +6,13 @@
 #
 
 TEMPLATE   = app
-TARGET     = thunderpad
+TARGET     = Thunderpad
 VERSION    = 0.9.3
+
+# Assembly info
+DEFINES += APP_NAME=\\\"$$TARGET\\\"
+DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+DEFINES += "APP_COMPANY=\"\\\"Alex Spataru\\\"\""
 
 CODECFORTR  = UTF-8
 CODECFORSRC = UTF-8
@@ -31,12 +36,10 @@ INCLUDEPATH += \
     $$PWD/src/window
 
 win32* {
-    TARGET  = "Thunderpad"
     RC_FILE = $$PWD/data/windows/thunderpad.rc
 }
 
 macx* {
-    TARGET  = "Thunderpad"
     ICON    = $$PWD/data/mac/icon.icns
     RC_FILE = $$PWD/data/mac/icon.icns
     QMAKE_INFO_PLIST = $$PWD/data/mac/info.plist
@@ -45,6 +48,7 @@ macx* {
 
 unix:!macx {
     target.path    = /usr/bin
+    TARGET         = thunderpad
     desktop.path   = /usr/share/applications
     desktop.files += $$PWD/data/linux/thunderpad.desktop
     INSTALLS      += target desktop
@@ -63,7 +67,6 @@ HEADERS += \
     $$PWD/src/window/statusbar.h \
     $$PWD/src/shared/platform.h \
     $$PWD/src/editor/theme.h \
-    $$PWD/src/shared/assembly_info.h \
     $$PWD/src/shared/defaults.h \
     $$PWD/src/editor/lexers/plain_text.h \
     $$PWD/src/editor/lexer_database.h

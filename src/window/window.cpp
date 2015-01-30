@@ -39,6 +39,18 @@
 
 #define CURRENT_YEAR QDateTime::currentDateTime().toString("yyyy")
 
+#define GNU_WARRANTY_WARNING "The program is provided AS IS with NO WARRANTY \
+OF ANY KIND, INCLUDING THE WARRANTY OF DESIGN, \
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE."
+
+#define HELP_LINK "http://thunderpad.sf.net/support"
+#define DONATE_LINK "http://thunderpad.sf.net/donate"
+#define FEED_BACK_LINK "mailto:alex_spataru@outlook.com"
+#define WEBSITE_LINK "http://thunderpad.sourceforge.net"
+#define LICENSE_LINK "http://www.gnu.org/copyleft/gpl.html"
+#define CONTRIBUTE_LINK "http://thunderpad.sf.net/contribute"
+#define REPORT_ISSUES_LINK "http://github.com/alex-97/thunderpad/issues"
+
 Window::Window (void)
 {
     // Allow other instances of Window

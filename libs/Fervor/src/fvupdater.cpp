@@ -17,7 +17,6 @@
 #   error "FV_APP_VERSION is undefined (must have been defined by Fervor.pri)"
 #endif
 
-
 #ifdef FV_DEBUG
 // Unit tests
 #   include "fvversioncomparatortest.h"

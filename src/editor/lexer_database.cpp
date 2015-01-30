@@ -90,8 +90,9 @@ QsciLexer *LexerDatabase::getLexer (const QString &file)
 QsciLexer *LexerDatabase::_guessByName (const QString &file)
 {
     QsciLexer *lexer;
-    QString s = QFileInfo (QFile (file)).suffix().toLower();
-    QString n = QFileInfo (QFile (file)).baseName().toLower();
+    QFile _file (file);
+    QString s = QFileInfo (_file).suffix().toLower();
+    QString n = QFileInfo (_file).baseName().toLower();
 
     //
     // Bash files
