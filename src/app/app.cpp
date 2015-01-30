@@ -122,14 +122,12 @@ void Application::showWelcomeMessages (void)
         _message.setText ("<b>" + tr ("Thank you for downloading Thunderpad!") +
                           "</b>           ");
 
-        _message.setInformativeText (
-                    "<i>" + tr ("This message will only appear once") + "</i><br/>"
-                    tr ("If you find this program useful and would like to help "
-                        "contribute to future development, please consider "
-                        "a small donation. You can  use the Donate item in the "
-                        "Help menu to send your much needed assistance via BitCoins.\n\n"
-                        "Please share Thunderpad with your friends and colleagues, "
-                        "and feel free to send me feedback!"));
+        _message.setInformativeText (tr ("If you find this program useful and would like to help "
+                                         "contribute to future development, please consider "
+                                         "a small donation. You can  use the Donate item in the "
+                                         "Help menu to send your much needed assistance via BitCoins.\n\n"
+                                         "Please share Thunderpad with your friends and colleagues, "
+                                         "and feel free to send me feedback!"));
 
         _message.exec();
 

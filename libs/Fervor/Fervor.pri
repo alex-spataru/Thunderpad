@@ -1,18 +1,14 @@
 QT += core gui webkit webkitwidgets network
 
 isEmpty(FV_APP_NAME) {
-	warning("Fervor: falling back to application name '$$TARGET'")
 	DEFINES += FV_APP_NAME=\\\"$$TARGET\\\"
 } else {
-	message("Fervor: building for application name '$$FV_APP_NAME'")
 	DEFINES += FV_APP_NAME=\\\"$$FV_APP_NAME\\\"
 }
 
 isEmpty(FV_APP_VERSION) {
-	warning("Fervor: falling back to application version '$$VERSION'")
 	DEFINES += FV_APP_VERSION=\\\"$$VERSION\\\"
 } else {
-	message("Fervor: building for application version '$$FV_APP_VERSION'")
 	DEFINES += FV_APP_VERSION=\\\"$$FV_APP_VERSION\\\"
 }
 

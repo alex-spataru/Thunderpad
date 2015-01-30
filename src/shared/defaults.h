@@ -40,7 +40,7 @@
 #define SETTINGS_TOOLBAR_ENABLED true
 #define SETTINGS_LARGE_ICONS MAC_OS_X ? true : false
 #define SETTINGS_TOOLBAR_TEXT MAC_OS_X ? true : false
-#define SETTINGS_ICON_THEME MAC_OS_X ? "Nimbus" : LINUX ? "Tango" : "Silk"
+#define SETTINGS_ICON_THEME MAC_OS_X ? "Faience" : LINUX ? "Tango" : "Silk"
 
 // Other defaults
 #define SETTINGS_AUTO_CHECK_UPDATES false
