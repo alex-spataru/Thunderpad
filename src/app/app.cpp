@@ -94,7 +94,7 @@ void Application::checkForUpdates (void)
 
 void Application::setupUpdater (void)
 {
-    FvUpdater::sharedUpdater()->SetFeedURL ("https://raw.githubusercontent.com/alex-97/Thunderpad/updater/appcast.xml");
+    FvUpdater::sharedUpdater()->SetFeedURL ("http://thunderpad.sourceforge.net/updater/appcast.xml");
 
     if (m_settings->value ("check-for-updates", SETTINGS_AUTO_CHECK_UPDATES).toBool())
         FvUpdater::sharedUpdater()->CheckForUpdates (true);
