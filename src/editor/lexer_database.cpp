@@ -19,11 +19,17 @@
 //  USA
 //
 
-#include "lexer_database.h"
-#include "lexers/plain_text.h"
-
 #include <QFile>
 #include <QFileInfo>
+
+#include "lexer_database.h"
+
+#include "qscilexerada.h"
+#include "qscilexerasm.h"
+#include "qscilexerhaskell.h"
+#include "qscilexerlisp.h"
+#include "qscilexernsis.h"
+#include "qscilexerplaintext.h"
 
 #include <Qsci/qscilexerbash.h>
 #include <Qsci/qscilexerbatch.h>
@@ -91,9 +97,39 @@ QsciLexer *LexerDatabase::_guessByName (const QString &file) {
     QString n = QFileInfo (_file).baseName().toLower();
 
     //
+    // Ada
+    //
+    if (s == "adb" || s == "ads")
+        lexer = new QsciLexerAda();
+
+    //
+    // Assembly
+    //
+    else if (s == "s" || s == "asm")
+        lexer = new QsciLexerASM();
+
+    //
+    // Haskell
+    //
+    else if (s == "hs" || s == "lhs")
+        lexer = new QsciLexerHaskell();
+
+    //
+    // Lisp
+    //
+    else if (s == "lisp" || s == "cl")
+        lexer = new QsciLexerLisp();
+
+    //
+    // NSIS
+    //
+    else if (s == "nsi")
+        lexer = new QsciLexerNSIS();
+
+    //
     // Bash files
     //
-    if (s == "sh" || s == "bsh")
+    else if (s == "sh" || s == "bsh")
         lexer = new QsciLexerBash();
 
     //

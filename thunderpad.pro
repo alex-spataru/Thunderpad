@@ -32,6 +32,7 @@ INCLUDEPATH += \
     $$PWD/src/app \
     $$PWD/src/dialogs \
     $$PWD/src/editor \
+    $$PWD/src/editor/lexers \
     $$PWD/src/shared \
     $$PWD/src/window
 
@@ -68,8 +69,13 @@ HEADERS += \
     $$PWD/src/shared/platform.h \
     $$PWD/src/editor/theme.h \
     $$PWD/src/shared/defaults.h \
-    $$PWD/src/editor/lexers/plain_text.h \
-    $$PWD/src/editor/lexer_database.h
+    $$PWD/src/editor/lexer_database.h \
+    $$PWD/src/editor/lexers/qscilexerada.h \
+    $$PWD/src/editor/lexers/qscilexerasm.h \
+    $$PWD/src/editor/lexers/qscilexerhaskell.h \
+    $$PWD/src/editor/lexers/qscilexerlisp.h \
+    $$PWD/src/editor/lexers/qscilexernsis.h \
+    $$PWD/src/editor/lexers/qscilexerplaintext.h
 
 SOURCES += \
     $$PWD/src/app/app.cpp \
@@ -81,5 +87,10 @@ SOURCES += \
     $$PWD/src/main.cpp \
     $$PWD/src/window/statusbar.cpp \
     $$PWD/src/editor/theme.cpp \
-    $$PWD/src/editor/lexers/plain_text.cpp \
-    $$PWD/src/editor/lexer_database.cpp
+    $$PWD/src/editor/lexer_database.cpp \
+    $$PWD/src/editor/lexers/qscilexerada.cpp \
+    $$PWD/src/editor/lexers/qscilexerasm.cpp \
+    $$PWD/src/editor/lexers/qscilexerhaskell.cpp \
+    $$PWD/src/editor/lexers/qscilexerlisp.cpp \
+    $$PWD/src/editor/lexers/qscilexernsis.cpp \
+    $$PWD/src/editor/lexers/qscilexerplaintext.cpp
