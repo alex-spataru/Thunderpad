@@ -47,8 +47,7 @@ class SearchDialog;
  * and open a file using the configureWindow() function.
  */
 
-class Window : public QMainWindow
-{
+class Window : public QMainWindow {
         Q_OBJECT
 
     public:

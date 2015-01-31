@@ -40,8 +40,7 @@
  * Initializes the class by doing nothing
  */
 
-Theme::Theme (QObject *parent) : QObject (parent)
-{
+Theme::Theme (QObject *parent) : QObject (parent) {
 }
 
 /*!
@@ -50,8 +49,7 @@ Theme::Theme (QObject *parent) : QObject (parent)
  * cannot be loaded during run-time.
  */
 
-void Theme::useFallbackColors (void)
-{
+void Theme::useFallbackColors (void) {
     m_background = "#ffffff";
     m_foreground = "#555555";
     m_highlight_background = "#b0c4dc";
@@ -66,13 +64,11 @@ void Theme::useFallbackColors (void)
  * and loads them into the program.
  */
 
-void Theme::readTheme (const QString &theme)
-{
+void Theme::readTheme (const QString &theme) {
     Q_ASSERT (!theme.isEmpty());
     QFile _file (COLOR_SCHEMES_PATH + theme + ".xml");
 
-    if (!_file.open (QFile::ReadOnly))
-    {
+    if (!_file.open (QFile::ReadOnly)) {
         useFallbackColors();
         return;
     }
@@ -82,12 +78,10 @@ void Theme::readTheme (const QString &theme)
 
     QXmlStreamReader *_xml_reader = new QXmlStreamReader (&_file);
 
-    while (!_xml_reader->atEnd() && !_xml_reader->hasError())
-    {
+    while (!_xml_reader->atEnd() && !_xml_reader->hasError()) {
         QXmlStreamReader::TokenType token = _xml_reader->readNext();
 
-        if (token == QXmlStreamReader::StartElement)
-        {
+        if (token == QXmlStreamReader::StartElement) {
             if (_xml_reader->name() == "type")
                 _types.append (_xml_reader->readElementText());
 
@@ -99,14 +93,12 @@ void Theme::readTheme (const QString &theme)
     _xml_reader->clear();
     _file.close();
 
-    if (_types.count() != _values.count())
-    {
+    if (_types.count() != _values.count()) {
         useFallbackColors();
         return;
     }
 
-    else
-    {
+    else {
         m_background = _values.at (_types.indexOf ("background"));
         m_foreground = _values.at (_types.indexOf ("foreground"));
         m_highlight_background = _values.at (_types.indexOf ("highlight_background"));
@@ -130,8 +122,7 @@ void Theme::readTheme (const QString &theme)
  * The background color of the text editor
  */
 
-QColor Theme::background (void) const
-{
+QColor Theme::background (void) const {
     return QColor (m_background);
 }
 
@@ -139,8 +130,7 @@ QColor Theme::background (void) const
  * The foreground color of the text editor
  */
 
-QColor Theme::foreground (void) const
-{
+QColor Theme::foreground (void) const {
     return QColor (m_foreground);
 }
 
@@ -148,8 +138,7 @@ QColor Theme::foreground (void) const
  * The highlight background color of the text editor
  */
 
-QColor Theme::highlightBackground (void) const
-{
+QColor Theme::highlightBackground (void) const {
     return QColor (m_highlight_background);
 }
 
@@ -157,8 +146,7 @@ QColor Theme::highlightBackground (void) const
  * The highlight foreground color of the text editor
  */
 
-QColor Theme::highlightForeground (void) const
-{
+QColor Theme::highlightForeground (void) const {
     return QColor (m_highlight_foreground);
 }
 
@@ -166,8 +154,7 @@ QColor Theme::highlightForeground (void) const
  * The caret line background color of the text editor
  */
 
-QColor Theme::currentLineBackground (void) const
-{
+QColor Theme::currentLineBackground (void) const {
     return QColor (m_current_line_background);
 }
 
@@ -175,8 +162,7 @@ QColor Theme::currentLineBackground (void) const
  * The line numbers margin background color of the text editor
  */
 
-QColor Theme::lineNumbersBackground (void) const
-{
+QColor Theme::lineNumbersBackground (void) const {
     return QColor (m_line_numbers_background);
 }
 
@@ -184,8 +170,7 @@ QColor Theme::lineNumbersBackground (void) const
  * The line numbers margin foreground color of the text editor
  */
 
-QColor Theme::lineNumbersForeground (void) const
-{
+QColor Theme::lineNumbersForeground (void) const {
     return QColor (m_line_numbers_foreground);
 }
 
@@ -195,8 +180,7 @@ QColor Theme::lineNumbersForeground (void) const
  * The color used to highlight other shit in the text editor
  */
 
-QColor Theme::others (void) const
-{
+QColor Theme::others (void) const {
     return QColor (m_others);
 }
 
@@ -204,8 +188,7 @@ QColor Theme::others (void) const
  * The color used to highlight numbers in the text editor
  */
 
-QColor Theme::numbers (void) const
-{
+QColor Theme::numbers (void) const {
     return QColor (m_numbers);
 }
 
@@ -213,8 +196,7 @@ QColor Theme::numbers (void) const
  * The color used to highlight strings in the text editor
  */
 
-QColor Theme::strings (void) const
-{
+QColor Theme::strings (void) const {
     return QColor (m_strings);
 }
 
@@ -222,8 +204,7 @@ QColor Theme::strings (void) const
  * The color used to highlight keywords in the text editor
  */
 
-QColor Theme::keywords (void) const
-{
+QColor Theme::keywords (void) const {
     return QColor (m_keywords);
 }
 
@@ -231,8 +212,7 @@ QColor Theme::keywords (void) const
  * The color used to highlight comments in the text editor
  */
 
-QColor Theme::comments (void) const
-{
+QColor Theme::comments (void) const {
     return QColor (m_comments);
 }
 
@@ -240,7 +220,6 @@ QColor Theme::comments (void) const
  * The color used to highlight functions in the text editor
  */
 
-QColor Theme::functions (void) const
-{
+QColor Theme::functions (void) const {
     return QColor (m_functions);
 }

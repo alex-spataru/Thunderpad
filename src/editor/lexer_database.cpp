@@ -36,7 +36,6 @@
 #include <Qsci/qscilexerfortran.h>
 #include <Qsci/qscilexerfortran77.h>
 #include <Qsci/qscilexerhtml.h>
-#include <Qsci/qscilexeridl.h>
 #include <Qsci/qscilexerjava.h>
 #include <Qsci/qscilexerjavascript.h>
 #include <Qsci/qscilexerlua.h>
@@ -45,7 +44,6 @@
 #include <Qsci/qscilexerpascal.h>
 #include <Qsci/qscilexerperl.h>
 #include <Qsci/qscilexerpostscript.h>
-#include <Qsci/qscilexerpov.h>
 #include <Qsci/qscilexerpython.h>
 #include <Qsci/qscilexerruby.h>
 #include <Qsci/qscilexerspice.h>
@@ -76,8 +74,7 @@ LexerDatabase::LexerDatabase (void) {}
  * configures it to fit the needs of the \a Editor.
  */
 
-QsciLexer *LexerDatabase::getLexer (const QString &file)
-{
+QsciLexer *LexerDatabase::getLexer (const QString &file) {
     QsciLexer *_lexer = _guessByName (file);
     return _lexer;
 }
@@ -87,8 +84,7 @@ QsciLexer *LexerDatabase::getLexer (const QString &file)
  * Returns a appropiate QsciLexer given the input \a {file}
  */
 
-QsciLexer *LexerDatabase::_guessByName (const QString &file)
-{
+QsciLexer *LexerDatabase::_guessByName (const QString &file) {
     QsciLexer *lexer;
     QFile _file (file);
     QString s = QFileInfo (_file).suffix().toLower();
@@ -166,10 +162,6 @@ QsciLexer *LexerDatabase::_guessByName (const QString &file)
         lexer = new QsciLexerHTML();
 
     //
-    // IDL
-    //
-
-    //
     // Java
     //
     else if (s == "java")
@@ -220,10 +212,6 @@ QsciLexer *LexerDatabase::_guessByName (const QString &file)
         lexer = new QsciLexerPostScript();
 
     //
-    // POV
-    //
-
-    //
     // Python
     //
     else if (s == "py" || s == "pyw")
@@ -238,6 +226,8 @@ QsciLexer *LexerDatabase::_guessByName (const QString &file)
     //
     // Spice
     //
+    else if (s == "cir")
+        lexer = new QsciLexerSpice();
 
     //
     // SQL

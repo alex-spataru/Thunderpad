@@ -25,8 +25,7 @@
 #include <QObject>
 #include <Qsci/qscilexer.h>
 
-class LexerDatabase : public QObject
-{
+class LexerDatabase : public QObject {
         Q_OBJECT
 
     public:

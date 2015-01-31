@@ -87,8 +87,7 @@
     \sa QFile::QFile()
 */
 QtLockedFile::QtLockedFile()
-    : QFile()
-{
+    : QFile() {
 #ifdef Q_OS_WIN
     wmutex = 0;
     rmutex = 0;
@@ -104,8 +103,7 @@ QtLockedFile::QtLockedFile()
     \sa QFile::QFile()
 */
 QtLockedFile::QtLockedFile (const QString &name)
-    : QFile (name)
-{
+    : QFile (name) {
 #ifdef Q_OS_WIN
     wmutex = 0;
     rmutex = 0;
@@ -126,10 +124,8 @@ QtLockedFile::QtLockedFile (const QString &name)
 
   \sa QFile::open(), QFile::resize()
 */
-bool QtLockedFile::open (OpenMode mode)
-{
-    if (mode & QIODevice::Truncate)
-    {
+bool QtLockedFile::open (OpenMode mode) {
+    if (mode & QIODevice::Truncate) {
         qWarning ("QtLockedFile::open(): Truncate mode not allowed.");
         return false;
     }
@@ -143,8 +139,7 @@ bool QtLockedFile::open (OpenMode mode)
 
     \sa lockMode()
 */
-bool QtLockedFile::isLocked() const
-{
+bool QtLockedFile::isLocked() const {
     return m_lock_mode != NoLock;
 }
 
@@ -154,8 +149,7 @@ bool QtLockedFile::isLocked() const
 
     \sa isLocked()
 */
-QtLockedFile::LockMode QtLockedFile::lockMode() const
-{
+QtLockedFile::LockMode QtLockedFile::lockMode() const {
     return m_lock_mode;
 }
 

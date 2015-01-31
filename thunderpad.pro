@@ -10,8 +10,8 @@ TARGET     = Thunderpad
 VERSION    = 0.9.3
 
 # Assembly info
-DEFINES += APP_NAME=\\\"$$TARGET\\\"
-DEFINES += APP_VERSION=\\\"$$VERSION\\\"
+DEFINES +=  APP_NAME=\\\"$$TARGET\\\"
+DEFINES +=  APP_VERSION=\\\"$$VERSION\\\"
 DEFINES += "APP_COMPANY=\"\\\"Alex Spataru\\\"\""
 
 CODECFORTR  = UTF-8

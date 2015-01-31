@@ -50,8 +50,7 @@ MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE."
 #define CONTRIBUTE_LINK "http://thunderpad.sf.net/contribute"
 #define REPORT_ISSUES_LINK "http://github.com/alex-97/thunderpad/issues"
 
-Window::Window (void)
-{
+Window::Window (void) {
     // Allow other instances of Window
     // to communicate with each other
     setObjectName ("window");
@@ -91,48 +90,41 @@ Window::Window (void)
     m_settings->value ("maximized", false).toBool() ? showMaximized() : showNormal();
 }
 
-Editor *Window::editor (void) const
-{
+Editor *Window::editor (void) const {
     return m_editor;
 }
 
-ToolBar *Window::toolbar (void) const
-{
+ToolBar *Window::toolbar (void) const {
     return m_toolbar;
 }
 
-void Window::closeEvent (QCloseEvent *event)
-{
+void Window::closeEvent (QCloseEvent *event) {
     saveWindowState();
 
     // Save the document before closing
     m_editor->maybeSave() ? event->accept() : event->ignore();
 }
 
-void Window::openFile (const QString &file_name)
-{
+void Window::openFile (const QString &file_name) {
     // Open the file in the same window
     if (m_editor->titleIsShit() && !m_editor->isModified())
         m_editor->readFile (file_name);
 
     // Open the file in another window
-    else
-    {
+    else {
         Window *_window = new Window();
         configureWindow (_window);
         _window->editor()->readFile (file_name);
     }
 }
 
-void Window::newFile (void)
-{
+void Window::newFile (void) {
     // Create a new window  and configure it
     Window *_window = new Window();
     configureWindow (_window);
 }
 
-void Window::open (void)
-{
+void Window::open (void) {
     QStringList _files = QFileDialog::getOpenFileNames (this, tr ("Open"), QDir::homePath());
 
     // Open each file separately
@@ -141,75 +133,63 @@ void Window::open (void)
             openFile (_files.at (i));
 }
 
-void Window::setReadOnly (bool ro)
-{
+void Window::setReadOnly (bool ro) {
     m_editor->setReadOnly (ro);
     m_toolbar->setReadOnly (ro);
 
     emit readOnlyChanged (ro);
 }
 
-void Window::setWordWrap (bool ww)
-{
+void Window::setWordWrap (bool ww) {
     m_settings->setValue ("wordwrap-enabled", ww);
     syncSettings();
 }
 
-void Window::setToolbarText (bool tt)
-{
+void Window::setToolbarText (bool tt) {
     m_settings->setValue ("toolbar-text", tt);
     syncSettings();
 }
 
-void Window::setToolbarEnabled (bool tb)
-{
+void Window::setToolbarEnabled (bool tb) {
     m_settings->setValue ("toolbar-enabled", tb);
     syncSettings();
 }
 
-void Window::setStatusBarEnabled (bool sb)
-{
+void Window::setStatusBarEnabled (bool sb) {
     m_settings->setValue ("statusbar-enabled", sb);
     syncSettings();
 }
 
-void Window::setHCLineEnabled (bool hc)
-{
+void Window::setHCLineEnabled (bool hc) {
     m_settings->setValue ("hc-line-enabled", hc);
     syncSettings();
 }
 
-void Window::setUseLargeIcons (bool li)
-{
+void Window::setUseLargeIcons (bool li) {
     m_settings->setValue ("large-icons", li);
     syncSettings();
 }
 
-void Window::setLineNumbersEnabled (bool ln)
-{
+void Window::setLineNumbersEnabled (bool ln) {
     m_settings->setValue ("line-numbers-enabled", ln);
     syncSettings();
 }
 
-void Window::setColorscheme (const QString &colorscheme)
-{
+void Window::setColorscheme (const QString &colorscheme) {
     m_settings->setValue ("color-scheme", colorscheme);
     syncSettings();
 }
 
-void Window::showFindReplaceDialog (void)
-{
+void Window::showFindReplaceDialog (void) {
     m_search_dialog->show();
 }
 
-void Window::setIconTheme (const QString &theme)
-{
+void Window::setIconTheme (const QString &theme) {
     m_settings->setValue ("icon-theme", theme);
     syncSettings();
 }
 
-void Window::aboutThunderpad (void)
-{
+void Window::aboutThunderpad (void) {
     // Show a nice about dialog with application information
     QString _message = QString ("<h%1>%2 %3</h%1>").arg (MAC_OS_X ? "3" : "2", APP_NAME, APP_VERSION) +
                        QString ("<span style='font-weight:normal;'><font size=%1>").arg (MAC_OS_X ? "2" : "3") +
@@ -220,43 +200,35 @@ void Window::aboutThunderpad (void)
     QMessageBox::about (this, tr ("About %1").arg (APP_NAME), _message);
 }
 
-void Window::license (void)
-{
+void Window::license (void) {
     QDesktopServices::openUrl (QUrl (LICENSE_LINK));
 }
 
-void Window::donate (void)
-{
+void Window::donate (void) {
     QDesktopServices::openUrl (QUrl (DONATE_LINK));
 }
 
-void Window::viewHelp (void)
-{
+void Window::viewHelp (void) {
     QDesktopServices::openUrl (QUrl (HELP_LINK));
 }
 
-void Window::sendFeedback (void)
-{
+void Window::sendFeedback (void) {
     QDesktopServices::openUrl (QUrl (FEED_BACK_LINK));
 }
 
-void Window::reportBug (void)
-{
+void Window::reportBug (void) {
     QDesktopServices::openUrl (QUrl (REPORT_ISSUES_LINK));
 }
 
-void Window::makeContribution (void)
-{
+void Window::makeContribution (void) {
     QDesktopServices::openUrl (QUrl (CONTRIBUTE_LINK));
 }
 
-void Window::officialWebsite (void)
-{
+void Window::officialWebsite (void) {
     QDesktopServices::openUrl (QUrl (WEBSITE_LINK));
 }
 
-void Window::updateTitle (void)
-{
+void Window::updateTitle (void) {
     // Use "Untitled" while editing new documents
     QString _title = editor()->documentTitle().isEmpty() ?
                      tr ("Untitled") :
@@ -274,36 +246,30 @@ void Window::updateTitle (void)
     m_toolbar->setSaveEnabled (_save_enabled);
 }
 
-void Window::syncSettings (void)
-{
+void Window::syncSettings (void) {
     emit updateSettings();
     emit settingsChanged();
 }
 
-void Window::saveWindowState (void)
-{
+void Window::saveWindowState (void) {
     m_settings->setValue ("maximized", isMaximized());
 
     // Only save the window size and position if it isn't maximized
-    if (!isMaximized())
-    {
+    if (!isMaximized()) {
         m_settings->setValue ("size", size());
         m_settings->setValue ("position", pos());
     }
 }
 
-void Window::configureWindow (Window *window)
-{
+void Window::configureWindow (Window *window) {
     Q_ASSERT (window != NULL);
 
     // Allow the other window to ask the application to check for updates
     connect (window, SIGNAL (checkForUpdates()), this, SIGNAL (checkForUpdates()));
 
     // Sync settings across windows
-    foreach (QWidget *widget, QApplication::topLevelWidgets())
-    {
-        if (widget->objectName() == objectName())
-        {
+    foreach (QWidget *widget, QApplication::topLevelWidgets()) {
+        if (widget->objectName() == objectName()) {
             connect (widget, SIGNAL (settingsChanged()), window, SIGNAL (updateSettings()));
             connect (window, SIGNAL (settingsChanged()), widget, SIGNAL (updateSettings()));
         }
@@ -314,16 +280,14 @@ void Window::configureWindow (Window *window)
         window->showNormal();
 
     // Resize the window and position it to match the current window
-    else
-    {
+    else {
         window->resize (size());
         window->move (window->x() + 30, window->y() + 30);
         m_settings->setValue ("position", QPoint (window->x(), window->y()));
     }
 }
 
-QString Window::shortFileName (const QString &file)
-{
+QString Window::shortFileName (const QString &file) {
     Q_ASSERT (!file.isEmpty());
     return QFileInfo (file).fileName();
 }

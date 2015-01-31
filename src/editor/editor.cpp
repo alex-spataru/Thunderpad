@@ -39,8 +39,7 @@
 #define KILOBYTE 1024
 #define MEGABYTE 1048576
 
-Editor::Editor (QWidget *parent) : QsciScintilla (parent)
-{
+Editor::Editor (QWidget *parent) : QsciScintilla (parent) {
     setAttribute (Qt::WA_DeleteOnClose);
 
     m_theme = new Theme (this);
@@ -56,8 +55,7 @@ Editor::Editor (QWidget *parent) : QsciScintilla (parent)
     connect (this, SIGNAL (settingsChanged()), this, SLOT (updateSettings()));
 }
 
-bool Editor::maybeSave (void)
-{
+bool Editor::maybeSave (void) {
     // We don't need to save the document if it isn't modified
     if (!isModified())
         return true;
@@ -68,8 +66,7 @@ bool Editor::maybeSave (void)
 
     // The document was never saved in the hard disk, so ask the user if he/she wants
     // to save the current document
-    else if (isModified())
-    {
+    else if (isModified()) {
         QMessageBox _message;
         _message.setParent (this);
         _message.setWindowModality (Qt::WindowModal);
@@ -84,8 +81,7 @@ bool Editor::maybeSave (void)
         _message.setInformativeText (
             tr ("Your changes will be lost if you close this item without saving."));
 
-        switch (_message.exec())
-        {
+        switch (_message.exec()) {
             case QMessageBox::Save:
                 return save();
                 break;
@@ -103,20 +99,17 @@ bool Editor::maybeSave (void)
     return false;
 }
 
-int Editor::wordCount (void)
-{
+int Editor::wordCount (void) {
     return text().split
            (QRegExp ("(\\s|\\n|\\r)+"),
             QString::SkipEmptyParts).count();
 }
 
-bool Editor::titleIsShit (void)
-{
+bool Editor::titleIsShit (void) {
     return documentTitle().isEmpty();
 }
 
-QString Editor::calculateSize (void)
-{
+QString Editor::calculateSize (void) {
     QString _units;
     float _length = length();
 
@@ -125,15 +118,13 @@ QString Editor::calculateSize (void)
         _units = " " + tr ("bytes");
 
     // File is one KB or greater, but smaller than one MB
-    else if (_length < MEGABYTE)
-    {
+    else if (_length < MEGABYTE) {
         _length /= KILOBYTE;
         _units = " " + tr ("KB");
     }
 
     // File is one MB or greater
-    else
-    {
+    else {
         _length /= MEGABYTE;
         _units = " " + tr ("MB");
     }
@@ -141,20 +132,17 @@ QString Editor::calculateSize (void)
     return QString::number (floorf (_length * 100 + 0.5) / 100) + _units;
 }
 
-QString Editor::documentTitle (void) const
-{
+QString Editor::documentTitle (void) const {
     return m_document_title;
 }
 
-void Editor::exportPdf (void)
-{
+void Editor::exportPdf (void) {
     QString _path = QFileDialog::getSaveFileName (this,
                     tr ("Export PDF"),
                     QDir::homePath(),
                     tr ("PDF Document") + " (*.pdf)");
 
-    if (!_path.isEmpty())
-    {
+    if (!_path.isEmpty()) {
         QsciPrinter printer (QPrinter::HighResolution);
 
         printer.setWrapMode (wrapMode());
@@ -181,17 +169,14 @@ void Editor::exportPdf (void)
     }
 }
 
-void Editor::resetZoom (void)
-{
+void Editor::resetZoom (void) {
     zoomTo (0);
 }
 
-void Editor::documentInfo (void)
-{
+void Editor::documentInfo (void) {
 }
 
-void Editor::updateSettings (void)
-{
+void Editor::updateSettings (void) {
     // Specify default values for the font
     int _default_size = 11;
     QString _default_font = "Courier";
@@ -226,15 +211,13 @@ void Editor::updateSettings (void)
     m_line_numbers = m_settings->value ("line-numbers-enabled", SETTINGS_LINE_NUMBERS).toBool();
 
     // Enable line numbers
-    if (m_line_numbers)
-    {
+    if (m_line_numbers) {
         setMarginLineNumbers (1, true);
         setMarginWidth (1, QString ("00%1").arg (lines()));
     }
 
     // Disable line numbers
-    else
-    {
+    else {
         setMarginWidth (1, 0);
         setMarginLineNumbers (1, false);
     }
@@ -253,51 +236,42 @@ void Editor::updateSettings (void)
     updateLexer();
 }
 
-bool Editor::save (void)
-{
+bool Editor::save (void) {
     return titleIsShit() ? saveAs() : writeFile (documentTitle());
 }
 
-bool Editor::saveAs (void)
-{
+bool Editor::saveAs (void) {
     return writeFile (QFileDialog::getSaveFileName (this, tr ("Save as") + "...",
                       QDir::homePath()));
 }
 
-void Editor::goToLine (void)
-{
+void Editor::goToLine (void) {
 
 }
 
-void Editor::sortSelection (void)
-{
+void Editor::sortSelection (void) {
 
 }
 
-void Editor::insertDateTime (void)
-{
+void Editor::insertDateTime (void) {
     // Todo
 }
 
-void Editor::print (void)
-{
+void Editor::print (void) {
     QsciPrinter printer;
     QPrintDialog dialog (&printer, this);
 
-    if (dialog.exec() == QDialog::Accepted)
-    {
+    if (dialog.exec() == QDialog::Accepted) {
         printer.setWrapMode (wrapMode());
         printer.printRange (this, 0);
     }
 }
 
-void Editor::selectFonts (void)
-{
+void Editor::selectFonts (void) {
     QFontDialog _dialog;
     _dialog.setCurrentFont (m_font);
 
-    if (_dialog.exec() == QFontDialog::Accepted)
-    {
+    if (_dialog.exec() == QFontDialog::Accepted) {
         m_font = _dialog.selectedFont();
 
         // Fonts cannot be saved directly
@@ -311,22 +285,18 @@ void Editor::selectFonts (void)
     }
 }
 
-void Editor::setWordWrap (bool ww)
-{
+void Editor::setWordWrap (bool ww) {
     setWrapMode (ww ? QsciScintilla::WrapWord : QsciScintilla::WrapNone);
 }
 
-void Editor::readFile (const QString &file)
-{
+void Editor::readFile (const QString &file) {
     qApp->setOverrideCursor (Qt::WaitCursor);
 
-    if (!file.isEmpty())
-    {
+    if (!file.isEmpty()) {
         QMutex _mutex;
         QFile _file (file);
 
-        if (_file.open (QIODevice::ReadOnly))
-        {
+        if (_file.open (QIODevice::ReadOnly)) {
             _mutex.lock();
             setText (QString::fromUtf8 (_file.readAll()));
             configureDocument (file);
@@ -335,8 +305,7 @@ void Editor::readFile (const QString &file)
             _mutex.unlock();
         }
 
-        else
-        {
+        else {
             QMessageBox::warning (this,
                                   tr ("Read error"),
                                   tr ("Cannot open file \"%1\"!\n%2")
@@ -348,15 +317,12 @@ void Editor::readFile (const QString &file)
     qApp->restoreOverrideCursor();
 }
 
-bool Editor::writeFile (const QString &file)
-{
-    if (!file.isEmpty())
-    {
+bool Editor::writeFile (const QString &file) {
+    if (!file.isEmpty()) {
         QFile _file (file);
         QMutex _mutex;
 
-        if (_file.open (QIODevice::WriteOnly))
-        {
+        if (_file.open (QIODevice::WriteOnly)) {
             qApp->setOverrideCursor (Qt::WaitCursor);
 
             _mutex.lock();
@@ -369,8 +335,7 @@ bool Editor::writeFile (const QString &file)
             return true;
         }
 
-        else
-        {
+        else {
             QMessageBox _message;
             _message.setParent (this);
             _message.setIcon (QMessageBox::Warning);
@@ -395,8 +360,7 @@ bool Editor::writeFile (const QString &file)
     return false;
 }
 
-void Editor::updateLexer (void)
-{
+void Editor::updateLexer (void) {
     QsciLexer *_lexer = m_lexer_db.getLexer (documentTitle());
 
     _lexer->setFont (m_font);
@@ -408,8 +372,7 @@ void Editor::updateLexer (void)
     setLexer (_lexer);
 }
 
-void Editor::updateLineNumbers (void)
-{
+void Editor::updateLineNumbers (void) {
     if (m_line_numbers)
         setMarginWidth (1, QString ("00%1").arg (lines()));
 
@@ -417,13 +380,11 @@ void Editor::updateLineNumbers (void)
         setMarginWidth (1, 0);
 }
 
-void Editor::onMarginClicked (void)
-{
+void Editor::onMarginClicked (void) {
 
 }
 
-void Editor::configureDocument (const QString &file)
-{
+void Editor::configureDocument (const QString &file) {
     m_document_title = file;
 
     updateLexer();

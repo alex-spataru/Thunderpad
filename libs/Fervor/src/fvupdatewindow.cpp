@@ -9,8 +9,7 @@
 
 FvUpdateWindow::FvUpdateWindow (QWidget *parent) :
     QWidget (parent),
-    m_ui (new Ui::FvUpdateWindow)
-{
+    m_ui (new Ui::FvUpdateWindow) {
     m_ui->setupUi (this);
 
     m_appIconScene = 0;
@@ -31,14 +30,12 @@ FvUpdateWindow::FvUpdateWindow (QWidget *parent) :
              FvUpdater::sharedUpdater(), SLOT (RemindMeLater()));
 }
 
-FvUpdateWindow::~FvUpdateWindow()
-{
+FvUpdateWindow::~FvUpdateWindow() {
     m_ui->releaseNotesWebView->stop();
     delete m_ui;
 }
 
-bool FvUpdateWindow::UpdateWindowWithCurrentProposedUpdate()
-{
+bool FvUpdateWindow::UpdateWindowWithCurrentProposedUpdate() {
     FvAvailableUpdate *proposedUpdate = FvUpdater::sharedUpdater()->GetProposedUpdate();
 
     if (! proposedUpdate)
@@ -54,8 +51,7 @@ bool FvUpdateWindow::UpdateWindowWithCurrentProposedUpdate()
     return true;
 }
 
-void FvUpdateWindow::closeEvent (QCloseEvent *event)
-{
+void FvUpdateWindow::closeEvent (QCloseEvent *event) {
     FvUpdater::sharedUpdater()->updaterWindowWasClosed();
     event->accept();
 }

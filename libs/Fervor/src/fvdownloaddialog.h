@@ -11,13 +11,11 @@
 
 #include <math.h>
 
-namespace Ui
-{
+namespace Ui {
 class FvDownloadDialog;
 }
 
-class FvDownloadDialog : public QWidget
-{
+class FvDownloadDialog : public QWidget {
         Q_OBJECT
 
     public:

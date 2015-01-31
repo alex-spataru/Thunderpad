@@ -36,8 +36,7 @@
  * \endlist
  */
 
-SearchDialog::SearchDialog (Window *parent) : QDialog (parent)
-{
+SearchDialog::SearchDialog (Window *parent) : QDialog (parent) {
     QIcon _blank;
     setWindowIcon (_blank);
 
@@ -112,8 +111,7 @@ SearchDialog::SearchDialog (Window *parent) : QDialog (parent)
  * adapts the UI interface based on the search results
  */
 
-bool SearchDialog::search (void)
-{
+bool SearchDialog::search (void) {
     bool _found = m_text_edit->findFirst (ui_find_lineedit->text(),               // Search query
                                           ui_regex_search_checkbox->isChecked(),  // Regex searching
                                           ui_match_case_checkbox->isChecked(),    // Match case
@@ -132,8 +130,7 @@ bool SearchDialog::search (void)
  * Highlights the next match of the search query
  */
 
-void SearchDialog::findNext (void)
-{
+void SearchDialog::findNext (void) {
     m_text_edit->findNext();
 }
 
@@ -141,10 +138,8 @@ void SearchDialog::findNext (void)
  * Replaces all matches of the search query
  */
 
-void SearchDialog::replaceAll (void)
-{
-    if (!m_text_edit->isReadOnly())
-    {
+void SearchDialog::replaceAll (void) {
+    if (!m_text_edit->isReadOnly()) {
         while (search())
             replaceFirstOccurrence();
 
@@ -162,10 +157,8 @@ void SearchDialog::replaceAll (void)
  * Replaces the selected match of the search query
  */
 
-void SearchDialog::replaceFirstOccurrence (void)
-{
-    if (!m_text_edit->isReadOnly())
-    {
+void SearchDialog::replaceFirstOccurrence (void) {
+    if (!m_text_edit->isReadOnly()) {
         m_text_edit->replaceSelectedText (ui_replace_lineedit->text());
         search();
     }

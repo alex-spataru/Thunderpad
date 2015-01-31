@@ -28,8 +28,7 @@
 #include "platform.h"
 #include "defaults.h"
 
-MenuBar::MenuBar (Window *parent) : QMenuBar (parent)
-{
+MenuBar::MenuBar (Window *parent) : QMenuBar (parent) {
     setAttribute (Qt::WA_DeleteOnClose);
     m_settings = new QSettings (APP_COMPANY, APP_NAME);
 
@@ -40,13 +39,11 @@ MenuBar::MenuBar (Window *parent) : QMenuBar (parent)
     initialize (parent);
 }
 
-void MenuBar::setSaveEnabled (bool enabled)
-{
+void MenuBar::setSaveEnabled (bool enabled) {
     f_save->setEnabled (enabled);
 }
 
-void MenuBar::initialize (Window *window)
-{
+void MenuBar::initialize (Window *window) {
     Q_ASSERT (window != NULL);
 
     window->setMenuBar (this);
@@ -111,8 +108,7 @@ void MenuBar::initialize (Window *window)
     connect (window, SIGNAL (updateSettings()), this, SLOT (updateSettings()));
 }
 
-void MenuBar::updateSettings (void)
-{
+void MenuBar::updateSettings (void) {
     v_toolbar->setChecked (m_settings->value ("toolbar-enabled", SETTINGS_TOOLBAR_ENABLED).toBool());
     v_toolbar_text->setChecked (m_settings->value ("toolbar-text", SETTINGS_TOOLBAR_TEXT).toBool());
     v_statusbar->setChecked (m_settings->value ("statusbar-enabled", SETTINGS_STATUSBAR_ENABLED).toBool());
@@ -122,8 +118,7 @@ void MenuBar::updateSettings (void)
     v_highlight_current_line->setChecked (m_settings->value ("hc-line-enabled", SETTINGS_CARET_LINE).toBool());
 }
 
-void MenuBar::createActions (void)
-{
+void MenuBar::createActions (void) {
     // Create the file menu actions
     f_new = new QAction (tr ("New"), this);
     f_open = new QAction (tr ("Open") + "...", this);
@@ -179,8 +174,7 @@ void MenuBar::createActions (void)
     h_official_website = new QAction (tr ("Website") + "...", this);
 }
 
-void MenuBar::configureActions (void)
-{
+void MenuBar::configureActions (void) {
     // Set the menu roles
     f_quit->setMenuRole (QAction::QuitRole);
     h_about_qt->setMenuRole (QAction::AboutQtRole);
@@ -222,8 +216,7 @@ void MenuBar::configureActions (void)
     v_highlight_current_line->setCheckable (true);
 }
 
-void MenuBar::createMenubar (void)
-{
+void MenuBar::createMenubar (void) {
     // Create the main menus we are adding the "&" before
     // each menu to inhibit the OS to add aditional items
     // to the menubar (such as in the Edit menu in Mac).
@@ -304,8 +297,7 @@ void MenuBar::createMenubar (void)
     QStringList icon_themes_list = icon_themes_dir.entryList();
 
     // Create a new action for each registered icon theme
-    for (int i = 0; icon_themes_list.count() > i; ++i)
-    {
+    for (int i = 0; icon_themes_list.count() > i; ++i) {
         // Get the name of the current theme and create the action
         QAction *_action = new QAction (icon_themes_list.at (i), this);
 
@@ -346,8 +338,7 @@ void MenuBar::createMenubar (void)
     m_help->addAction (h_official_website);
 }
 
-void MenuBar::setReadOnly (bool ro)
-{
+void MenuBar::setReadOnly (bool ro) {
     e_undo->setEnabled (!ro);
     e_redo->setEnabled (!ro);
 

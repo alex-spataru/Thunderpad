@@ -51,10 +51,8 @@
 
 #include "qtlockedfile.h"
 
-bool QtLockedFile::lock (LockMode mode, bool block)
-{
-    if (!isOpen())
-    {
+bool QtLockedFile::lock (LockMode mode, bool block) {
+    if (!isOpen()) {
         qWarning ("QtLockedFile::lock(): file is not opened");
         return false;
     }
@@ -76,8 +74,7 @@ bool QtLockedFile::lock (LockMode mode, bool block)
     int cmd = block ? F_SETLKW : F_SETLK;
     int ret = fcntl (handle(), cmd, &fl);
 
-    if (ret == -1)
-    {
+    if (ret == -1) {
         if (errno != EINTR && errno != EAGAIN)
             qWarning ("QtLockedFile::lock(): fcntl: %s", strerror (errno));
 
@@ -90,10 +87,8 @@ bool QtLockedFile::lock (LockMode mode, bool block)
 }
 
 
-bool QtLockedFile::unlock()
-{
-    if (!isOpen())
-    {
+bool QtLockedFile::unlock() {
+    if (!isOpen()) {
         qWarning ("QtLockedFile::unlock(): file is not opened");
         return false;
     }
@@ -108,8 +103,7 @@ bool QtLockedFile::unlock()
     fl.l_type = F_UNLCK;
     int ret = fcntl (handle(), F_SETLKW, &fl);
 
-    if (ret == -1)
-    {
+    if (ret == -1) {
         qWarning ("QtLockedFile::lock(): fcntl: %s", strerror (errno));
         return false;
     }
@@ -118,8 +112,7 @@ bool QtLockedFile::unlock()
     return true;
 }
 
-QtLockedFile::~QtLockedFile()
-{
+QtLockedFile::~QtLockedFile() {
     if (isOpen())
         unlock();
 }

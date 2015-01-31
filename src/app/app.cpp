@@ -46,8 +46,7 @@
  * Initializes the application and sets the application information
  */
 
-Application::Application (int &argc, char **argv) : QtSingleApplication (argc, argv)
-{
+Application::Application (int &argc, char **argv) : QtSingleApplication (argc, argv) {
     setApplicationName (APP_NAME);
     setOrganizationName (APP_COMPANY);
     setOrganizationDomain (APP_COMPANY);
@@ -60,8 +59,7 @@ Application::Application (int &argc, char **argv) : QtSingleApplication (argc, a
  * and shows welcome messages.
  */
 
-int Application::start (const QString &arguments)
-{
+int Application::start (const QString &arguments) {
     m_window = new Window();
     m_settings = new QSettings (APP_COMPANY, APP_NAME);
     m_window->openFile (arguments);
@@ -82,8 +80,7 @@ int Application::start (const QString &arguments)
  * messages and checks for updates
  */
 
-void Application::checkForUpdates (void)
-{
+void Application::checkForUpdates (void) {
     FvUpdater::sharedUpdater()->CheckForUpdatesNotSilent();
 }
 
@@ -91,8 +88,7 @@ void Application::checkForUpdates (void)
  * Configures the auto-updater system and checks for updates automatically
  */
 
-void Application::setupUpdater (void)
-{
+void Application::setupUpdater (void) {
     FvUpdater::sharedUpdater()->SetFeedURL ("http://thunderpad.sourceforge.net/updater/appcast.xml");
 
     if (m_settings->value ("check-for-updates", SETTINGS_AUTO_CHECK_UPDATES).toBool())
@@ -107,15 +103,13 @@ void Application::setupUpdater (void)
  * \endlist
  */
 
-void Application::showWelcomeMessages (void)
-{
+void Application::showWelcomeMessages (void) {
     QMessageBox _message;
     _message.setWindowModality (Qt::WindowModal);
     _message.setIconPixmap (QPixmap (":/images/others/logo.png"));
 
     // Its the first launch, welcome the user to the application
-    if (m_settings->value ("first-launch", true).toBool())
-    {
+    if (m_settings->value ("first-launch", true).toBool()) {
         _message.setStandardButtons (QMessageBox::Close);
         _message.setText ("<b>" + tr ("Thank you for downloading Thunderpad!") +
                           "</b>           ");
@@ -135,8 +129,7 @@ void Application::showWelcomeMessages (void)
 
     // Its the second launch, ask the user if he/she wants to allow the application
     // to check for updates automatically
-    else if (m_settings->value ("second-launch", false).toBool())
-    {
+    else if (m_settings->value ("second-launch", false).toBool()) {
         _message.setDefaultButton (QMessageBox::Yes);
         _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No);
         _message.setText (
@@ -154,8 +147,7 @@ void Application::showWelcomeMessages (void)
  * acts accordingly (ex: open a file or create a new one)
  */
 
-void Application::onMessageReceived (const QString &msg)
-{
+void Application::onMessageReceived (const QString &msg) {
     if (!msg.isEmpty())
         m_window->openFile (msg);
 
@@ -168,8 +160,7 @@ void Application::onMessageReceived (const QString &msg)
  * (ex: when you open a file from the file manager)
  */
 
-bool Application::event (QEvent *_event)
-{
+bool Application::event (QEvent *_event) {
     if (_event->type() == QEvent::FileOpen)
         m_window->openFile (static_cast<QFileOpenEvent *> (_event)->file());
 

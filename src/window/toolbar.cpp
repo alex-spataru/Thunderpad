@@ -27,8 +27,7 @@
 #define SMALL_ICONS_SIZE "16x16"
 #define ICON_THEMES_PATH ":/images/themes"
 
-ToolBar::ToolBar (Window *parent) : QToolBar (parent)
-{
+ToolBar::ToolBar (Window *parent) : QToolBar (parent) {
     setAttribute (Qt::WA_DeleteOnClose);
 
     // Configure the toolbar
@@ -80,8 +79,7 @@ ToolBar::ToolBar (Window *parent) : QToolBar (parent)
     initialize (parent);
 }
 
-void ToolBar::setReadOnly (bool ro)
-{
+void ToolBar::setReadOnly (bool ro) {
     m_readonly->setChecked (ro);
     m_readonly->setEnabled (ro);
     m_readonly->setVisible (ro);
@@ -93,13 +91,11 @@ void ToolBar::setReadOnly (bool ro)
     m_paste->setEnabled (!ro);
 }
 
-void ToolBar::setSaveEnabled (bool enabled)
-{
+void ToolBar::setSaveEnabled (bool enabled) {
     m_save->setEnabled (enabled);
 }
 
-void ToolBar::setToolbarText (bool enabled)
-{
+void ToolBar::setToolbarText (bool enabled) {
     QSize _icon_size;
     short _toolbar_height;
 
@@ -111,8 +107,7 @@ void ToolBar::setToolbarText (bool enabled)
         _icon_size = QSize (24, 24);
 
     // Show the text and set the size of the toolbar
-    if (enabled)
-    {
+    if (enabled) {
         if (m_large_icons)
             _toolbar_height = MAC_OS_X ? 48 : 56;
 
@@ -123,8 +118,7 @@ void ToolBar::setToolbarText (bool enabled)
     }
 
     // Hide the text and set the size of the toolbar
-    else
-    {
+    else {
         if (m_large_icons)
             _toolbar_height = MAC_OS_X ? 32 : 36;
 
@@ -144,8 +138,7 @@ void ToolBar::setToolbarText (bool enabled)
     show();
 }
 
-void ToolBar::initialize (Window *window)
-{
+void ToolBar::initialize (Window *window) {
     Q_ASSERT (window != NULL);
 
     window->addToolBar (this);
@@ -169,14 +162,12 @@ void ToolBar::initialize (Window *window)
     connect (window, SIGNAL (updateSettings()), this, SLOT (updateSettings()));
 }
 
-void ToolBar::updateSettings (void)
-{
+void ToolBar::updateSettings (void) {
     bool _new_value = m_settings->value ("toolbar-text", SETTINGS_TOOLBAR_TEXT).toBool();
     bool _new_sizes = m_settings->value ("large-icons", SETTINGS_LARGE_ICONS).toBool();
 
     // Resize and redraw the toolbar if neccessary
-    if (_new_value != m_toolbar_text || m_large_icons != _new_sizes)
-    {
+    if (_new_value != m_toolbar_text || m_large_icons != _new_sizes) {
         m_large_icons = _new_sizes;
         m_toolbar_text = _new_value;
 
@@ -191,8 +182,7 @@ void ToolBar::updateSettings (void)
     update_theme (m_settings->value ("icon-theme", SETTINGS_ICON_THEME).toString());
 }
 
-void ToolBar::update_theme (const QString &theme)
-{
+void ToolBar::update_theme (const QString &theme) {
     Q_ASSERT (!theme.isEmpty());
 
     // Decide if we use small icons or large icons
