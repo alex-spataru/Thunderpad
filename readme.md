@@ -67,4 +67,3 @@ Thunderpad is released with the GNU 3.0 license, you can read a copy of it [here
  
  
  That's all! To run Thunderpad, you can type "thunderpad" (without quotes) in Terminal. You can also run Thunderpad from your application menu (Gnome) or Dash (Unity).
- 
