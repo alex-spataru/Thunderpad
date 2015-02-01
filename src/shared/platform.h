@@ -22,17 +22,9 @@
 #ifndef PLATFORM_H
 #define PLATFORM_H
 
-#ifndef LINUX
 #define LINUX false
-#endif
-
-#ifndef WINDOWS
 #define WINDOWS false
-#endif
-
-#ifndef MAC_OS_X
 #define MAC_OS_X false
-#endif
 
 #ifdef Q_OS_LINUX
 #undef LINUX

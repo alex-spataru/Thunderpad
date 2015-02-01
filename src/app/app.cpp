@@ -108,7 +108,9 @@ void Application::showWelcomeMessages (void) {
     _message.setWindowModality (Qt::WindowModal);
     _message.setIconPixmap (QPixmap (":/images/others/logo.png"));
 
+    //
     // Its the first launch, welcome the user to the application
+    //
     if (m_settings->value ("first-launch", true).toBool()) {
         _message.setStandardButtons (QMessageBox::Close);
         _message.setText ("<b>" + tr ("Thank you for downloading Thunderpad!") +
@@ -127,8 +129,10 @@ void Application::showWelcomeMessages (void) {
         m_settings->setValue ("second-launch", true);
     }
 
+    //
     // Its the second launch, ask the user if he/she wants to allow the application
     // to check for updates automatically
+    //
     else if (m_settings->value ("second-launch", false).toBool()) {
         _message.setDefaultButton (QMessageBox::Yes);
         _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No);

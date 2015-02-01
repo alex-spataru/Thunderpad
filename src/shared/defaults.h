@@ -24,10 +24,14 @@
 
 #include "platform.h"
 
+//
 // Statusbar defaults
+//
 #define SETTINGS_STATUSBAR_ENABLED true
 
+//
 // Editor defaults
+//
 #define SETTINGS_CARET_LINE true
 #define SETTINGS_CODE_FOLDING true
 #define SETTINGS_LINE_NUMBERS true
@@ -36,13 +40,17 @@
 #define SETTINGS_WORD_WRAP_ENABLED true
 #define SETTINGS_INDENTATION_GUIDES true
 
+//
 // Toolbar defaults
+//
 #define SETTINGS_TOOLBAR_ENABLED true
 #define SETTINGS_LARGE_ICONS MAC_OS_X ? true : false
 #define SETTINGS_TOOLBAR_TEXT MAC_OS_X ? true : false
 #define SETTINGS_ICON_THEME MAC_OS_X ? "Faience" : LINUX ? "Tango" : "Silk"
 
+//
 // Other defaults
+//
 #define SETTINGS_AUTO_CHECK_UPDATES false
 
 #endif

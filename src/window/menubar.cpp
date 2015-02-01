@@ -48,7 +48,9 @@ void MenuBar::initialize (Window *window) {
 
     window->setMenuBar (this);
 
+    //
     // Connect slots for the file menu
+    //
     connect (f_new, SIGNAL (triggered()), window, SLOT (newFile()));
     connect (f_open, SIGNAL (triggered()), window, SLOT (open()));
     connect (f_save, SIGNAL (triggered()), window->editor(), SLOT (save()));
@@ -58,7 +60,9 @@ void MenuBar::initialize (Window *window) {
     connect (f_close, SIGNAL (triggered()), window, SLOT (close()));
     connect (f_quit, SIGNAL (triggered()), qApp, SLOT (closeAllWindows()));
 
+    //
     // Connect slots for the edit menu
+    //
     connect (e_undo, SIGNAL (triggered()), window->editor(), SLOT (undo()));
     connect (e_redo, SIGNAL (triggered()), window->editor(), SLOT (redo()));
     connect (e_cut, SIGNAL (triggered()), window->editor(), SLOT (cut()));
@@ -69,17 +73,23 @@ void MenuBar::initialize (Window *window) {
     connect (e_read_only, SIGNAL (triggered (bool)), window, SLOT (setReadOnly (bool)));
     connect (window, SIGNAL (readOnlyChanged (bool)), this, SLOT (setReadOnly (bool)));
 
+    //
     // Connect slots for the tools menu
+    //
     connect (t_goto_line, SIGNAL (triggered()), window->editor(), SLOT (goToLine()));
     connect (t_sort_selection, SIGNAL (triggered()), window->editor(), SLOT (sortSelection()));
     connect (t_insert_date_time, SIGNAL (triggered()), window->editor(), SLOT (insertDateTime()));
     connect (t_document_information, SIGNAL (triggered()), window->editor(), SLOT (documentInfo()));
 
+    //
     // Connect slots for the format menu
+    //
     connect (format_font, SIGNAL (triggered()), window->editor(), SLOT (selectFonts()));
     connect (format_word_wrap, SIGNAL (triggered (bool)), window, SLOT (setWordWrap (bool)));
 
+    //
     // Connect slots from the view menu
+    //
     connect (v_toolbar, SIGNAL (triggered (bool)), window, SLOT (setToolbarEnabled (bool)));
     connect (v_statusbar, SIGNAL (triggered (bool)), window, SLOT (setStatusBarEnabled (bool)));
     connect (v_zoom_in, SIGNAL (triggered()), window->editor(), SLOT (zoomIn()));
@@ -92,7 +102,9 @@ void MenuBar::initialize (Window *window) {
     connect (this, SIGNAL (colorChanged (QString)), window, SLOT (setColorscheme (QString)));
     connect (this, SIGNAL (iconsChanged (QString)), window, SLOT (setIconTheme (QString)));
 
+    //
     // Connect the slots for the help menu
+    //
     connect (h_about_qt, SIGNAL (triggered()), qApp, SLOT (aboutQt()));
     connect (h_about_thunderpad, SIGNAL (triggered()), window, SLOT (aboutThunderpad()));
     connect (h_donate, SIGNAL (triggered()), window, SLOT (donate()));
@@ -104,11 +116,16 @@ void MenuBar::initialize (Window *window) {
     connect (h_check_for_updates, SIGNAL (triggered()), window, SIGNAL (checkForUpdates()));
     connect (h_official_website, SIGNAL (triggered()), window, SLOT (officialWebsite()));
 
+    //
     // Sync settings
+    //
     connect (window, SIGNAL (updateSettings()), this, SLOT (updateSettings()));
 }
 
 void MenuBar::updateSettings (void) {
+    //
+    // Change the check state of the actions
+    //
     v_toolbar->setChecked (m_settings->value ("toolbar-enabled", SETTINGS_TOOLBAR_ENABLED).toBool());
     v_toolbar_text->setChecked (m_settings->value ("toolbar-text", SETTINGS_TOOLBAR_TEXT).toBool());
     v_statusbar->setChecked (m_settings->value ("statusbar-enabled", SETTINGS_STATUSBAR_ENABLED).toBool());
@@ -119,7 +136,9 @@ void MenuBar::updateSettings (void) {
 }
 
 void MenuBar::createActions (void) {
+    //
     // Create the file menu actions
+    //
     f_new = new QAction (tr ("New"), this);
     f_open = new QAction (tr ("Open") + "...", this);
     f_save = new QAction (tr ("Save"), this);
@@ -130,7 +149,9 @@ void MenuBar::createActions (void) {
     f_close = new QAction (tr ("Close current document"), this);
     f_quit = new QAction (tr ("Quit"), this);
 
+    //
     // Create the edit menu actions
+    //
     e_undo = new QAction (tr ("Undo"), this);
     e_redo = new QAction (tr ("Redo"), this);
     e_cut = new QAction (tr ("Cut"), this);
@@ -140,11 +161,15 @@ void MenuBar::createActions (void) {
     e_find_replace = new QAction (tr ("Find/Replace"), this);
     e_read_only = new QAction (tr ("Read only"), this);
 
+    //
     // Create the format menu actions
+    //
     format_font = new QAction (tr ("Fonts") + "...", this);
     format_word_wrap = new QAction (tr ("Word wrap"), this);
 
+    //
     // Create the view menu actions
+    //
     v_toolbar = new QAction (tr ("Toolbar"), this);
     v_statusbar = new QAction (tr ("Statusbar"), this);
     v_zoom_in = new QAction (tr ("Zoom in"), this);
@@ -155,13 +180,17 @@ void MenuBar::createActions (void) {
     v_large_toolbar_icons = new QAction (tr ("Large toolbar icons"), this);
     v_toolbar_text = new QAction (tr ("Display text under toolbar icons"), this);
 
+    //
     // Create the tools menu actions
+    //
     t_sort_selection = new QAction (tr ("Sort selection"), this);
     t_goto_line = new QAction (tr ("Go to line") + "...", this);
     t_insert_date_time = new QAction (tr ("Insert date/time"), this);
     t_document_information = new QAction (tr ("Document information"), this);
 
+    //
     // Create the help menu actions
+    //
     h_about_qt = new QAction (tr ("About Qt") + "...", this);
     h_feedback = new QAction (tr ("Send feedback") + "...", this);
     h_donate = new QAction (tr ("Donate") + "...", this);
@@ -175,12 +204,16 @@ void MenuBar::createActions (void) {
 }
 
 void MenuBar::configureActions (void) {
+    //
     // Set the menu roles
+    //
     f_quit->setMenuRole (QAction::QuitRole);
     h_about_qt->setMenuRole (QAction::AboutQtRole);
     h_about_thunderpad->setMenuRole (QAction::AboutRole);
 
+    //
     // Set the menu shortcuts
+    //
     f_new->setShortcut (QKeySequence::New);
     f_open->setShortcut (QKeySequence::Open);
     f_save->setShortcut (QKeySequence::Save);
@@ -205,7 +238,9 @@ void MenuBar::configureActions (void) {
     v_zoom_out->setShortcut (QKeySequence::ZoomOut);
     v_zoom_reset->setShortcut (QKeySequence (Qt::CTRL + Qt::Key_0));
 
+    //
     // Configure checkable actions
+    //
     v_toolbar->setCheckable (true);
     v_statusbar->setCheckable (true);
     e_read_only->setCheckable (true);
@@ -217,9 +252,11 @@ void MenuBar::configureActions (void) {
 }
 
 void MenuBar::createMenubar (void) {
+    //
     // Create the main menus we are adding the "&" before
     // each menu to inhibit the OS to add aditional items
     // to the menubar (such as in the Edit menu in Mac).
+    //
     m_file = addMenu (tr ("&File"));
     m_edit = addMenu (tr ("&Edit"));
     m_format = addMenu (tr ("&Format"));
@@ -227,7 +264,9 @@ void MenuBar::createMenubar (void) {
     m_tools = addMenu (tr ("&Tools"));
     m_help = addMenu (tr ("&Help"));
 
+    //
     // Create the file menu
+    //
     m_file->addAction (f_new);
     m_file->addAction (f_open);
     m_file->addSeparator();
@@ -235,19 +274,25 @@ void MenuBar::createMenubar (void) {
     m_file->addAction (f_save_as);
     m_file->addSeparator();
 
+    //
     // Create the export menu
+    //
     f_export = m_file->addMenu (tr ("Export") + "...");
     f_export->addAction (export_html);
     f_export->addAction (export_pdf);
 
+    //
     // Continue with the file menu...
+    //
     m_file->addSeparator();
     m_file->addAction (f_print);
     m_file->addSeparator();
     m_file->addAction (f_close);
     m_file->addAction (f_quit);
 
+    //
     // Create the edit menu
+    //
     m_edit->addAction (e_undo);
     m_edit->addAction (e_redo);
     m_edit->addSeparator();
@@ -261,16 +306,22 @@ void MenuBar::createMenubar (void) {
     m_edit->addSeparator();
     m_edit->addAction (e_read_only);
 
+    //
     // Create the format menu
+    //
     m_format->addAction (format_font);
     m_format->addAction (format_word_wrap);
 
+    //
     // Create the visible menu
+    //
     m_view->addAction (v_toolbar);
     m_view->addAction (v_statusbar);
     m_view->addSeparator();
 
+    //
     // Create the zoom menu
+    //
     v_zoom = m_view->addMenu (tr ("Zoom"));
     v_zoom->addAction (v_zoom_in);
     v_zoom->addAction (v_zoom_out);
@@ -278,7 +329,9 @@ void MenuBar::createMenubar (void) {
     v_zoom->addAction (v_zoom_reset);
     m_view->addSeparator();
 
+    //
     // Create the advanced menu
+    //
     v_appearance = m_view->addMenu (tr ("Appearance"));
     v_appearance->addAction (v_highlight_current_line);
     v_appearance->addAction (v_line_numbers);
@@ -286,41 +339,58 @@ void MenuBar::createMenubar (void) {
     v_appearance->addAction (v_large_toolbar_icons);
     v_appearance->addAction (v_toolbar_text);
 
+    //
     // Create the icon theme menu
+    //
     v_icon_theme = m_view->addMenu (tr ("Icon themes"));
     QActionGroup *icon_themes_group = new QActionGroup (this);
     QSignalMapper *icon_themes_mapper = new QSignalMapper (this);
     connect (icon_themes_mapper, SIGNAL (mapped (QString)), this, SIGNAL (iconsChanged (QString)));
 
+    //
     // Read all the registered icons in the resources
+    //
     QDir icon_themes_dir (":/images/themes/");
     QStringList icon_themes_list = icon_themes_dir.entryList();
 
+    //
     // Create a new action for each registered icon theme
+    //
     for (int i = 0; icon_themes_list.count() > i; ++i) {
+
+        //
         // Get the name of the current theme and create the action
+        //
         QAction *_action = new QAction (icon_themes_list.at (i), this);
 
+        //
         // Configure the action
+        //
         _action->setCheckable (true);
         v_icon_theme->addAction (_action);
         icon_themes_group->addAction (_action);
         icon_themes_mapper->setMapping (_action, _action->text());
         connect (_action, SIGNAL (triggered()), icon_themes_mapper, SLOT (map()));
 
+        //
         // Check the icon if necessary
+        //
         if (m_settings->value ("icon-theme", SETTINGS_ICON_THEME).toString() == _action->text())
             _action->setChecked (true);
     }
 
+    //
     // Create the tools menu
+    //
     m_tools->addAction (t_sort_selection);
     m_tools->addAction (t_goto_line);
     m_tools->addSeparator();
     m_tools->addAction (t_insert_date_time);
     m_tools->addAction (t_document_information);
 
+    //
     // Create the help menu
+    //
     m_help->addAction (h_about_qt);
     m_help->addAction (h_about_thunderpad);
     m_help->addSeparator();
@@ -339,12 +409,23 @@ void MenuBar::createMenubar (void) {
 }
 
 void MenuBar::setReadOnly (bool ro) {
+    //
+    // Disable/Enable undo/redo actions
+    //
     e_undo->setEnabled (!ro);
     e_redo->setEnabled (!ro);
 
+    //
+    // Disable/Enable the cut, copy and
+    // paste actions.
+    //
     e_cut->setEnabled (!ro);
     e_copy->setEnabled (!ro);
     e_paste->setEnabled (!ro);
 
+    //
+    // Change the state of the read only
+    // action.
+    //
     e_read_only->setChecked (ro);
 }

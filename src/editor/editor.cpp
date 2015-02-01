@@ -56,16 +56,21 @@ Editor::Editor (QWidget *parent) : QsciScintilla (parent) {
 }
 
 bool Editor::maybeSave (void) {
+    //
     // We don't need to save the document if it isn't modified
+    //
     if (!isModified())
         return true;
 
+    //
     // The document was already saved in the hard disk, however, it has unsaved changes
+    //
     if (!titleIsShit() && isModified())
         return save();
 
-    // The document was never saved in the hard disk, so ask the user if he/she wants
-    // to save the current document
+    //
+    // The document was never saved in the hard disk, show a "Save as..." dialog
+    //
     else if (isModified()) {
         QMessageBox _message;
         _message.setParent (this);
@@ -113,17 +118,23 @@ QString Editor::calculateSize (void) {
     QString _units;
     float _length = length();
 
+    //
     // File is less than one KB
+    //
     if (_length < KILOBYTE)
         _units = " " + tr ("bytes");
 
+    //
     // File is one KB or greater, but smaller than one MB
+    //
     else if (_length < MEGABYTE) {
         _length /= KILOBYTE;
         _units = " " + tr ("KB");
     }
 
+    //
     // File is one MB or greater
+    //
     else {
         _length /= MEGABYTE;
         _units = " " + tr ("MB");
@@ -151,10 +162,14 @@ void Editor::exportPdf (void) {
         printer.setCreator (qApp->applicationName());
         printer.setOutputFormat (QPrinter::PdfFormat);
 
+        //
         // Create the file
+        //
         printer.printRange (this, 0);
 
+        //
         // Ask user to open file
+        //
         QMessageBox _message;
         _message.setIcon (QMessageBox::Question);
         _message.setWindowTitle (tr ("PDF Export"));
@@ -177,62 +192,87 @@ void Editor::documentInfo (void) {
 }
 
 void Editor::updateSettings (void) {
+
+    //
     // Specify default values for the font
+    //
     int _default_size = 11;
     QString _default_font = "Courier";
 
+    //
+    // Load the Menlo font in Mac OS X
+    //
 #if MAC_OS_X
     _default_font = "Menlo";
 #endif
 
+    // 
+    // Use the Consolas font in Windows Vista or later
+    //
 #if WINDOWS
-    _default_size = 10;
-
-    // Use Consolas font if Windows version is Vista or greater
     _default_font = QSysInfo::windowsVersion() >= 0x0080 ? "Consolas" : "Courier New";
 #endif
 
+    //
+    // Get system mono font?
+    //
 #if LINUX
-    // Get system monospaced font?
+    _default_size = 10;
 #endif
 
+    //
     // Load the saved font
+    //
     m_font.setBold (m_settings->value ("font-bold", false).toBool());
     m_font.setItalic (m_settings->value ("font-italic", false).toBool());
     m_font.setUnderline (m_settings->value ("font-underline", false).toBool());
     m_font.setPointSize (m_settings->value ("font-size", _default_size).toInt());
     m_font.setFamily (m_settings->value ("font-family", _default_font).toString());
 
+    //
     // Enable/disable word wrapping based on the saved settings
+    //
     setWordWrap (m_settings->value ("wordwrap-enabled", SETTINGS_WORD_WRAP_ENABLED).toBool());
 
+    //
     // Update caret line & line numbers
+    //
     setCaretLineVisible (m_settings->value ("hc-line-enabled", SETTINGS_CARET_LINE).toBool());
     m_line_numbers = m_settings->value ("line-numbers-enabled", SETTINGS_LINE_NUMBERS).toBool();
 
+    //
     // Enable line numbers
+    //
     if (m_line_numbers) {
         setMarginLineNumbers (1, true);
         setMarginWidth (1, QString ("00%1").arg (lines()));
     }
 
+    //
     // Disable line numbers
+    //
     else {
         setMarginWidth (1, 0);
         setMarginLineNumbers (1, false);
     }
 
+    //
     // Use the same font in the editor
+    //
     setFont (m_font);
     setMarginsFont (m_font);
 
+    //
     // Update the colors of the text editor
+    //
     m_theme->readTheme (m_settings->value ("color-scheme", "Light").toString());
     setMarginsBackgroundColor (m_theme->lineNumbersBackground());
     setMarginsForegroundColor (m_theme->lineNumbersForeground());
     setCaretLineBackgroundColor (m_theme->currentLineBackground());
 
-    // Basically, re-highlight the document
+    //
+    // Re-load the current lexer
+    //
     updateLexer();
 }
 
@@ -274,7 +314,10 @@ void Editor::selectFonts (void) {
     if (_dialog.exec() == QFontDialog::Accepted) {
         m_font = _dialog.selectedFont();
 
-        // Fonts cannot be saved directly
+        //
+        // Fonts cannot be saved directly, so we need to save
+        // each of the possible values of the font.
+        //
         m_settings->setValue ("font-bold", m_font.bold());
         m_settings->setValue ("font-italic", m_font.italic());
         m_settings->setValue ("font-family", m_font.family());

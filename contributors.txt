@@ -1,5 +1,7 @@
-THUNDERPAD AUTHORS
-------------------
+THUNDERPAD CONTRIBUTORS
+-----------------------
+
+Ryan P.C. McQuen <ryan.q@linux.com>
 Alex Spataru <alex_spataru@outlook.com>
 
 Note: If you have contributed to this project and do not appear in this list, please e-mail me at alex_spataru@outlook.com.

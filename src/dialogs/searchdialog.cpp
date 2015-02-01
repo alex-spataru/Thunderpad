@@ -40,15 +40,21 @@ SearchDialog::SearchDialog (Window *parent) : QDialog (parent) {
     QIcon _blank;
     setWindowIcon (_blank);
 
+    //
     // Configure the window
+    //
     setWindowTitle (tr ("Find/Replace"));
     setWindowModality (Qt::WindowModal);
     setWindowFlags (Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint);
 
+    //
     // Get access to the text editor
+    //
     m_text_edit = parent->editor();
 
+    //
     // Initialize UI items
+    //
     ui_find_label = new QLabel (this);
     ui_layout = new QGridLayout (this);
     ui_replace_label = new QLabel (this);
@@ -62,7 +68,9 @@ SearchDialog::SearchDialog (Window *parent) : QDialog (parent) {
     ui_replace_all_button = new QPushButton (this);
     ui_regex_search_checkbox = new QCheckBox (this);
 
+    //
     // Set the text of each widget
+    //
     ui_done_button->setText (tr ("Done"));
     ui_next_button->setText (tr ("Find next"));
     ui_replace_button->setText (tr ("Replace"));
@@ -73,7 +81,9 @@ SearchDialog::SearchDialog (Window *parent) : QDialog (parent) {
     ui_regex_search_checkbox->setText (tr ("Regex search"));
     ui_whole_words_checkbox->setText (tr ("Whole words only"));
 
+    //
     // Arrange the widgets in a nice layout...
+    //
     ui_layout->setSpacing (10);
     ui_layout->addWidget (ui_find_label,              1, 1, 1, 1);
     ui_layout->addWidget (ui_find_lineedit,           1, 2, 1, 2);
@@ -87,15 +97,21 @@ SearchDialog::SearchDialog (Window *parent) : QDialog (parent) {
     ui_layout->addWidget (ui_regex_search_checkbox,   6, 1, 3, 1);
     ui_layout->addWidget (ui_done_button,             8, 4, 4, 4);
 
+    //
     // Inhibit resizing
+    //
     layout()->setSizeConstraint (QLayout::SetFixedSize);
 
+    //
     // Disable replace functions
+    //
     ui_replace_button->setEnabled (false);
     ui_replace_lineedit->setEnabled (false);
     ui_replace_all_button->setEnabled (false);
 
+    //
     // Connect the UI with the dialog logic
+    //
     connect (ui_done_button, SIGNAL (clicked()), this, SLOT (hide()));
     connect (ui_next_button, SIGNAL (clicked()), this, SLOT (findNext()));
     connect (ui_match_case_checkbox, SIGNAL (clicked()), this, SLOT (search()));

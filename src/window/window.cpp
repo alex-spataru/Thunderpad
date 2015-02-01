@@ -51,16 +51,22 @@ MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE."
 #define REPORT_ISSUES_LINK "http://github.com/alex-97/thunderpad/issues"
 
 Window::Window (void) {
+    //
     // Allow other instances of Window
     // to communicate with each other
+    //
     setObjectName ("window");
 
+    //
     // The application crashes on Mac OS X if
     // WA_DeleteOnClose attribute is defined
+    //
     if (!MAC_OS_X)
         setAttribute (Qt::WA_DeleteOnClose);
 
+    //
     // Create the core components
+    //
     m_editor = new Editor (this);
     m_toolbar = new ToolBar (this);
     m_statusbar = new StatusBar (this);
@@ -68,22 +74,32 @@ Window::Window (void) {
     m_menu = new MenuBar (this);
     m_settings = new QSettings (APP_COMPANY, APP_NAME);
 
+    //
     // Change the title of the window when a new file is loaded
+    //
     connect (editor(), SIGNAL (updateTitle()), this, SLOT (updateTitle()));
 
+    //
     // Append a "*" to the document name when the file is modified
+    //
     connect (editor(), SIGNAL (textChanged()), this, SLOT (updateTitle()));
 
+    //
     // Sync the settings across the editor and the window
+    //
     connect (editor(), SIGNAL (settingsChanged()), this, SIGNAL (settingsChanged()));
     connect (this,     SIGNAL (updateSettings()), editor(), SLOT (updateSettings()));
 
+    //
     // Configure all widgets
+    //
     updateTitle();
     updateSettings();
     setCentralWidget (editor());
 
+    //
     // Set window geometry
+    //
     setMinimumSize (420, 420);
     resize (m_settings->value ("size", QSize (640, 420)).toSize());
     move (m_settings->value ("position", QPoint (200, 200)).toPoint());
@@ -99,18 +115,19 @@ ToolBar *Window::toolbar (void) const {
 }
 
 void Window::closeEvent (QCloseEvent *event) {
-    saveWindowState();
-
-    // Save the document before closing
     m_editor->maybeSave() ? event->accept() : event->ignore();
 }
 
 void Window::openFile (const QString &file_name) {
+    //
     // Open the file in the same window
+    //
     if (m_editor->titleIsShit() && !m_editor->isModified())
         m_editor->readFile (file_name);
 
+    //
     // Open the file in another window
+    //
     else {
         Window *_window = new Window();
         configureWindow (_window);
@@ -119,15 +136,15 @@ void Window::openFile (const QString &file_name) {
 }
 
 void Window::newFile (void) {
-    // Create a new window  and configure it
     Window *_window = new Window();
     configureWindow (_window);
 }
 
 void Window::open (void) {
     QStringList _files = QFileDialog::getOpenFileNames (this, tr ("Open"), QDir::homePath());
-
+    //
     // Open each file separately
+    //
     for (int i = 0; i < _files.count(); ++i)
         if (!_files.at (i).isEmpty())
             openFile (_files.at (i));
@@ -190,7 +207,9 @@ void Window::setIconTheme (const QString &theme) {
 }
 
 void Window::aboutThunderpad (void) {
+    //
     // Show a nice about dialog with application information
+    //
     QString _message = QString ("<h%1>%2 %3</h%1>").arg (MAC_OS_X ? "3" : "2", APP_NAME, APP_VERSION) +
                        QString ("<span style='font-weight:normal;'><font size=%1>").arg (MAC_OS_X ? "2" : "3") +
                        "<p>" + tr ("Built on %1 at %2").arg (__DATE__, __TIME__) + "</p>" +
@@ -229,16 +248,22 @@ void Window::officialWebsite (void) {
 }
 
 void Window::updateTitle (void) {
+    //
     // Use "Untitled" while editing new documents
+    //
     QString _title = editor()->documentTitle().isEmpty() ?
                      tr ("Untitled") :
                      shortFileName (editor()->documentTitle());
 
+    //
     // Add a "*" if the document was modifed
+    //
     QString _star = editor()->isModified() ?  "* - " : " - ";
     setWindowTitle (_title + _star + APP_NAME);
 
+    //
     // Configure the behavior of the 'smart' save actions
+    //
     bool _save_enabled = ! (!m_editor->titleIsShit() &&
                             !m_editor->isModified());
 
@@ -254,7 +279,9 @@ void Window::syncSettings (void) {
 void Window::saveWindowState (void) {
     m_settings->setValue ("maximized", isMaximized());
 
+    //
     // Only save the window size and position if it isn't maximized
+    //
     if (!isMaximized()) {
         m_settings->setValue ("size", size());
         m_settings->setValue ("position", pos());
@@ -264,10 +291,14 @@ void Window::saveWindowState (void) {
 void Window::configureWindow (Window *window) {
     Q_ASSERT (window != NULL);
 
+    //
     // Allow the other window to ask the application to check for updates
+    //
     connect (window, SIGNAL (checkForUpdates()), this, SIGNAL (checkForUpdates()));
 
+    //
     // Sync settings across windows
+    //
     foreach (QWidget *widget, QApplication::topLevelWidgets()) {
         if (widget->objectName() == objectName()) {
             connect (widget, SIGNAL (settingsChanged()), window, SIGNAL (updateSettings()));
@@ -275,11 +306,15 @@ void Window::configureWindow (Window *window) {
         }
     }
 
+    //
     // Show the window normally if the current window is maximized
+    //
     if (isMaximized())
         window->showNormal();
 
+    //
     // Resize the window and position it to match the current window
+    //
     else {
         window->resize (size());
         window->move (window->x() + 30, window->y() + 30);
