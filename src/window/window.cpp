@@ -57,7 +57,6 @@ Window::Window (void)
     // Allow other instances of Window
     // to communicate with each other
     //
-    hide();
     setObjectName ("window");
 
     //
@@ -324,10 +323,24 @@ void Window::saveWindowState (void)
 {
     m_settings->setValue ("maximized", isMaximized());
 
+    // 
+    // Mac OS X does not register a window as maximized, 
+    // so we take into account the window size instead
+    //
+    bool _mac_os_maximized = false;
+ 
+    if (MAC_OS_X) {
+        int d_width = QApplication::desktop()->width() - 100;
+        int d_height = QApplication::desktop()->height() - 100;
+
+        if (width() >= d_width || height() >= d_height)
+            _mac_os_maximized = true;
+    }
+
     //
     // Only save the window size and position if it isn't maximized
     //
-    if (!isMaximized())
+    if (!isMaximized() && !_mac_os_maximized)
     {
         m_settings->setValue ("size", size());
         m_settings->setValue ("position", pos());
