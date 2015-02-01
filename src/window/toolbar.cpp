@@ -138,7 +138,7 @@ void ToolBar::setToolbarText (bool enabled) {
     //
     // Set icon size
     //
-    _icon_size = m_large_icons ? QSize (32, 32) : QSize (24, 24);
+    _icon_size = m_large_icons ? QSize (24, 24) : QSize (16, 16);
 
     //
     // Show toolbar text
