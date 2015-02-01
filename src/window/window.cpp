@@ -323,13 +323,14 @@ void Window::saveWindowState (void)
 {
     m_settings->setValue ("maximized", isMaximized());
 
-    // 
-    // Mac OS X does not register a window as maximized, 
+    //
+    // Mac OS X does not register a window as maximized,
     // so we take into account the window size instead
     //
     bool _mac_os_maximized = false;
- 
-    if (MAC_OS_X) {
+
+    if (MAC_OS_X)
+    {
         int d_width = QApplication::desktop()->width() - 100;
         int d_height = QApplication::desktop()->height() - 100;
 
