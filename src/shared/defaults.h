@@ -32,6 +32,7 @@
 //
 // Editor defaults
 //
+#define DEFAULT_THEME "Light"
 #define SETTINGS_CARET_LINE true
 #define SETTINGS_CODE_FOLDING true
 #define SETTINGS_LINE_NUMBERS true
@@ -39,6 +40,29 @@
 #define SETTINGS_BRACE_MATCHING true
 #define SETTINGS_WORD_WRAP_ENABLED true
 #define SETTINGS_INDENTATION_GUIDES true
+
+//
+// Editor font
+//
+#define DEFAULT_FONT_SIZE 11
+#define DEFAULT_FONT_FAMILY "Courier"
+
+//
+// Use Menlo font on OS X
+//
+#if MAC_OS_X
+#undef DEFAULT_FONT_FAMILY
+#define DEFAULT_FONT_FAMILY "Menlo"
+#endif
+
+//
+// Use the Consolas font in Windows Vista or later
+//
+#if WINDOWS
+#include <QSysInfo>
+#undef DEFAULT_FONT_FAMILY
+#define DEFAULT_FONT_FAMILY QSysInfo::windowsVersion() >= 0x0080 ? "Consolas" : "Courier New"
+#endif
 
 //
 // Toolbar defaults

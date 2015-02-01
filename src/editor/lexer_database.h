@@ -25,6 +25,8 @@
 #include <QObject>
 #include <Qsci/qscilexer.h>
 
+class Theme;
+
 class LexerDatabase : public QObject
 {
         Q_OBJECT
@@ -33,7 +35,7 @@ class LexerDatabase : public QObject
         explicit LexerDatabase (void);
 
     public slots:
-        QsciLexer *getLexer (const QString &file);
+        QsciLexer *getLexer (const QString &file, Theme *theme);
 
     private:
         QsciLexer *_guessByName (const QString &file);

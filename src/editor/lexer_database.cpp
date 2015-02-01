@@ -22,6 +22,7 @@
 #include <QFile>
 #include <QFileInfo>
 
+#include "theme.h"
 #include "lexer_database.h"
 
 #include "qscilexerada.h"
@@ -80,9 +81,18 @@ LexerDatabase::LexerDatabase (void) {}
  * configures it to fit the needs of the \a Editor.
  */
 
-QsciLexer *LexerDatabase::getLexer (const QString &file)
+QsciLexer *LexerDatabase::getLexer (const QString &file, Theme *theme)
 {
     QsciLexer *_lexer = _guessByName (file);
+
+    _lexer->setDefaultColor (theme->foreground());
+    _lexer->setDefaultPaper (theme->background());
+
+    _lexer->setAutoIndentStyle (QsciScintilla::AiOpening ||
+                                QsciScintilla::AiClosing);
+
+    _lexer->refreshProperties();
+
     return _lexer;
 }
 
@@ -151,8 +161,9 @@ QsciLexer *LexerDatabase::_guessByName (const QString &file)
     // C and C++ files
     //
     else if (s == "cpp" || s == "cxx" ||
-             s == "cc"  || s == "hh"  ||
-             s == "h"   || s == "hpp")
+             s == "cc"  || s == "c"   ||
+             s == "h"   || s == "hh"  ||
+             s == "hpp")
         lexer = new QsciLexerCPP();
 
     //

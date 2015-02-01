@@ -49,7 +49,10 @@ Editor::Editor (QWidget *parent) : QsciScintilla (parent)
     setUtf8 (true);
     setIndentationWidth (4);
     setIndentationGuides (true);
-    setFolding (QsciScintilla::BoxedTreeFoldStyle, 2);
+
+    setMarginType (0, NumberMargin);
+    setWrapIndentMode (WrapIndentIndented);
+    setFolding (QsciScintilla::BoxedTreeFoldStyle, 1);
     setBraceMatching (QsciScintilla::SloppyBraceMatch);
 
     connect (this, SIGNAL (textChanged()), this, SLOT (updateLineNumbers()));
@@ -207,47 +210,27 @@ void Editor::documentInfo (void)
 
 void Editor::updateSettings (void)
 {
-
-    //
-    // Specify default values for the font
-    //
-    int _default_size = 11;
-    QString _default_font = "Courier";
-
-    //
-    // Load the Menlo font in Mac OS X
-    //
-#if MAC_OS_X
-    _default_font = "Menlo";
-#endif
-
-    //
-    // Use the Consolas font in Windows Vista or later
-    //
-#if WINDOWS
-    _default_font = QSysInfo::windowsVersion() >= 0x0080 ? "Consolas" : "Courier New";
-#endif
-
-    //
-    // Get system mono font?
-    //
-#if LINUX
-    _default_size = 10;
-#endif
-
     //
     // Load the saved font
     //
     m_font.setBold (m_settings->value ("font-bold", false).toBool());
     m_font.setItalic (m_settings->value ("font-italic", false).toBool());
     m_font.setUnderline (m_settings->value ("font-underline", false).toBool());
-    m_font.setPointSize (m_settings->value ("font-size", _default_size).toInt());
-    m_font.setFamily (m_settings->value ("font-family", _default_font).toString());
+    m_font.setPointSize (m_settings->value ("font-size", DEFAULT_FONT_SIZE).toInt());
+    m_font.setFamily (m_settings->value ("font-family", DEFAULT_FONT_FAMILY).toString());
 
     //
     // Enable/disable word wrapping based on the saved settings
     //
     setWordWrap (m_settings->value ("wordwrap-enabled", SETTINGS_WORD_WRAP_ENABLED).toBool());
+
+    //
+    // Update the colors of the text editor
+    //
+    m_theme->readTheme (m_settings->value ("color-scheme", DEFAULT_THEME).toString());
+    setMarginsBackgroundColor (m_theme->lineNumbersBackground());
+    setMarginsForegroundColor (m_theme->lineNumbersForeground());
+    setCaretLineBackgroundColor (m_theme->currentLineBackground());
 
     //
     // Update caret line & line numbers
@@ -256,36 +239,9 @@ void Editor::updateSettings (void)
     m_line_numbers = m_settings->value ("line-numbers-enabled", SETTINGS_LINE_NUMBERS).toBool();
 
     //
-    // Enable line numbers
+    // Enable/Disable line numbers
     //
-    if (m_line_numbers)
-    {
-        setMarginLineNumbers (1, true);
-        setMarginWidth (1, QString ("00%1").arg (lines()));
-    }
-
-    //
-    // Disable line numbers
-    //
-    else
-    {
-        setMarginWidth (1, 0);
-        setMarginLineNumbers (1, false);
-    }
-
-    //
-    // Use the same font in the editor
-    //
-    setFont (m_font);
-    setMarginsFont (m_font);
-
-    //
-    // Update the colors of the text editor
-    //
-    m_theme->readTheme (m_settings->value ("color-scheme", "Light").toString());
-    setMarginsBackgroundColor (m_theme->lineNumbersBackground());
-    setMarginsForegroundColor (m_theme->lineNumbersForeground());
-    setCaretLineBackgroundColor (m_theme->currentLineBackground());
+    setMarginWidth (0, m_line_numbers ? QString ("00%1").arg (lines()) : 0);
 
     //
     // Re-load the current lexer
@@ -306,12 +262,12 @@ bool Editor::saveAs (void)
 
 void Editor::goToLine (void)
 {
-
+    // Todo
 }
 
 void Editor::sortSelection (void)
 {
-
+    // Todo
 }
 
 void Editor::insertDateTime (void)
@@ -440,13 +396,12 @@ bool Editor::writeFile (const QString &file)
 
 void Editor::updateLexer (void)
 {
-    QsciLexer *_lexer = m_lexer_db.getLexer (documentTitle());
+    QsciLexer *_lexer = m_lexer_db.getLexer (documentTitle(), m_theme);
 
-    _lexer->setFont (m_font);
+    _lexer->setFont (m_font, -1);
     _lexer->setDefaultFont (m_font);
-    _lexer->setDefaultColor (m_theme->foreground());
-    _lexer->setDefaultPaper (m_theme->background());
-    _lexer->setAutoIndentStyle (QsciScintilla::AiMaintain);
+
+    setMarginOptions (MoNone);
 
     setLexer (_lexer);
 }
@@ -454,10 +409,10 @@ void Editor::updateLexer (void)
 void Editor::updateLineNumbers (void)
 {
     if (m_line_numbers)
-        setMarginWidth (1, QString ("00%1").arg (lines()));
+        setMarginWidth (0, QString ("00%1").arg (lines()));
 
     else
-        setMarginWidth (1, 0);
+        setMarginWidth (0, 0);
 }
 
 void Editor::onMarginClicked (void)

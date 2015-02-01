@@ -141,8 +141,8 @@ void Application::showWelcomeMessages (void)
     //
     else if (m_settings->value ("second-launch", false).toBool())
     {
-        _message.setDefaultButton (QMessageBox::Yes);
         _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No);
+        _message.setDefaultButton (QMessageBox::Yes);
         _message.setText (
             "<b>" + tr ("Do you want to check for updates automatically?") + "</b>");
         _message.setInformativeText (tr ("You can always check for updates from the "

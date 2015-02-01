@@ -140,9 +140,10 @@ void ToolBar::setToolbarText (bool enabled)
     short _toolbar_height;
 
     //
-    // Set icon size
+    // Set icon size, use larger values to allow some
+    // spacing between the icons.
     //
-    _icon_size = m_large_icons ? QSize (24, 24) : QSize (16, 16);
+    _icon_size = m_large_icons ? QSize (32, 32) : QSize (24, 24);
 
     //
     // Show toolbar text
