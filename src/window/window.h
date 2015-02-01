@@ -47,7 +47,8 @@ class SearchDialog;
  * and open a file using the configureWindow() function.
  */
 
-class Window : public QMainWindow {
+class Window : public QMainWindow
+{
         Q_OBJECT
 
     public:
@@ -66,7 +67,9 @@ class Window : public QMainWindow {
         void readOnlyChanged (bool ro);
 
     protected:
+        void moveEvent (QMoveEvent *event);
         void closeEvent (QCloseEvent *event);
+        void resizeEvent (QResizeEvent *event);
 
     public slots:
         void newFile (void);

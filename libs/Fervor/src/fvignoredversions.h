@@ -3,7 +3,8 @@
 
 #include <QObject>
 
-class FVIgnoredVersions : public QObject {
+class FVIgnoredVersions : public QObject
+{
         Q_OBJECT
 
     public:

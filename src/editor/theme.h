@@ -24,7 +24,8 @@
 
 #include <QColor>
 
-class Theme : public QObject {
+class Theme : public QObject
+{
         Q_OBJECT
 
     public:

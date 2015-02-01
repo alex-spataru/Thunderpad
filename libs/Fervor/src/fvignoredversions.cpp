@@ -9,11 +9,13 @@
 
 
 FVIgnoredVersions::FVIgnoredVersions (QObject *parent) :
-    QObject (parent) {
+    QObject (parent)
+{
     // noop
 }
 
-bool FVIgnoredVersions::VersionIsIgnored (QString version) {
+bool FVIgnoredVersions::VersionIsIgnored (QString version)
+{
     // We assume that variable 'version' contains either:
     //  1) The current version of the application (ignore)
     //  2) The version that was skipped before and thus stored in QSettings (ignore)
@@ -35,10 +37,12 @@ bool FVIgnoredVersions::VersionIsIgnored (QString version) {
                         QApplication::applicationName());
 #endif
 
-    if (settings.contains (FV_IGNORED_VERSIONS_LATEST_SKIPPED_VERSION_KEY)) {
+    if (settings.contains (FV_IGNORED_VERSIONS_LATEST_SKIPPED_VERSION_KEY))
+    {
         QString lastSkippedVersion = settings.value (FV_IGNORED_VERSIONS_LATEST_SKIPPED_VERSION_KEY).toString();
 
-        if (version == lastSkippedVersion) {
+        if (version == lastSkippedVersion)
+        {
             // Implicitly skipped version - skip
             return true;
         }
@@ -47,7 +51,8 @@ bool FVIgnoredVersions::VersionIsIgnored (QString version) {
     std::string currentAppVersion = std::string (FV_APP_VERSION);
     std::string suggestedVersion = std::string (version.toStdString());
 
-    if (FvVersionComparator::CompareVersions (currentAppVersion, suggestedVersion) == FvVersionComparator::kAscending) {
+    if (FvVersionComparator::CompareVersions (currentAppVersion, suggestedVersion) == FvVersionComparator::kAscending)
+    {
         // Newer version - do not skip
         return false;
     }
@@ -56,8 +61,10 @@ bool FVIgnoredVersions::VersionIsIgnored (QString version) {
     return true;
 }
 
-void FVIgnoredVersions::IgnoreVersion (QString version) {
-    if (version == FV_APP_VERSION) {
+void FVIgnoredVersions::IgnoreVersion (QString version)
+{
+    if (version == FV_APP_VERSION)
+    {
         // Don't ignore the current version
         return;
     }

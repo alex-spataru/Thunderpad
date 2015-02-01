@@ -80,7 +80,8 @@ LexerDatabase::LexerDatabase (void) {}
  * configures it to fit the needs of the \a Editor.
  */
 
-QsciLexer *LexerDatabase::getLexer (const QString &file) {
+QsciLexer *LexerDatabase::getLexer (const QString &file)
+{
     QsciLexer *_lexer = _guessByName (file);
     return _lexer;
 }
@@ -90,7 +91,8 @@ QsciLexer *LexerDatabase::getLexer (const QString &file) {
  * Returns a appropiate QsciLexer given the input \a {file}
  */
 
-QsciLexer *LexerDatabase::_guessByName (const QString &file) {
+QsciLexer *LexerDatabase::_guessByName (const QString &file)
+{
     QsciLexer *lexer;
     QFile _file (file);
     QString s = QFileInfo (_file).suffix().toLower();

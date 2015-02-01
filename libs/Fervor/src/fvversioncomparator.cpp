@@ -15,11 +15,13 @@
 //
 
 
-FvVersionComparator::FvVersionComparator() {
+FvVersionComparator::FvVersionComparator()
+{
     // noop
 }
 
-FvVersionComparator::CharacterType FvVersionComparator::TypeOfCharacter (std::string character) {
+FvVersionComparator::CharacterType FvVersionComparator::TypeOfCharacter (std::string character)
+{
     if (character == ".")
         return kSeparatorType;
 
@@ -37,14 +39,16 @@ FvVersionComparator::CharacterType FvVersionComparator::TypeOfCharacter (std::st
 
 }
 
-std::vector<std::string> FvVersionComparator::SplitVersionString (std::string version) {
+std::vector<std::string> FvVersionComparator::SplitVersionString (std::string version)
+{
     std::string character;
     std::string s;
     unsigned long i = 0, n = 0;
     CharacterType oldType, newType;
     std::vector<std::string> parts;
 
-    if (version.length() == 0) {
+    if (version.length() == 0)
+    {
         // Nothing to do here
         return parts;
     }
@@ -53,18 +57,21 @@ std::vector<std::string> FvVersionComparator::SplitVersionString (std::string ve
     oldType = TypeOfCharacter (s);
     n = version.length() - 1;
 
-    for (i = 1; i <= n; ++i) {
+    for (i = 1; i <= n; ++i)
+    {
         character = version.substr (i, 1)[0];
         newType = TypeOfCharacter (character);
 
-        if (oldType != newType || oldType == kSeparatorType) {
+        if (oldType != newType || oldType == kSeparatorType)
+        {
             // We've reached a new segment
             std::string aPart = s;
             parts.push_back (aPart);
             s = character;
         }
 
-        else {
+        else
+        {
             // Add character to string and continue
             s.append (character);
         }
@@ -79,7 +86,8 @@ std::vector<std::string> FvVersionComparator::SplitVersionString (std::string ve
 
 
 FvVersionComparator::ComparatorResult FvVersionComparator::CompareVersions (std::string versionA,
-        std::string versionB) {
+        std::string versionB)
+{
     std::vector<std::string> partsA = SplitVersionString (versionA);
     std::vector<std::string> partsB = SplitVersionString (versionB);
 
@@ -90,7 +98,8 @@ FvVersionComparator::ComparatorResult FvVersionComparator::CompareVersions (std:
 
     n = std::min (partsA.size(), partsB.size());
 
-    for (i = 0; i < n; ++i) {
+    for (i = 0; i < n; ++i)
+    {
         partA = partsA.at (i);
         partB = partsB.at (i);
 
@@ -98,9 +107,11 @@ FvVersionComparator::ComparatorResult FvVersionComparator::CompareVersions (std:
         typeB = TypeOfCharacter (partB);
 
         // Compare types
-        if (typeA == typeB) {
+        if (typeA == typeB)
+        {
             // Same type; we can compare
-            if (typeA == kNumberType) {
+            if (typeA == kNumberType)
+            {
                 intA = atoi (partA.c_str());
                 intB = atoi (partB.c_str());
 
@@ -111,10 +122,12 @@ FvVersionComparator::ComparatorResult FvVersionComparator::CompareVersions (std:
                     return kAscending;
             }
 
-            else if (typeA == kStringType) {
+            else if (typeA == kStringType)
+            {
                 short result = partA.compare (partB);
 
-                switch (result) {
+                switch (result)
+                {
                     case -1:
                         return kAscending;
                         break;
@@ -129,19 +142,23 @@ FvVersionComparator::ComparatorResult FvVersionComparator::CompareVersions (std:
             }
         }
 
-        else {
+        else
+        {
             // Not the same type? Now we have to do some validity checking
-            if (typeA != kStringType && typeB == kStringType) {
+            if (typeA != kStringType && typeB == kStringType)
+            {
                 // typeA wins
                 return kDescending;
             }
 
-            else if (typeA == kStringType && typeB != kStringType) {
+            else if (typeA == kStringType && typeB != kStringType)
+            {
                 // typeB wins
                 return kAscending;
             }
 
-            else {
+            else
+            {
                 // One is a number and the other is a period. The period is invalid
                 if (typeA == kNumberType)
                     return kDescending;
@@ -154,20 +171,23 @@ FvVersionComparator::ComparatorResult FvVersionComparator::CompareVersions (std:
 
     // The versions are equal up to the point where they both still have parts
     // Lets check to see if one is larger than the other
-    if (partsA.size() != partsB.size()) {
+    if (partsA.size() != partsB.size())
+    {
         // Yep. Lets get the next part of the larger
         // n holds the index of the part we want.
         std::string missingPart = std::string ("");
         CharacterType missingType;
         ComparatorResult shorterResult, largerResult;
 
-        if (partsA.size() > partsB.size()) {
+        if (partsA.size() > partsB.size())
+        {
             missingPart = partsA.at (n);
             shorterResult = kAscending;
             largerResult = kDescending;
         }
 
-        else {
+        else
+        {
             missingPart = partsB.at (n);
             shorterResult = kDescending;
             largerResult = kAscending;
@@ -176,12 +196,14 @@ FvVersionComparator::ComparatorResult FvVersionComparator::CompareVersions (std:
         missingType = TypeOfCharacter (missingPart);
 
         // Check the type
-        if (missingType == kStringType) {
+        if (missingType == kStringType)
+        {
             // It's a string. Shorter version wins
             return shorterResult;
         }
 
-        else {
+        else
+        {
             // It's a number/period. Larger version wins
             return largerResult;
         }

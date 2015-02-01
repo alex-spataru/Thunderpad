@@ -3,11 +3,13 @@
 #include <QDebug>
 
 FvPlatform::FvPlatform (QObject *parent) :
-    QObject (parent) {
+    QObject (parent)
+{
     // noop
 }
 
-bool FvPlatform::CurrentlyRunningOnPlatform (QString platform) {
+bool FvPlatform::CurrentlyRunningOnPlatform (QString platform)
+{
     platform = platform.toUpper().trimmed();
 
     if (platform.isEmpty())

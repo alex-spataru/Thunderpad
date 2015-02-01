@@ -28,30 +28,36 @@
 
 class QsciLexerNSIS : public QsciLexer
 {
-Q_OBJECT
-public:
-    explicit QsciLexerNSIS(QObject *parent = 0);
+        Q_OBJECT
+    public:
+        explicit QsciLexerNSIS (QObject *parent = 0);
 
-    virtual ~QsciLexerNSIS();
+        virtual ~QsciLexerNSIS();
 
-    //! Returns the name of the language.
-    const char *language() const { return "NSIS Script"; }
+        //! Returns the name of the language.
+        const char *language() const
+        {
+            return "NSIS Script";
+        }
 
-    //! Returns the name of the lexer.  Some lexers support a number of
-    //! languages.
-    const char *lexer() const { return "nsis"; }
+        //! Returns the name of the lexer.  Some lexers support a number of
+        //! languages.
+        const char *lexer() const
+        {
+            return "nsis";
+        }
 
-    //! Returns the set of keywords for the keyword set \a set recognised by
-    //! the lexer as a space separated string.
-    const char *keywords(int set) const;
+        //! Returns the set of keywords for the keyword set \a set recognised by
+        //! the lexer as a space separated string.
+        const char *keywords (int set) const;
 
-    //! Returns the descriptive name for style number \a style.  If the style
-    //! is invalid for this language then an empty QString is returned.  This
-    //! is intended to be used in user preference dialogs.
-    QString description(int style) const;
+        //! Returns the descriptive name for style number \a style.  If the style
+        //! is invalid for this language then an empty QString is returned.  This
+        //! is intended to be used in user preference dialogs.
+        QString description (int style) const;
 
-    //! Returns the foreground colour of the text for a style.
-    QColor defaultColor(int style) const;
+        //! Returns the foreground colour of the text for a style.
+        QColor defaultColor (int style) const;
 
 };
 

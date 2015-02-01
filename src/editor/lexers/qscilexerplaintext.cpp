@@ -21,20 +21,24 @@
 
 #include "qscilexerplaintext.h"
 
-QsciLexerPlainText::QsciLexerPlainText (Editor *parent) : QsciLexer (parent) {
+QsciLexerPlainText::QsciLexerPlainText (Editor *parent) : QsciLexer (parent)
+{
 }
 
-const char *QsciLexerPlainText::keywords (int set) const {
+const char *QsciLexerPlainText::keywords (int set) const
+{
     Q_UNUSED (set);
     return 0;
 }
 
-QString QsciLexerPlainText::description (int style) const {
+QString QsciLexerPlainText::description (int style) const
+{
     Q_UNUSED (style);
     return "";
 }
 
-QColor QsciLexerPlainText::defaultColor (int style) const {
+QColor QsciLexerPlainText::defaultColor (int style) const
+{
     Q_UNUSED (style);
     return Qt::black;
 }

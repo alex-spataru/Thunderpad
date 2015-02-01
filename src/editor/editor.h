@@ -28,7 +28,8 @@
 #include "theme.h"
 #include "lexer_database.h"
 
-class Editor : public QsciScintilla {
+class Editor : public QsciScintilla
+{
         Q_OBJECT
 
     public:

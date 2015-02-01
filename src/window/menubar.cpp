@@ -28,7 +28,8 @@
 #include "platform.h"
 #include "defaults.h"
 
-MenuBar::MenuBar (Window *parent) : QMenuBar (parent) {
+MenuBar::MenuBar (Window *parent) : QMenuBar (parent)
+{
     setAttribute (Qt::WA_DeleteOnClose);
     m_settings = new QSettings (APP_COMPANY, APP_NAME);
 
@@ -39,11 +40,13 @@ MenuBar::MenuBar (Window *parent) : QMenuBar (parent) {
     initialize (parent);
 }
 
-void MenuBar::setSaveEnabled (bool enabled) {
+void MenuBar::setSaveEnabled (bool enabled)
+{
     f_save->setEnabled (enabled);
 }
 
-void MenuBar::initialize (Window *window) {
+void MenuBar::initialize (Window *window)
+{
     Q_ASSERT (window != NULL);
 
     window->setMenuBar (this);
@@ -122,7 +125,8 @@ void MenuBar::initialize (Window *window) {
     connect (window, SIGNAL (updateSettings()), this, SLOT (updateSettings()));
 }
 
-void MenuBar::updateSettings (void) {
+void MenuBar::updateSettings (void)
+{
     //
     // Change the check state of the actions
     //
@@ -135,7 +139,8 @@ void MenuBar::updateSettings (void) {
     v_highlight_current_line->setChecked (m_settings->value ("hc-line-enabled", SETTINGS_CARET_LINE).toBool());
 }
 
-void MenuBar::createActions (void) {
+void MenuBar::createActions (void)
+{
     //
     // Create the file menu actions
     //
@@ -203,7 +208,8 @@ void MenuBar::createActions (void) {
     h_official_website = new QAction (tr ("Website") + "...", this);
 }
 
-void MenuBar::configureActions (void) {
+void MenuBar::configureActions (void)
+{
     //
     // Set the menu roles
     //
@@ -251,7 +257,8 @@ void MenuBar::configureActions (void) {
     v_highlight_current_line->setCheckable (true);
 }
 
-void MenuBar::createMenubar (void) {
+void MenuBar::createMenubar (void)
+{
     //
     // Create the main menus we are adding the "&" before
     // each menu to inhibit the OS to add aditional items
@@ -356,7 +363,8 @@ void MenuBar::createMenubar (void) {
     //
     // Create a new action for each registered icon theme
     //
-    for (int i = 0; icon_themes_list.count() > i; ++i) {
+    for (int i = 0; icon_themes_list.count() > i; ++i)
+    {
 
         //
         // Get the name of the current theme and create the action
@@ -408,7 +416,8 @@ void MenuBar::createMenubar (void) {
     m_help->addAction (h_official_website);
 }
 
-void MenuBar::setReadOnly (bool ro) {
+void MenuBar::setReadOnly (bool ro)
+{
     //
     // Disable/Enable undo/redo actions
     //

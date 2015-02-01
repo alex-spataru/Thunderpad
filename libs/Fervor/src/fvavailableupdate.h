@@ -4,7 +4,8 @@
 #include <QObject>
 #include <QUrl>
 
-class FvAvailableUpdate : public QObject {
+class FvAvailableUpdate : public QObject
+{
         Q_OBJECT
     public:
         explicit FvAvailableUpdate (QObject *parent = 0);

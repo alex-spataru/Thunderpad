@@ -40,7 +40,8 @@
  * automatically with the initialize() function.
  */
 
-class MenuBar : public QMenuBar {
+class MenuBar : public QMenuBar
+{
         Q_OBJECT
 
     public:

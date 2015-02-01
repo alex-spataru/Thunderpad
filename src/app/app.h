@@ -13,7 +13,8 @@
 
 #include "window.h"
 
-class Application : public QtSingleApplication {
+class Application : public QtSingleApplication
+{
         Q_OBJECT
 
     public:

@@ -33,7 +33,8 @@
 #include "editor.h"
 #include "window.h"
 
-class SearchDialog : public QDialog {
+class SearchDialog : public QDialog
+{
         Q_OBJECT
 
     public:

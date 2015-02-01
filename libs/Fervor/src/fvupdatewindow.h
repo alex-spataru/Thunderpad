@@ -4,11 +4,13 @@
 #include <QWidget>
 class QGraphicsScene;
 
-namespace Ui {
+namespace Ui
+{
 class FvUpdateWindow;
 }
 
-class FvUpdateWindow : public QWidget {
+class FvUpdateWindow : public QWidget
+{
         Q_OBJECT
 
     public:

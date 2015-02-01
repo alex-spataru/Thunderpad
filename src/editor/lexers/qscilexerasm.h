@@ -21,40 +21,46 @@
 
 class QsciLexerASM : public QsciLexer
 {
-Q_OBJECT
-public:
-    explicit QsciLexerASM(QObject *parent = 0);
-    virtual ~QsciLexerASM();
+        Q_OBJECT
+    public:
+        explicit QsciLexerASM (QObject *parent = 0);
+        virtual ~QsciLexerASM();
 
-    //! Returns the name of the language.
-    const char *language() const { return "Assembly"; }
+        //! Returns the name of the language.
+        const char *language() const
+        {
+            return "Assembly";
+        }
 
-    //! Returns the name of the lexer.  Some lexers support a number of
-    //! languages.
-    const char *lexer() const { return "asm"; }
+        //! Returns the name of the lexer.  Some lexers support a number of
+        //! languages.
+        const char *lexer() const
+        {
+            return "asm";
+        }
 
-    //! \internal Returns the string of characters that comprise a word.
-    const char *wordCharacters() const;
+        //! \internal Returns the string of characters that comprise a word.
+        const char *wordCharacters() const;
 
-    //! Returns the set of keywords for the keyword set \a set recognised by
-    //! the lexer as a space separated string.
-    const char *keywords(int set) const;
+        //! Returns the set of keywords for the keyword set \a set recognised by
+        //! the lexer as a space separated string.
+        const char *keywords (int set) const;
 
-    //! Returns the descriptive name for style number \a style.  If the style
-    //! is invalid for this language then an empty QString is returned.  This
-    //! is intended to be used in user preference dialogs.
-    QString description(int style) const;
+        //! Returns the descriptive name for style number \a style.  If the style
+        //! is invalid for this language then an empty QString is returned.  This
+        //! is intended to be used in user preference dialogs.
+        QString description (int style) const;
 
-    //! Returns the foreground colour of the text for a style.
-    QColor defaultColor(int style) const;
+        //! Returns the foreground colour of the text for a style.
+        QColor defaultColor (int style) const;
 
-    virtual const char * blockStartKeyword (int *style=0) const;
-    virtual const char * blockStart (int *style=0) const;
-    virtual const char * blockEnd (int *style=0) const;
+        virtual const char *blockStartKeyword (int *style = 0) const;
+        virtual const char *blockStart (int *style = 0) const;
+        virtual const char *blockEnd (int *style = 0) const;
 
-signals:
+    signals:
 
-public slots:
+    public slots:
 
 };
 
