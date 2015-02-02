@@ -65,13 +65,12 @@ Thunderpad is released with the GNU 3.0 license, you can read a copy of it [here
  
         sudo make install
 
+That's all! To run Thunderpad, you can type "thunderpad" (without quotes) in Terminal. You can also run Thunderpad from your application menu (Gnome) or Dash (Unity). If you run into issues, check the following section:
+
 #### Troubleshooting for Linux
 
-**The application is compiled successfully, but nothing happens when executed**
+**The application fails to compile OR the application is compiled successfully, but nothing happens when executed**
 
-*Solutions*:
+- Check that you have installed the packages required above. I have tested the application on Ubuntu 14.10 and gNewSense 3.1 (both are Debian based). 
 
-- Make sure that you installed all the packages above, then try again.
-- Download the newest stable QScintilla release from [here](http://www.riverbankcomputing.com/software/qscintilla/download) and compile and install it manually. It seems that some distributions provide an outdated version of QScintilla in their repositories.
- 
- That's all! To run Thunderpad, you can type "thunderpad" (without quotes) in Terminal. You can also run Thunderpad from your application menu (Gnome) or Dash (Unity).
+- If you get errors saying "undefined reference to...", download the newest stable QScintilla release from [here](http://www.riverbankcomputing.com/software/qscintilla/download) and compile and install it manually. Some distributions may require this step because their repositories have an outdated version of QScintilla.
