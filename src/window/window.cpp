@@ -60,10 +60,10 @@ Window::Window (void)
     setObjectName ("window");
 
     //
-    // The application crashes on Mac OS X if
+    // The application crashes on Unix if
     // WA_DeleteOnClose attribute is defined
     //
-    if (!MAC_OS_X)
+    if (WINDOWS)
         setAttribute (Qt::WA_DeleteOnClose);
 
     //
