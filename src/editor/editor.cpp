@@ -31,7 +31,7 @@
 #include <QPrintDialog>
 #include <QDesktopServices>
 
-#include <qsci/qscilexer.h>
+#include <Qsci/qscilexer.h>
 #include <Qsci/qsciprinter.h>
 
 #include "theme.h"
