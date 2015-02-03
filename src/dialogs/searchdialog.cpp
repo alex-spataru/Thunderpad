@@ -176,10 +176,26 @@ void SearchDialog::replaceAll (void) {
     }
 
     //
-    // Surprise motherf*cker!
+    // Surprise motherf*cker! Cannot replace selected text
     //
     else
-        QMessageBox::warning (this, tr ("Find/Replace"), tr ("Document is read-only!"));
+        surpriseMotherfucker();
+}
+
+/*!
+ * Informs the user that the document is read only
+ */
+
+void SearchDialog::surpriseMotherfucker (void) {
+    QMessageBox _message;
+    _message.setIcon(QMessageBox::Warning);
+    _message.setWindowTitle("Find/Replace");
+    _message.setStandardButtons(QMessageBox::Ok);
+    _message.setText("<b>" + tr("Cannot replace the selected text") + "</b>");
+    _message.setInformativeText(tr ("Read-only mode is enabled, "
+                                    "disable it in order to edit this document."));
+
+    _message.exec();
 }
 
 /*!
@@ -193,8 +209,8 @@ void SearchDialog::replaceFirstOccurrence (void) {
     }
 
     //
-    // Surprise motherf*cker!
+    // Surprise motherf*cker! Cannot replace selected text
     //
     else
-        QMessageBox::warning (this, tr ("Find/Replace"), tr ("Document is read-only!"));
+        surpriseMotherfucker();
 }

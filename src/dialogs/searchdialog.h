@@ -42,6 +42,7 @@ class SearchDialog : public QDialog {
         bool search (void);
         void findNext (void);
         void replaceAll (void);
+        void surpriseMotherfucker (void);
         void replaceFirstOccurrence (void);
 
     private:
