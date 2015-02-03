@@ -175,6 +175,9 @@ void SearchDialog::replaceAll (void) {
                                   .arg (ui_replace_lineedit->text()));
     }
 
+    //
+    // Surprise motherf*cker!
+    //
     else
         QMessageBox::warning (this, tr ("Find/Replace"), tr ("Document is read-only!"));
 }
@@ -189,6 +192,9 @@ void SearchDialog::replaceFirstOccurrence (void) {
         search();
     }
 
+    //
+    // Surprise motherf*cker!
+    //
     else
         QMessageBox::warning (this, tr ("Find/Replace"), tr ("Document is read-only!"));
 }
