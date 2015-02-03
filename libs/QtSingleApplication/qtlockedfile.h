@@ -68,8 +68,7 @@
 #  define QT_QTLOCKEDFILE_EXPORT
 #endif
 
-class QT_QTLOCKEDFILE_EXPORT QtLockedFile : public QFile
-{
+class QT_QTLOCKEDFILE_EXPORT QtLockedFile : public QFile {
     public:
         enum LockMode { NoLock = 0, ReadLock, WriteLock };
 

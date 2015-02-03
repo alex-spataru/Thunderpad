@@ -21,6 +21,7 @@
 
 #include <QUrl>
 #include <QFile>
+#include <QSettings>
 #include <QDateTime>
 #include <QMessageBox>
 #include <QFileDialog>
@@ -28,8 +29,12 @@
 #include <QDesktopWidget>
 #include <QDesktopServices>
 
+#include <QMoveEvent>
+#include <QCloseEvent>
+
 #include <Qsci/qsciprinter.h>
 
+#include "editor.h"
 #include "window.h"
 #include "menubar.h"
 #include "toolbar.h"
@@ -51,8 +56,19 @@ MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE."
 #define CONTRIBUTE_LINK "http://thunderpad.sf.net/contribute"
 #define REPORT_ISSUES_LINK "http://github.com/alex-97/thunderpad/issues"
 
-Window::Window (const QString &file)
-{
+/*!
+ * \class Window
+ *
+ * The \c Window class is used to display and configure each element
+ * of Thunderpad, such as the \c Editor widget.
+ *
+ * The \c Window is in charge of connecting and configuring everything together,
+ * such as the actions of the menubar with the functions of the text editor.
+ * Finally, the \c Window allows the \c Application class to create a new window
+ * and open a file using the configureWindow() function.
+ */
+
+Window::Window (const QString &file) {
     //
     // Allow other instances of Window
     // to communicate with each other
@@ -104,11 +120,10 @@ Window::Window (const QString &file)
     // Read file
     //
     if (!file.isEmpty())
-        editor()->readFile(file);
+        editor()->readFile (file);
 }
 
-Window::~Window (void)
-{
+Window::~Window (void) {
     delete m_menu;
     delete m_editor;
     delete m_toolbar;
@@ -117,50 +132,41 @@ Window::~Window (void)
     delete m_search_dialog;
 }
 
-Editor *Window::editor (void) const
-{
+Editor *Window::editor (void) const {
     return m_editor;
 }
 
-ToolBar *Window::toolbar (void) const
-{
+ToolBar *Window::toolbar (void) const {
     return m_toolbar;
 }
 
-MenuBar *Window::menubar (void) const
-{
+MenuBar *Window::menubar (void) const {
     return m_menu;
 }
 
-QSettings *Window::settings (void) const
-{
+QSettings *Window::settings (void) const {
     return m_settings;
 }
 
-SearchDialog *Window::searchDialog (void) const
-{
+SearchDialog *Window::searchDialog (void) const {
     return m_search_dialog;
 }
 
-void Window::moveEvent (QMoveEvent *event)
-{
+void Window::moveEvent (QMoveEvent *event) {
     saveWindowState();
     event->accept();
 }
 
-void Window::closeEvent (QCloseEvent *event)
-{
+void Window::closeEvent (QCloseEvent *event) {
     editor()->maybeSave() ? event->accept() : event->ignore();
 }
 
-void Window::resizeEvent (QResizeEvent *event)
-{
+void Window::resizeEvent (QResizeEvent *event) {
     saveWindowState();
     event->accept();
 }
 
-void Window::openFile (const QString &file_name)
-{
+void Window::openFile (const QString &file_name) {
     //
     // Open the file in the same window
     //
@@ -171,16 +177,14 @@ void Window::openFile (const QString &file_name)
     // Open the file in another window
     //
     else
-        configureWindow (new Window(file_name));
+        configureWindow (new Window (file_name));
 }
 
-void Window::newFile (void)
-{
-    configureWindow (new Window(""));
+void Window::newFile (void) {
+    configureWindow (new Window (""));
 }
 
-void Window::open (void)
-{
+void Window::open (void) {
     QStringList _files = QFileDialog::getOpenFileNames (this, tr ("Open"), QDir::homePath());
 
     //
@@ -191,75 +195,63 @@ void Window::open (void)
             openFile (_files.at (i));
 }
 
-void Window::setReadOnly (bool ro)
-{
+void Window::setReadOnly (bool ro) {
     editor()->setReadOnly (ro);
     toolbar()->setReadOnly (ro);
 
     emit readOnlyChanged (ro);
 }
 
-void Window::setWordWrap (bool ww)
-{
+void Window::setWordWrap (bool ww) {
     settings()->setValue ("wordwrap-enabled", ww);
     syncSettings();
 }
 
-void Window::setToolbarText (bool tt)
-{
+void Window::setToolbarText (bool tt) {
     settings()->setValue ("toolbar-text", tt);
     syncSettings();
 }
 
-void Window::setToolbarEnabled (bool tb)
-{
+void Window::setToolbarEnabled (bool tb) {
     settings()->setValue ("toolbar-enabled", tb);
     syncSettings();
 }
 
-void Window::setStatusBarEnabled (bool sb)
-{
+void Window::setStatusBarEnabled (bool sb) {
     settings()->setValue ("statusbar-enabled", sb);
     syncSettings();
 }
 
-void Window::setHCLineEnabled (bool hc)
-{
+void Window::setHCLineEnabled (bool hc) {
     settings()->setValue ("hc-line-enabled", hc);
     syncSettings();
 }
 
-void Window::setUseLargeIcons (bool li)
-{
+void Window::setUseLargeIcons (bool li) {
     settings()->setValue ("large-icons", li);
     syncSettings();
 }
 
-void Window::setLineNumbersEnabled (bool ln)
-{
+void Window::setLineNumbersEnabled (bool ln) {
     settings()->setValue ("line-numbers-enabled", ln);
     syncSettings();
 }
 
-void Window::setColorscheme (const QString &colorscheme)
-{
+void Window::setColorscheme (const QString &colorscheme) {
     settings()->setValue ("color-scheme", colorscheme);
     syncSettings();
 }
 
-void Window::showFindReplaceDialog (void)
-{
+void Window::showFindReplaceDialog (void) {
     searchDialog()->show();
 }
 
-void Window::setIconTheme (const QString &theme)
-{
+void Window::setIconTheme (const QString &theme) {
     settings()->setValue ("icon-theme", theme);
     syncSettings();
 }
 
-void Window::aboutThunderpad (void)
-{
+void Window::aboutThunderpad (void) {
     //
     // Show a nice about dialog with application information
     //
@@ -272,43 +264,35 @@ void Window::aboutThunderpad (void)
     QMessageBox::about (this, tr ("About %1").arg (APP_NAME), _message);
 }
 
-void Window::license (void)
-{
+void Window::license (void) {
     QDesktopServices::openUrl (QUrl (LICENSE_LINK));
 }
 
-void Window::donate (void)
-{
+void Window::donate (void) {
     QDesktopServices::openUrl (QUrl (DONATE_LINK));
 }
 
-void Window::viewHelp (void)
-{
+void Window::viewHelp (void) {
     QDesktopServices::openUrl (QUrl (HELP_LINK));
 }
 
-void Window::sendFeedback (void)
-{
+void Window::sendFeedback (void) {
     QDesktopServices::openUrl (QUrl (FEED_BACK_LINK));
 }
 
-void Window::reportBug (void)
-{
+void Window::reportBug (void) {
     QDesktopServices::openUrl (QUrl (REPORT_ISSUES_LINK));
 }
 
-void Window::makeContribution (void)
-{
+void Window::makeContribution (void) {
     QDesktopServices::openUrl (QUrl (CONTRIBUTE_LINK));
 }
 
-void Window::officialWebsite (void)
-{
+void Window::officialWebsite (void) {
     QDesktopServices::openUrl (QUrl (WEBSITE_LINK));
 }
 
-void Window::updateTitle (void)
-{
+void Window::updateTitle (void) {
     //
     // Use "Untitled" while editing new documents
     //
@@ -332,14 +316,12 @@ void Window::updateTitle (void)
     toolbar()->setSaveEnabled (_save_enabled);
 }
 
-void Window::syncSettings (void)
-{
+void Window::syncSettings (void) {
     emit updateSettings();
     emit settingsChanged();
 }
 
-void Window::saveWindowState (void)
-{
+void Window::saveWindowState (void) {
     settings()->setValue ("maximized", isMaximized());
 
     //
@@ -348,8 +330,7 @@ void Window::saveWindowState (void)
     //
     bool _mac_os_maximized = false;
 
-    if (MAC_OS_X)
-    {
+    if (MAC_OS_X) {
         int d_width = QApplication::desktop()->width() - 100;
         int d_height = QApplication::desktop()->height() - 100;
 
@@ -360,15 +341,13 @@ void Window::saveWindowState (void)
     //
     // Only save the window size and position if it isn't maximized
     //
-    if (!isMaximized() && !_mac_os_maximized)
-    {
+    if (!isMaximized() && !_mac_os_maximized) {
         settings()->setValue ("size", size());
         settings()->setValue ("position", pos());
     }
 }
 
-void Window::configureWindow (Window *window)
-{
+void Window::configureWindow (Window *window) {
     Q_ASSERT (window != NULL);
 
     //
@@ -379,10 +358,8 @@ void Window::configureWindow (Window *window)
     //
     // Sync settings across windows
     //
-    foreach (QWidget *widget, QApplication::topLevelWidgets())
-    {
-        if (widget->objectName() == objectName())
-        {
+    foreach (QWidget *widget, QApplication::topLevelWidgets()) {
+        if (widget->objectName() == objectName()) {
             connect (widget, SIGNAL (settingsChanged()), window, SIGNAL (updateSettings()));
             connect (window, SIGNAL (settingsChanged()), widget, SIGNAL (updateSettings()));
         }
@@ -397,8 +374,7 @@ void Window::configureWindow (Window *window)
     //
     // Resize the window and position it to match the current window
     //
-    else
-    {
+    else {
         int _x = window->x() + 45;
         int _y = window->y() + 75;
         QDesktopWidget *desktop = QApplication::desktop();
@@ -427,8 +403,7 @@ void Window::configureWindow (Window *window)
     }
 }
 
-QString Window::shortFileName (const QString &file)
-{
+QString Window::shortFileName (const QString &file) {
     Q_ASSERT (!file.isEmpty());
     return QFileInfo (file).fileName();
 }

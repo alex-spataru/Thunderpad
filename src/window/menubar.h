@@ -22,26 +22,14 @@
 #ifndef MENUBAR_H
 #define MENUBAR_H
 
-#include <QMenu>
-#include <QAction>
+class QMenu;
+class Window;
+class QAction;
+class QSettings;
+
 #include <QMenuBar>
-#include <QSettings>
 
-#include "editor.h"
-#include "window.h"
-
-/*!
- * \class MenuBar
- *
- * The \c MenuBar class is in charge of creating and configuring
- * a new QMenuBar widget to be used with the \c Window class.
- *
- * This class creates the neccessary actions and connects the signals/slots
- * automatically with the initialize() function.
- */
-
-class MenuBar : public QMenuBar
-{
+class MenuBar : public QMenuBar {
         Q_OBJECT
 
     public:

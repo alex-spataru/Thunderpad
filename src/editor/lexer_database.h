@@ -22,13 +22,12 @@
 #ifndef LEXERDATABASE_H
 #define LEXERDATABASE_H
 
-#include <QObject>
-#include <Qsci/qscilexer.h>
-
 class Theme;
+class QsciLexer;
 
-class LexerDatabase : public QObject
-{
+#include <QObject>
+
+class LexerDatabase : public QObject {
         Q_OBJECT
 
     public:

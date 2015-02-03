@@ -28,13 +28,11 @@
  * to the existing instance and quit.
  */
 
-int main (int argc, char *argv[])
-{
+int main (int argc, char *argv[]) {
     Application app (argc, argv);
     QString arguments;
 
-    if (argc != 1)
-    {
+    if (argc != 1) {
         for (int i = 0; i < argc; i++)
             arguments = argv[i];
     }

@@ -19,6 +19,11 @@
 //  USA
 //
 
+#include <QAction>
+#include <QSettings>
+
+#include "editor.h"
+#include "window.h"
 #include "toolbar.h"
 #include "platform.h"
 #include "defaults.h"
@@ -31,32 +36,37 @@
 #define ICON_THEMES_PATH ":/images/themes"
 
 //
+// Make the toolbar look good on Yosemite
+//
+#if MAC_OS_X
+#include <QSysInfo>
+#define LARGE_ICONS_WITH_TEXT QSysInfo::MacintoshVersion >= 11 ? 42 : 48
+#define SMALL_ICONS_WITH_TEXT QSysInfo::MacintoshVersion >= 11 ? 32 : 36
+#define LARGE_ICONS_WITHOUT_TEXT QSysInfo::MacintoshVersion >= 11 ? 28 : 32
+#define SMALL_ICONS_WITHOUT_TEXT QSysInfo::MacintoshVersion >= 11 ? 22 : 24
+
+//
 // Define the toolbar size in Windows and Linux
 //
+#else
 #define LARGE_ICONS_WITH_TEXT 56
 #define SMALL_ICONS_WITH_TEXT 48
 #define LARGE_ICONS_WITHOUT_TEXT 36
 #define SMALL_ICONS_WITHOUT_TEXT 32
 
-//
-// Make the toolbar look good on Yosemite
-//
-#if MAC_OS_X
-#include <QSysInfo>
-
-#undef LARGE_ICONS_WITH_TEXT
-#undef SMALL_ICONS_WITH_TEXT
-#undef SMALL_ICONS_WITHOUT_TEXT
-#undef LARGE_ICONS_WITHOUT_TEXT
-
-#define LARGE_ICONS_WITH_TEXT QSysInfo::MacintoshVersion >= 11 ? 42 : 48
-#define SMALL_ICONS_WITH_TEXT QSysInfo::MacintoshVersion >= 11 ? 32 : 36
-#define LARGE_ICONS_WITHOUT_TEXT QSysInfo::MacintoshVersion >= 11 ? 28 : 32
-#define SMALL_ICONS_WITHOUT_TEXT QSysInfo::MacintoshVersion >= 11 ? 22 : 24
 #endif
 
-ToolBar::ToolBar (Window *parent) : QToolBar (parent)
-{
+/*!
+ * \class ToolBar
+ *
+ * The \c ToolBar class is in charge of creating and configuring
+ * a new QToolbarar widget to be used with the \c Window class.
+ *
+ * This class creates the neccessary actions and connects the signals/slots
+ * automatically with the initialize() function.
+ */
+
+ToolBar::ToolBar (Window *parent) : QToolBar (parent) {
     setMovable (false);
 
     //
@@ -114,8 +124,7 @@ ToolBar::ToolBar (Window *parent) : QToolBar (parent)
     initialize (parent);
 }
 
-void ToolBar::setReadOnly (bool ro)
-{
+void ToolBar::setReadOnly (bool ro) {
     m_readonly->setChecked (ro);
     m_readonly->setEnabled (ro);
     m_readonly->setVisible (ro);
@@ -127,13 +136,11 @@ void ToolBar::setReadOnly (bool ro)
     m_paste->setEnabled (!ro);
 }
 
-void ToolBar::setSaveEnabled (bool enabled)
-{
+void ToolBar::setSaveEnabled (bool enabled) {
     m_save->setEnabled (enabled);
 }
 
-void ToolBar::setToolbarText (bool enabled)
-{
+void ToolBar::setToolbarText (bool enabled) {
     QSize _icon_size;
     short _toolbar_height;
 
@@ -146,8 +153,7 @@ void ToolBar::setToolbarText (bool enabled)
     //
     // Show toolbar text
     //
-    if (enabled)
-    {
+    if (enabled) {
         _toolbar_height = m_large_icons ? LARGE_ICONS_WITH_TEXT :
                           SMALL_ICONS_WITH_TEXT ;
 
@@ -157,8 +163,7 @@ void ToolBar::setToolbarText (bool enabled)
     //
     // Hide toolbar text
     //
-    else
-    {
+    else {
         _toolbar_height = m_large_icons ? LARGE_ICONS_WITHOUT_TEXT :
                           SMALL_ICONS_WITHOUT_TEXT ;
 
@@ -179,8 +184,7 @@ void ToolBar::setToolbarText (bool enabled)
     show();
 }
 
-void ToolBar::initialize (Window *window)
-{
+void ToolBar::initialize (Window *window) {
     Q_ASSERT (window != NULL);
 
     window->addToolBar (this);
@@ -208,16 +212,14 @@ void ToolBar::initialize (Window *window)
     connect (window, SIGNAL (updateSettings()), this, SLOT (updateSettings()));
 }
 
-void ToolBar::updateSettings (void)
-{
+void ToolBar::updateSettings (void) {
     bool _new_value = m_settings->value ("toolbar-text", SETTINGS_TOOLBAR_TEXT).toBool();
     bool _new_sizes = m_settings->value ("large-icons", SETTINGS_LARGE_ICONS).toBool();
 
     //
     // Resize and redraw the toolbar if neccessary
     //
-    if (_new_value != m_toolbar_text || m_large_icons != _new_sizes)
-    {
+    if (_new_value != m_toolbar_text || m_large_icons != _new_sizes) {
         m_large_icons = _new_sizes;
         m_toolbar_text = _new_value;
 
@@ -236,8 +238,7 @@ void ToolBar::updateSettings (void)
     update_theme (m_settings->value ("icon-theme", SETTINGS_ICON_THEME).toString());
 }
 
-void ToolBar::update_theme (const QString &theme)
-{
+void ToolBar::update_theme (const QString &theme) {
     Q_ASSERT (!theme.isEmpty());
 
     //

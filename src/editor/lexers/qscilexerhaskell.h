@@ -24,22 +24,19 @@
 #define SCE_HA_COMMENTBLOCK2 15
 #define SCE_HA_COMMENTBLOCK3 16
 
-class QsciLexerHaskell : public QsciLexer
-{
+class QsciLexerHaskell : public QsciLexer {
         Q_OBJECT
     public:
         explicit QsciLexerHaskell (QObject *parent = 0);
 
         //! Returns the name of the language.
-        const char *language() const
-        {
+        const char *language() const {
             return "Haskell";
         }
 
         //! Returns the name of the lexer.  Some lexers support a number of
         //! languages.
-        const char *lexer() const
-        {
+        const char *lexer() const {
             return "haskell";
         }
 

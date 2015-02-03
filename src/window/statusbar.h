@@ -22,24 +22,16 @@
 #ifndef STATUSBAR_H
 #define STATUSBAR_H
 
-#include <QLabel>
-#include <QString>
-#include <QRegExp>
-#include <QSettings>
+class Editor;
+class QLabel;
+class Window;
+class QString;
+class QRegExp;
+class QSettings;
+
 #include <QStatusBar>
 
-#include "editor.h"
-#include "window.h"
-
-/*!
- * \class StatusBar
- *
- * The \c StatusBar class is in charge of creating and configuring
- * a new QStatusBar widget to be used with the \c Window class.
- */
-
-class StatusBar : public QStatusBar
-{
+class StatusBar : public QStatusBar {
         Q_OBJECT
 
     public:

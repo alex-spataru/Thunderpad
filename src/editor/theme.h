@@ -22,10 +22,11 @@
 #ifndef THEME_H
 #define THEME_H
 
-#include <QColor>
+class QColor;
 
-class Theme : public QObject
-{
+#include <QObject>
+
+class Theme : public QObject {
         Q_OBJECT
 
     public:

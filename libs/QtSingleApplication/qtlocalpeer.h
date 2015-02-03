@@ -49,21 +49,18 @@
 #include <QtNetwork/QLocalSocket>
 #include <QtCore/QDir>
 
-namespace QtLP_Private
-{
+namespace QtLP_Private {
 #include "qtlockedfile.h"
 }
 
-class QtLocalPeer : public QObject
-{
+class QtLocalPeer : public QObject {
         Q_OBJECT
 
     public:
         QtLocalPeer (QObject *parent = 0, const QString &appId = QString());
         bool isClient();
         bool sendMessage (const QString &message, int timeout);
-        QString applicationId() const
-        {
+        QString applicationId() const {
             return id;
         }
 

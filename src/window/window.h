@@ -21,33 +21,20 @@
 
 #ifndef WINDOW_H
 #define WINDOW_H
-#include <QSettings>
-#include <QCloseEvent>
-#include <QMainWindow>
 
-#include "editor.h"
-
+class Editor;
 class ToolBar;
 class MenuBar;
 class ToolBar;
 class MenuBar;
 class StatusBar;
+class QSettings;
+class QMainWindow;
 class SearchDialog;
 
-/*!
- * \class Window
- *
- * The \c Window class is used to display and configure each element
- * of Thunderpad, such as the \c Editor widget.
- *
- * The \c Window is in charge of connecting and configuring everything together,
- * such as the actions of the menubar with the functions of the text editor.
- * Finally, the \c Window allows the \c Application class to create a new window
- * and open a file using the configureWindow() function.
- */
+#include <QMainWindow>
 
-class Window : public QMainWindow
-{
+class Window : public QMainWindow {
         Q_OBJECT
 
     public:

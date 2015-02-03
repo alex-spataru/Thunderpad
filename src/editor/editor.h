@@ -22,14 +22,13 @@
 #ifndef EDITOR_H
 #define EDITOR_H
 
-#include <QSettings>
+class Theme;
+class QSettings;
+class LexerDatabase;
+
 #include <Qsci/qsciscintilla.h>
 
-#include "theme.h"
-#include "lexer_database.h"
-
-class Editor : public QsciScintilla
-{
+class Editor : public QsciScintilla {
         Q_OBJECT
 
     public:
@@ -70,11 +69,11 @@ class Editor : public QsciScintilla
     private:
         Theme *m_theme;
         QSettings *m_settings;
+        LexerDatabase *m_lexer_db;
 
         QFont m_font;
         bool m_line_numbers;
         QString m_document_title;
-        LexerDatabase m_lexer_db;
 };
 
 #endif

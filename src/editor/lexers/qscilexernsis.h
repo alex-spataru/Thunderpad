@@ -26,8 +26,7 @@
 #define SCE_NSIS_FUNCTIONDEF 17
 #define SCE_NSIS_COMMENTBOX 18
 
-class QsciLexerNSIS : public QsciLexer
-{
+class QsciLexerNSIS : public QsciLexer {
         Q_OBJECT
     public:
         explicit QsciLexerNSIS (QObject *parent = 0);
@@ -35,15 +34,13 @@ class QsciLexerNSIS : public QsciLexer
         virtual ~QsciLexerNSIS();
 
         //! Returns the name of the language.
-        const char *language() const
-        {
+        const char *language() const {
             return "NSIS Script";
         }
 
         //! Returns the name of the lexer.  Some lexers support a number of
         //! languages.
-        const char *lexer() const
-        {
+        const char *lexer() const {
             return "nsis";
         }
 

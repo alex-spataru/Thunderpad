@@ -1,12 +1,10 @@
 #include "qscilexerlisp.h"
 
 QsciLexerLisp::QsciLexerLisp (QObject *parent) :
-    QsciLexer (parent)
-{
+    QsciLexer (parent) {
 }
 
-const char *QsciLexerLisp::keywords (int set) const
-{
+const char *QsciLexerLisp::keywords (int set) const {
     // Functions and operators
     if (set == 1)
         return "princ eval apply funcall quote complement backquote lambda set "
@@ -31,10 +29,8 @@ const char *QsciLexerLisp::keywords (int set) const
     return 0;
 }
 
-QString QsciLexerLisp::description (int style) const
-{
-    switch (style)
-    {
+QString QsciLexerLisp::description (int style) const {
+    switch (style) {
         case SCE_LISP_DEFAULT:
             return tr ("Default");
 
@@ -75,10 +71,8 @@ QString QsciLexerLisp::description (int style) const
     return "";
 }
 
-QColor QsciLexerLisp::defaultColor (int style) const
-{
-    switch (style)
-    {
+QColor QsciLexerLisp::defaultColor (int style) const {
+    switch (style) {
         case SCE_LISP_DEFAULT:
             return Qt::black;
 

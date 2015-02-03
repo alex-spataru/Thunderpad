@@ -22,25 +22,13 @@
 #ifndef TOOLBAR_H
 #define TOOLBAR_H
 
-#include <QAction>
+class Window;
+class QAction;
+class QSettings;
+
 #include <QToolBar>
-#include <QSettings>
 
-#include "editor.h"
-#include "window.h"
-
-/*!
- * \class ToolBar
- *
- * The \c ToolBar class is in charge of creating and configuring
- * a new QToolbarar widget to be used with the \c Window class.
- *
- * This class creates the neccessary actions and connects the signals/slots
- * automatically with the initialize() function.
- */
-
-class ToolBar : public QToolBar
-{
+class ToolBar : public QToolBar {
         Q_OBJECT
 
     public:

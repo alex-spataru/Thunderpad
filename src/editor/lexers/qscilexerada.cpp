@@ -2,12 +2,10 @@
 
 
 QsciLexerAda::QsciLexerAda (QObject *parent) :
-    QsciLexer (parent)
-{
+    QsciLexer (parent) {
 }
 
-const char *QsciLexerAda::keywords (int set) const
-{
+const char *QsciLexerAda::keywords (int set) const {
     // Keywords
     if (set == 1)
         return "abort else new return abs elsif not reverse abstract end null accept entry select access exception of separate aliased exit or subtype all others synchronized and for out array function overriding tagged at task generic package terminate begin goto pragma then body private type if procedure case in protected until constant interface use is raise declare range when delay limited record while delta loop rem with digits renames do mod requeue xor";
@@ -15,10 +13,8 @@ const char *QsciLexerAda::keywords (int set) const
     return 0;
 }
 
-QString QsciLexerAda::description (int style) const
-{
-    switch (style)
-    {
+QString QsciLexerAda::description (int style) const {
+    switch (style) {
         case SCE_ADA_DEFAULT:
             return tr ("Default");
 
@@ -59,10 +55,8 @@ QString QsciLexerAda::description (int style) const
     return "";
 }
 
-QColor QsciLexerAda::defaultColor (int style) const
-{
-    switch (style)
-    {
+QColor QsciLexerAda::defaultColor (int style) const {
+    switch (style) {
         case SCE_ADA_DEFAULT:
             return Qt::black;
 

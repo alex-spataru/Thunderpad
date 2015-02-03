@@ -19,22 +19,19 @@
 #define SCE_LISP_SPECIAL 11
 #define SCE_LISP_MULTI_COMMENT 12
 
-class QsciLexerLisp : public QsciLexer
-{
+class QsciLexerLisp : public QsciLexer {
         Q_OBJECT
     public:
         explicit QsciLexerLisp (QObject *parent = 0);
 
         //! Returns the name of the language.
-        const char *language() const
-        {
+        const char *language() const {
             return "Lisp";
         }
 
         //! Returns the name of the lexer.  Some lexers support a number of
         //! languages.
-        const char *lexer() const
-        {
+        const char *lexer() const {
             return "lisp";
         }
 

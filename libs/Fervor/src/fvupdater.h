@@ -12,8 +12,7 @@ class FvUpdateWindow;
 class FvAvailableUpdate;
 class FvDownloadDialog;
 
-class FvUpdater : public QObject
-{
+class FvUpdater : public QObject {
         Q_OBJECT
 
     public:

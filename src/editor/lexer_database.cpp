@@ -22,16 +22,7 @@
 #include <QFile>
 #include <QFileInfo>
 
-#include "theme.h"
-#include "lexer_database.h"
-
-#include "qscilexerada.h"
-#include "qscilexerasm.h"
-#include "qscilexerhaskell.h"
-#include "qscilexerlisp.h"
-#include "qscilexernsis.h"
-#include "qscilexerplaintext.h"
-
+#include <Qsci/qscilexer.h>
 #include <Qsci/qscilexerbash.h>
 #include <Qsci/qscilexerbatch.h>
 #include <Qsci/qscilexercmake.h>
@@ -62,6 +53,16 @@
 #include <Qsci/qscilexerxml.h>
 #include <Qsci/qscilexeryaml.h>
 
+#include "theme.h"
+#include "lexer_database.h"
+
+#include "qscilexerada.h"
+#include "qscilexerasm.h"
+#include "qscilexerhaskell.h"
+#include "qscilexerlisp.h"
+#include "qscilexernsis.h"
+#include "qscilexerplaintext.h"
+
 /*!
  * \class LexerDatabase
  * \brief Configures appropiate lexers for the \c Editor
@@ -81,8 +82,7 @@ LexerDatabase::LexerDatabase (void) {}
  * configures it to fit the needs of the \a Editor.
  */
 
-QsciLexer *LexerDatabase::getLexer (const QString &file, Theme *theme)
-{
+QsciLexer *LexerDatabase::getLexer (const QString &file, Theme *theme) {
     QsciLexer *_lexer = _guessByName (file);
 
     _lexer->setDefaultColor (theme->foreground());
@@ -101,8 +101,7 @@ QsciLexer *LexerDatabase::getLexer (const QString &file, Theme *theme)
  * Returns a appropiate QsciLexer given the input \a {file}
  */
 
-QsciLexer *LexerDatabase::_guessByName (const QString &file)
-{
+QsciLexer *LexerDatabase::_guessByName (const QString &file) {
     QsciLexer *lexer;
     QFile _file (file);
     QString s = QFileInfo (_file).suffix().toLower();

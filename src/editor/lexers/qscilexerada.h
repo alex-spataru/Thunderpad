@@ -19,22 +19,19 @@
 #define SCE_ADA_COMMENTLINE 10
 #define SCE_ADA_ILLEGAL 11
 
-class QsciLexerAda : public QsciLexer
-{
+class QsciLexerAda : public QsciLexer {
         Q_OBJECT
     public:
         explicit QsciLexerAda (QObject *parent = 0);
 
         //! Returns the name of the language.
-        const char *language() const
-        {
+        const char *language() const {
             return "Ada";
         }
 
         //! Returns the name of the lexer.  Some lexers support a number of
         //! languages.
-        const char *lexer() const
-        {
+        const char *lexer() const {
             return "ada";
         }
 

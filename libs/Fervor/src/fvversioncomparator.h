@@ -5,12 +5,10 @@
 #include <vector>
 
 
-class FvVersionComparator
-{
+class FvVersionComparator {
     public:
 
-        typedef enum
-        {
+        typedef enum {
             kSame = 0,
             kDescending = 1,
             kAscending = -1
@@ -23,8 +21,7 @@ class FvVersionComparator
 
         FvVersionComparator();
 
-        typedef enum
-        {
+        typedef enum {
             kNumberType,
             kStringType,
             kSeparatorType

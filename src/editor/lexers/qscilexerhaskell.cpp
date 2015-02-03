@@ -2,12 +2,10 @@
 
 
 QsciLexerHaskell::QsciLexerHaskell (QObject *parent) :
-    QsciLexer (parent)
-{
+    QsciLexer (parent) {
 }
 
-const char *QsciLexerHaskell::keywords (int set) const
-{
+const char *QsciLexerHaskell::keywords (int set) const {
     // Keywords
     if (set == 1)
         return "as case class data default deriving do else hiding if import in "
@@ -16,10 +14,8 @@ const char *QsciLexerHaskell::keywords (int set) const
     return 0;
 }
 
-QString QsciLexerHaskell::description (int style) const
-{
-    switch (style)
-    {
+QString QsciLexerHaskell::description (int style) const {
+    switch (style) {
         case SCE_HA_DEFAULT:
             return tr ("Default");
 
@@ -75,10 +71,8 @@ QString QsciLexerHaskell::description (int style) const
     return "";
 }
 
-QColor QsciLexerHaskell::defaultColor (int style) const
-{
-    switch (style)
-    {
+QColor QsciLexerHaskell::defaultColor (int style) const {
+    switch (style) {
         case SCE_HA_DEFAULT:
             return Qt::black;
 

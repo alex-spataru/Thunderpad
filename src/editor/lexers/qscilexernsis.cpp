@@ -1,16 +1,13 @@
 #include "qscilexernsis.h"
 
 QsciLexerNSIS::QsciLexerNSIS (QObject *parent) :
-    QsciLexer (parent)
-{
+    QsciLexer (parent) {
 }
 
-QsciLexerNSIS::~QsciLexerNSIS()
-{
+QsciLexerNSIS::~QsciLexerNSIS() {
 }
 
-const char *QsciLexerNSIS::keywords (int set) const
-{
+const char *QsciLexerNSIS::keywords (int set) const {
     // Functions
     if (set == 1)
         return "Abort AddBrandingImage AddSize AllowRootDirInstall AllowSkipFiles AutoCloseWindow BGFont BGGradient BrandingText BringToFront Call CallInstDLL Caption ChangeUI CheckBitmap ClearErrors CompletedText ComponentText CopyFiles CRCCheck CreateDirectory CreateFont CreateShortCut Delete DeleteINISec DeleteINIStr DeleteRegKey DeleteRegValue DetailPrint DetailsButtonText DirShow DirText DirVar DirVerify DisabledBitmap EnabledBitmap EnableWindow EnumRegKey EnumRegValue Exch Exec ExecShell ExecWait ExpandEnvStrings File FileBufSize FileClose FileErrorText FileOpen FileRead FileReadByte FileSeek FileWrite FileWriteByte FindClose FindFirst FindNext FindWindow FlushINI Function FunctionEnd GetCurInstType GetCurrentAddress GetDlgItem GetDLLVersion GetDLLVersionLocal GetErrorLevel GetFileTime GetFileTimeLocal GetFullPathName GetFunctionAddress GetInstDirError GetLabelAddress GetTempFileName Goto HideWindow Icon IfAbort IfErrors IfFileExists IfRebootFlag IfSilent InitPluginsDir InstallButtonText InstallColors InstallDir InstallDirRegKey InstProgressFlags InstType InstTypeGetText InstTypeSetText IntCmp IntCmpU IntFmt IntOp IsWindow LangString LangStringUP LicenseBkColor LicenseData LicenseForceSelection LicenseLangString LicenseText LoadLanguageFile LockWindow LogSet LogText MessageBox MiscButtonText Name OutFile Page PageEx PageExEnd PluginDir Pop Push Quit ReadEnvStr ReadINIStr ReadRegDWORD ReadRegStr Reboot RegDLL Rename RequestExecutionLevel ReserveFile Return RMDir SearchPath Section SectionDivider SectionEnd SectionGetFlags SectionGetInstTypes SectionGetSize SectionGetText SectionGroup SectionGroupEnd SectionIn SectionSetFlags SectionSetInstTypes SectionSetSize SectionSetText SendMessage SetAutoClose SetBrandingImage SetCompress SetCompressionLevel SetCompressor SetCompressorDictSize SetCtlColors SetCurInstType SetDatablockOptimize SetDateSave SetDetailsPrint SetDetailsView SetErrorLevel SetErrors SetFileAttributes SetFont SetOutPath SetOverwrite SetPluginUnload SetRebootFlag SetShellVarContext SetSilent SetStaticBkColor ShowInstDetails ShowUninstDetails ShowWindow SilentInstall SilentUnInstall Sleep SpaceTexts StrCmp StrCmpS StrCpy StrLen SubSection SubSectionEnd UninstallButtonText UninstallCaption UninstallEXEName UninstallIcon UninstallSubCaption UninstallText UninstPage UnRegDLL Var VIAddVersionKey VIProductVersion WindowIcon WriteINIStr WriteRegBin WriteRegDWORD WriteRegExpandStr WriteRegStr WriteUninstaller XPStyle !AddIncludeDir !AddPluginDir !appendfile !cd !define !delfile !echo !else !endif !error !execute !ifdef !ifmacrodef !ifmacrondef !ifndef !include !insertmacro !macro !macroend !packhdr !system !tempfile !undef !verbose !warning";
@@ -25,10 +22,8 @@ const char *QsciLexerNSIS::keywords (int set) const
     return 0;
 }
 
-QString QsciLexerNSIS::description (int style) const
-{
-    switch (style)
-    {
+QString QsciLexerNSIS::description (int style) const {
+    switch (style) {
         case SCE_NSIS_DEFAULT:
             return tr ("Default");
 
@@ -90,10 +85,8 @@ QString QsciLexerNSIS::description (int style) const
     return "";
 }
 
-QColor QsciLexerNSIS::defaultColor (int style) const
-{
-    switch (style)
-    {
+QColor QsciLexerNSIS::defaultColor (int style) const {
+    switch (style) {
         case SCE_NSIS_DEFAULT:
             return Qt::black;
 

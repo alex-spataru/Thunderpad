@@ -19,19 +19,31 @@
 //  USA
 //
 
+#include <QLabel>
+#include <QString>
+#include <QRegExp>
+#include <QSettings>
+
+#include "editor.h"
+#include "window.h"
 #include "defaults.h"
 #include "statusbar.h"
 
-StatusBar::StatusBar (Window *parent) : QStatusBar (parent)
-{
+/*!
+ * \class StatusBar
+ *
+ * The \c StatusBar class is in charge of creating and configuring
+ * a new QStatusBar widget to be used with the \c Window class.
+ */
+
+StatusBar::StatusBar (Window *parent) : QStatusBar (parent) {
     m_settings = new QSettings (APP_COMPANY, APP_NAME);
     updateSettings();
 
     initialize (parent);
 }
 
-void StatusBar::initialize (Window *window)
-{
+void StatusBar::initialize (Window *window) {
     Q_ASSERT (window != NULL);
 
     window->setStatusBar (this);
@@ -51,32 +63,27 @@ void StatusBar::initialize (Window *window)
     updateStatusLabel();
 }
 
-void StatusBar::updateSettings (void)
-{
+void StatusBar::updateSettings (void) {
     m_settings->value ("statusbar-enabled", SETTINGS_STATUSBAR_ENABLED).toBool() ? show() : hide();
 }
 
-void StatusBar::updateStatusLabel (void)
-{
+void StatusBar::updateStatusLabel (void) {
     m_size_label->setText ("  " + fileSize() + "  ");
     m_lines_label->setText ("  " + lineCount() + "  ");
     m_words_label->setText ("  " + wordCount() + "  ");
 }
 
-QString StatusBar::fileSize (void)
-{
+QString StatusBar::fileSize (void) {
     return tr ("Size:") + " " +
            m_text_edit->calculateSize();
 }
 
-QString StatusBar::wordCount (void)
-{
+QString StatusBar::wordCount (void) {
     return tr ("Words:") + " " +
            QString::number (m_text_edit->wordCount());
 }
 
-QString StatusBar::lineCount (void)
-{
+QString StatusBar::lineCount (void) {
     return tr ("Lines:") + " " +
            QString::number (m_text_edit->lines());
 }

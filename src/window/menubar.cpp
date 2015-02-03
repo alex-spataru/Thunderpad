@@ -20,16 +20,35 @@
 //
 
 #include <QDir>
+#include <QMenu>
+#include <QAction>
+#include <QSettings>
 #include <QKeySequence>
 #include <QApplication>
 #include <QSignalMapper>
 
+#include "editor.h"
+#include "window.h"
 #include "menubar.h"
 #include "platform.h"
 #include "defaults.h"
 
-MenuBar::MenuBar (Window *parent) : QMenuBar (parent)
-{
+/*!
+ * \class MenuBar
+ *
+ * The \c MenuBar class is in charge of creating and configuring
+ * a new QMenuBar widget to be used with the \c Window class.
+ *
+ * This class creates the neccessary actions and connects the signals/slots
+ * automatically with the initialize() function.
+ */
+
+/*!
+ * \internal
+ * Initializes and configures the widget
+ */
+
+MenuBar::MenuBar (Window *parent) : QMenuBar (parent) {
     m_settings = new QSettings (APP_COMPANY, APP_NAME);
 
     createActions();
@@ -39,13 +58,21 @@ MenuBar::MenuBar (Window *parent) : QMenuBar (parent)
     initialize (parent);
 }
 
-void MenuBar::setSaveEnabled (bool enabled)
-{
+/*!
+ * Enables or disables the save item in the "File" menu
+ * based on the value of \a {enabled}.
+ */
+
+void MenuBar::setSaveEnabled (bool enabled) {
     f_save->setEnabled (enabled);
 }
 
-void MenuBar::initialize (Window *window)
-{
+/*!
+ * Connects the menubar actions to their respective
+ * slots in the main window and the text editor
+ */
+
+void MenuBar::initialize (Window *window) {
     Q_ASSERT (window != NULL);
 
     window->setMenuBar (this);
@@ -124,11 +151,15 @@ void MenuBar::initialize (Window *window)
     connect (window, SIGNAL (updateSettings()), this, SLOT (updateSettings()));
 }
 
-void MenuBar::updateSettings (void)
-{
-    //
-    // Change the check state of the actions
-    //
+/*!
+ * Changes the checked state of the actions that change in any way the settings
+ * of the application.
+ * This function is called automatically when a setting is changed in order
+ * to maintain the menubar actions in sync with the current settings of
+ * the application.
+ */
+
+void MenuBar::updateSettings (void) {
     v_toolbar->setChecked (m_settings->value ("toolbar-enabled", SETTINGS_TOOLBAR_ENABLED).toBool());
     v_toolbar_text->setChecked (m_settings->value ("toolbar-text", SETTINGS_TOOLBAR_TEXT).toBool());
     v_statusbar->setChecked (m_settings->value ("statusbar-enabled", SETTINGS_STATUSBAR_ENABLED).toBool());
@@ -138,8 +169,11 @@ void MenuBar::updateSettings (void)
     v_highlight_current_line->setChecked (m_settings->value ("hc-line-enabled", SETTINGS_CARET_LINE).toBool());
 }
 
-void MenuBar::createActions (void)
-{
+/*!
+ * Initializes the menubar actions and sets their respective strings
+ */
+
+void MenuBar::createActions (void) {
     //
     // Create the file menu actions
     //
@@ -207,8 +241,12 @@ void MenuBar::createActions (void)
     h_official_website = new QAction (tr ("Website") + "...", this);
 }
 
-void MenuBar::configureActions (void)
-{
+/*!
+ * Creates standard shortcuts for each action and enables some selected
+ * actions to display a checked or unchecked state.
+ */
+
+void MenuBar::configureActions (void) {
     //
     // Set the menu roles
     //
@@ -256,8 +294,17 @@ void MenuBar::configureActions (void)
     v_highlight_current_line->setCheckable (true);
 }
 
-void MenuBar::createMenubar (void)
-{
+/*!
+ * Organizes the menubar actions in different categories, such as:
+ * \list
+ * \o File
+ * \o Edit
+ * \o Format
+ * \o Etc.
+ * \endlist
+ */
+
+void MenuBar::createMenubar (void) {
     //
     // Create the main menus we are adding the "&" before
     // each menu to inhibit the OS to add aditional items
@@ -362,9 +409,7 @@ void MenuBar::createMenubar (void)
     //
     // Create a new action for each registered icon theme
     //
-    for (int i = 0; icon_themes_list.count() > i; ++i)
-    {
-
+    for (int i = 0; icon_themes_list.count() > i; ++i) {
         //
         // Get the name of the current theme and create the action
         //
@@ -415,8 +460,12 @@ void MenuBar::createMenubar (void)
     m_help->addAction (h_official_website);
 }
 
-void MenuBar::setReadOnly (bool ro)
-{
+/*!
+ * Enables or disables menubar actions that can directly modify the
+ * contents of the text editor based on the value of \a {ro}
+ */
+
+void MenuBar::setReadOnly (bool ro) {
     //
     // Disable/Enable undo/redo actions
     //

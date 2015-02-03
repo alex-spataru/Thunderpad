@@ -3,8 +3,7 @@
 
 #include <QObject>
 
-class FvPlatform : public QObject
-{
+class FvPlatform : public QObject {
         Q_OBJECT
 
     public:

@@ -19,23 +19,20 @@
 #define SCE_ASM_STRINGEOL 13
 #define SCE_ASM_EXTINSTRUCTION 14
 
-class QsciLexerASM : public QsciLexer
-{
+class QsciLexerASM : public QsciLexer {
         Q_OBJECT
     public:
         explicit QsciLexerASM (QObject *parent = 0);
         virtual ~QsciLexerASM();
 
         //! Returns the name of the language.
-        const char *language() const
-        {
+        const char *language() const {
             return "Assembly";
         }
 
         //! Returns the name of the lexer.  Some lexers support a number of
         //! languages.
-        const char *lexer() const
-        {
+        const char *lexer() const {
             return "asm";
         }
 

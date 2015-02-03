@@ -1,23 +1,19 @@
 #include "qscilexerasm.h"
 
 QsciLexerASM::QsciLexerASM (QObject *parent) :
-    QsciLexer (parent)
-{
+    QsciLexer (parent) {
 }
 
-QsciLexerASM::~QsciLexerASM()
-{
+QsciLexerASM::~QsciLexerASM() {
 }
 
 // Return the string of characters that comprise a word.
-const char *QsciLexerASM::wordCharacters() const
-{
+const char *QsciLexerASM::wordCharacters() const {
     return "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
 }
 
 // Return the list of characters that can start a block.
-const char *QsciLexerASM::blockStart (int *style) const
-{
+const char *QsciLexerASM::blockStart (int *style) const {
     if (style)
         *style = SCE_ASM_OPERATOR;
 
@@ -26,8 +22,7 @@ const char *QsciLexerASM::blockStart (int *style) const
 
 
 // Return the list of characters that can end a block.
-const char *QsciLexerASM::blockEnd (int *style) const
-{
+const char *QsciLexerASM::blockEnd (int *style) const {
     if (style)
         *style = SCE_ASM_OPERATOR;
 
@@ -35,8 +30,7 @@ const char *QsciLexerASM::blockEnd (int *style) const
 }
 
 // Return the list of keywords that can start a block.
-const char *QsciLexerASM::blockStartKeyword (int *style) const
-{
+const char *QsciLexerASM::blockStartKeyword (int *style) const {
     if (style)
         *style = SCE_ASM_DIRECTIVE;
 
@@ -45,8 +39,7 @@ const char *QsciLexerASM::blockStartKeyword (int *style) const
 }
 
 // Returns the set of keywords.
-const char *QsciLexerASM::keywords (int set) const
-{
+const char *QsciLexerASM::keywords (int set) const {
     // CPU instructions
     if (set == 1)
         return
@@ -180,10 +173,8 @@ const char *QsciLexerASM::keywords (int set) const
 
 
 // Returns the user name of a style.
-QString QsciLexerASM::description (int style) const
-{
-    switch (style)
-    {
+QString QsciLexerASM::description (int style) const {
+    switch (style) {
         case SCE_ASM_DEFAULT:
             return tr ("Default");
 
@@ -233,10 +224,8 @@ QString QsciLexerASM::description (int style) const
     return QString();
 }
 
-QColor QsciLexerASM::defaultColor (int style) const
-{
-    switch (style)
-    {
+QColor QsciLexerASM::defaultColor (int style) const {
+    switch (style) {
         case SCE_ASM_DEFAULT:
             return Qt::black;
 

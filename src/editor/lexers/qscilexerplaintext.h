@@ -25,8 +25,7 @@
 #include "editor.h"
 #include <Qsci/qscilexer.h>
 
-class QsciLexerPlainText : public QsciLexer
-{
+class QsciLexerPlainText : public QsciLexer {
 
         Q_OBJECT
 
@@ -36,12 +35,10 @@ class QsciLexerPlainText : public QsciLexer
         const char *keywords (int set) const;
         QString description (int style) const;
         QColor defaultColor (int style) const;
-        const char *lexer() const
-        {
+        const char *lexer() const {
             return "plain_text";
         }
-        const char *language() const
-        {
+        const char *language() const {
             return "PlainText";
         }
 };

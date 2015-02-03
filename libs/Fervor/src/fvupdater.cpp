@@ -26,12 +26,10 @@
 FvUpdater *FvUpdater::m_Instance = 0;
 
 
-FvUpdater *FvUpdater::sharedUpdater()
-{
+FvUpdater *FvUpdater::sharedUpdater() {
     static QMutex mutex;
 
-    if (! m_Instance)
-    {
+    if (! m_Instance) {
         mutex.lock();
 
         if (! m_Instance)
@@ -43,8 +41,7 @@ FvUpdater *FvUpdater::sharedUpdater()
     return m_Instance;
 }
 
-void FvUpdater::drop()
-{
+void FvUpdater::drop() {
     static QMutex mutex;
     mutex.lock();
     delete m_Instance;
@@ -52,8 +49,7 @@ void FvUpdater::drop()
     mutex.unlock();
 }
 
-FvUpdater::FvUpdater() : QObject (0)
-{
+FvUpdater::FvUpdater() : QObject (0) {
     m_reply = 0;
     m_updaterWindow = 0;
     m_download_dialog = 0;
@@ -71,10 +67,8 @@ FvUpdater::FvUpdater() : QObject (0)
 
 }
 
-FvUpdater::~FvUpdater()
-{
-    if (m_proposedUpdate)
-    {
+FvUpdater::~FvUpdater() {
+    if (m_proposedUpdate) {
         delete m_proposedUpdate;
         m_proposedUpdate = 0;
     }
@@ -83,8 +77,7 @@ FvUpdater::~FvUpdater()
     hideUpdaterWindow();
 }
 
-void FvUpdater::installTranslator()
-{
+void FvUpdater::installTranslator() {
     QTranslator translator;
     QString locale = QLocale::system().name();
     translator.load (QString ("fervor_") + locale);
@@ -92,8 +85,7 @@ void FvUpdater::installTranslator()
     qApp->installTranslator (&translator);
 }
 
-void FvUpdater::showUpdaterWindowUpdatedWithCurrentUpdateProposal()
-{
+void FvUpdater::showUpdaterWindowUpdatedWithCurrentUpdateProposal() {
     // Destroy window if already exists
     hideUpdaterWindow();
 
@@ -103,10 +95,8 @@ void FvUpdater::showUpdaterWindowUpdatedWithCurrentUpdateProposal()
     m_updaterWindow->show();
 }
 
-void FvUpdater::hideUpdaterWindow()
-{
-    if (m_updaterWindow)
-    {
+void FvUpdater::hideUpdaterWindow() {
+    if (m_updaterWindow) {
         if (! m_updaterWindow->close())
             qWarning() << "Update window didn't close, leaking memory from now on";
 
@@ -116,16 +106,13 @@ void FvUpdater::hideUpdaterWindow()
     }
 }
 
-void FvUpdater::updaterWindowWasClosed()
-{
+void FvUpdater::updaterWindowWasClosed() {
     // (Re-)nullify a pointer to a destroyed QWidget or you're going to have a bad time.
     m_updaterWindow = 0;
 }
 
-void FvUpdater::showNoUpdateFound()
-{
-    if (!m_silentAsMuchAsItCouldGet)
-    {
+void FvUpdater::showNoUpdateFound() {
+    if (!m_silentAsMuchAsItCouldGet) {
         // Get the application icon as a pixmap
         QPixmap _icon = qApp->windowIcon().pixmap (
                             qApp->windowIcon().actualSize (QSize (96, 96)));
@@ -152,10 +139,8 @@ void FvUpdater::showNoUpdateFound()
     }
 }
 
-void FvUpdater::hideDownloadDialog()
-{
-    if (m_download_dialog)
-    {
+void FvUpdater::hideDownloadDialog() {
+    if (m_download_dialog) {
         if (! m_download_dialog->close())
             qWarning() << "Update confirmation dialog didn't close, leaking memory from now on";
 
@@ -165,36 +150,30 @@ void FvUpdater::hideDownloadDialog()
     }
 }
 
-void FvUpdater::downloadDialogWasClosed()
-{
+void FvUpdater::downloadDialogWasClosed() {
     // (Re-)nullify a pointer to a destroyed QWidget or you're going to have a bad time.
     m_download_dialog = 0;
 }
 
 
-void FvUpdater::SetFeedURL (QUrl feedURL)
-{
+void FvUpdater::SetFeedURL (QUrl feedURL) {
     m_feedURL = feedURL;
 }
 
-void FvUpdater::SetFeedURL (QString feedURL)
-{
+void FvUpdater::SetFeedURL (QString feedURL) {
     SetFeedURL (QUrl (feedURL));
 }
 
-QString FvUpdater::GetFeedURL()
-{
+QString FvUpdater::GetFeedURL() {
     return m_feedURL.toString();
 }
 
-FvAvailableUpdate *FvUpdater::GetProposedUpdate()
-{
+FvAvailableUpdate *FvUpdater::GetProposedUpdate() {
     return m_proposedUpdate;
 }
 
 
-void FvUpdater::InstallUpdate()
-{
+void FvUpdater::InstallUpdate() {
     qDebug() << "Install update";
 
     // Destroy dialog if already exists
@@ -208,14 +187,12 @@ void FvUpdater::InstallUpdate()
     hideUpdaterWindow();
 }
 
-void FvUpdater::SkipUpdate()
-{
+void FvUpdater::SkipUpdate() {
     qDebug() << "Skip update";
 
     FvAvailableUpdate *proposedUpdate = GetProposedUpdate();
 
-    if (! proposedUpdate)
-    {
+    if (! proposedUpdate) {
         qWarning() << "Proposed update is NULL (shouldn't be at this point)";
         return;
     }
@@ -227,29 +204,25 @@ void FvUpdater::SkipUpdate()
     hideDownloadDialog();   // if any; shouldn't be shown at this point, but who knows
 }
 
-void FvUpdater::RemindMeLater()
-{
+void FvUpdater::RemindMeLater() {
     qDebug() << "Remind me later";
 
     hideUpdaterWindow();
     hideDownloadDialog();   // if any; shouldn't be shown at this point, but who knows
 }
 
-void FvUpdater::UpdateInstallationConfirmed()
-{
+void FvUpdater::UpdateInstallationConfirmed() {
     qDebug() << "Confirm update installation";
 
     FvAvailableUpdate *proposedUpdate = GetProposedUpdate();
 
-    if (! proposedUpdate)
-    {
+    if (! proposedUpdate) {
         qWarning() << "Proposed update is NULL (shouldn't be at this point)";
         return;
     }
 
     // Open a link
-    if (! QDesktopServices::openUrl (proposedUpdate->GetEnclosureUrl()))
-    {
+    if (! QDesktopServices::openUrl (proposedUpdate->GetEnclosureUrl())) {
         showErrorDialog (tr ("Unable to open this link in a browser. Please do it manually."), true);
         return;
     }
@@ -258,8 +231,7 @@ void FvUpdater::UpdateInstallationConfirmed()
     hideDownloadDialog();
 }
 
-void FvUpdater::UpdateInstallationNotConfirmed()
-{
+void FvUpdater::UpdateInstallationNotConfirmed() {
     qDebug() << "Do not confirm update installation";
 
     hideDownloadDialog();   // if any; shouldn't be shown at this point, but who knows
@@ -267,10 +239,8 @@ void FvUpdater::UpdateInstallationNotConfirmed()
 }
 
 
-bool FvUpdater::CheckForUpdates (bool silentAsMuchAsItCouldGet)
-{
-    if (m_feedURL.isEmpty())
-    {
+bool FvUpdater::CheckForUpdates (bool silentAsMuchAsItCouldGet) {
+    if (m_feedURL.isEmpty()) {
         qCritical() << "Please set feed URL via setFeedURL() before calling CheckForUpdates().";
         return false;
     }
@@ -279,28 +249,24 @@ bool FvUpdater::CheckForUpdates (bool silentAsMuchAsItCouldGet)
 
     // Check if application's organization name and domain are set, fail otherwise
     // (nowhere to store QSettings to)
-    if (QApplication::organizationName().isEmpty())
-    {
+    if (QApplication::organizationName().isEmpty()) {
         qCritical() << "QApplication::organizationName is not set. Please do that.";
         return false;
     }
 
-    if (QApplication::organizationDomain().isEmpty())
-    {
+    if (QApplication::organizationDomain().isEmpty()) {
         qCritical() << "QApplication::organizationDomain is not set. Please do that.";
         return false;
     }
 
     // Set application name / version is not set yet
-    if (QApplication::applicationName().isEmpty())
-    {
+    if (QApplication::applicationName().isEmpty()) {
         QString appName = QString::fromUtf8 (FV_APP_NAME);
         qWarning() << "QApplication::applicationName is not set, setting it to '" << appName << "'";
         QApplication::setApplicationName (appName);
     }
 
-    if (QApplication::applicationVersion().isEmpty())
-    {
+    if (QApplication::applicationVersion().isEmpty()) {
         QString appVersion = QString::fromUtf8 (FV_APP_VERSION);
         qWarning() << "QApplication::applicationVersion is not set, setting it to '" << appVersion << "'";
         QApplication::setApplicationVersion (appVersion);
@@ -313,19 +279,16 @@ bool FvUpdater::CheckForUpdates (bool silentAsMuchAsItCouldGet)
     return true;
 }
 
-bool FvUpdater::CheckForUpdatesSilent()
-{
+bool FvUpdater::CheckForUpdatesSilent() {
     return CheckForUpdates (true);
 }
 
-bool FvUpdater::CheckForUpdatesNotSilent()
-{
+bool FvUpdater::CheckForUpdatesNotSilent() {
     return CheckForUpdates (false);
 }
 
 
-void FvUpdater::startDownloadFeed (QUrl url)
-{
+void FvUpdater::startDownloadFeed (QUrl url) {
     m_xml.clear();
 
     QNetworkRequest request;
@@ -351,17 +314,14 @@ void FvUpdater::startDownloadFeed (QUrl url)
     connect (m_reply, SIGNAL (finished()), this, SLOT (httpFeedDownloadFinished()));
 }
 
-void FvUpdater::cancelDownloadFeed()
-{
-    if (m_reply)
-    {
+void FvUpdater::cancelDownloadFeed() {
+    if (m_reply) {
         m_httpRequestAborted = true;
         m_reply->abort();
     }
 }
 
-void FvUpdater::httpFeedReadyRead()
-{
+void FvUpdater::httpFeedReadyRead() {
     // this slot gets called every time the QNetworkReply has new data.
     // We read all of its new data and write it into the file.
     // That way we use less RAM than when reading it at the finished()
@@ -370,8 +330,7 @@ void FvUpdater::httpFeedReadyRead()
 }
 
 void FvUpdater::httpFeedUpdateDataReadProgress (qint64 bytesRead,
-        qint64 totalBytes)
-{
+        qint64 totalBytes) {
     Q_UNUSED (bytesRead);
     Q_UNUSED (totalBytes);
 
@@ -379,26 +338,22 @@ void FvUpdater::httpFeedUpdateDataReadProgress (qint64 bytesRead,
         return;
 }
 
-void FvUpdater::httpFeedDownloadFinished()
-{
-    if (m_httpRequestAborted)
-    {
+void FvUpdater::httpFeedDownloadFinished() {
+    if (m_httpRequestAborted) {
         m_reply->deleteLater();
         return;
     }
 
     QVariant redirectionTarget = m_reply->attribute (QNetworkRequest::RedirectionTargetAttribute);
 
-    if (m_reply->error())
-    {
+    if (m_reply->error()) {
 
         // Error.
         showErrorDialog (tr ("Feed download failed: %1.").arg (m_reply->errorString()), false);
 
     }
 
-    else if (! redirectionTarget.isNull())
-    {
+    else if (! redirectionTarget.isNull()) {
         QUrl newUrl = m_feedURL.resolved (redirectionTarget.toUrl());
 
         m_feedURL = newUrl;
@@ -409,8 +364,7 @@ void FvUpdater::httpFeedDownloadFinished()
 
     }
 
-    else
-    {
+    else {
 
         // Done.
         xmlParseFeed();
@@ -421,8 +375,7 @@ void FvUpdater::httpFeedDownloadFinished()
     m_reply = 0;
 }
 
-bool FvUpdater::xmlParseFeed()
-{
+bool FvUpdater::xmlParseFeed() {
     QString currentTag, currentQualifiedTag;
 
     QString xmlTitle, xmlLink, xmlReleaseNotesLink, xmlPubDate, xmlEnclosureUrl,
@@ -430,19 +383,16 @@ bool FvUpdater::xmlParseFeed()
     unsigned long xmlEnclosureLength = 0;
 
     // Parse
-    while (! m_xml.atEnd())
-    {
+    while (! m_xml.atEnd()) {
 
         m_xml.readNext();
 
-        if (m_xml.isStartElement())
-        {
+        if (m_xml.isStartElement()) {
 
             currentTag = m_xml.name().toString();
             currentQualifiedTag = m_xml.qualifiedName().toString();
 
-            if (m_xml.name() == "item")
-            {
+            if (m_xml.name() == "item") {
 
                 xmlTitle.clear();
                 xmlLink.clear();
@@ -456,16 +406,13 @@ bool FvUpdater::xmlParseFeed()
 
             }
 
-            else if (m_xml.name() == "enclosure")
-            {
+            else if (m_xml.name() == "enclosure") {
 
                 QXmlStreamAttributes attribs = m_xml.attributes();
 
-                if (attribs.hasAttribute ("fervor:platform"))
-                {
+                if (attribs.hasAttribute ("fervor:platform")) {
 
-                    if (FvPlatform::CurrentlyRunningOnPlatform (attribs.value ("fervor:platform").toString().trimmed()))
-                    {
+                    if (FvPlatform::CurrentlyRunningOnPlatform (attribs.value ("fervor:platform").toString().trimmed())) {
 
                         xmlEnclosurePlatform = attribs.value ("fervor:platform").toString().trimmed();
 
@@ -476,16 +423,14 @@ bool FvUpdater::xmlParseFeed()
                             xmlEnclosureUrl = "";
 
                         // First check for Sparkle's version, then overwrite with Fervor's version (if any)
-                        if (attribs.hasAttribute ("sparkle:version"))
-                        {
+                        if (attribs.hasAttribute ("sparkle:version")) {
                             QString candidateVersion = attribs.value ("sparkle:version").toString().trimmed();
 
                             if (! candidateVersion.isEmpty())
                                 xmlEnclosureVersion = candidateVersion;
                         }
 
-                        if (attribs.hasAttribute ("fervor:version"))
-                        {
+                        if (attribs.hasAttribute ("fervor:version")) {
                             QString candidateVersion = attribs.value ("fervor:version").toString().trimmed();
 
                             if (! candidateVersion.isEmpty())
@@ -512,11 +457,9 @@ bool FvUpdater::xmlParseFeed()
 
         }
 
-        else if (m_xml.isEndElement())
-        {
+        else if (m_xml.isEndElement()) {
 
-            if (m_xml.name() == "item")
-            {
+            if (m_xml.name() == "item") {
 
                 // That's it - we have analyzed a single <item> and we'll stop
                 // here (because the topmost is the most recent one, and thus
@@ -536,8 +479,7 @@ bool FvUpdater::xmlParseFeed()
 
         }
 
-        else if (m_xml.isCharacters() && ! m_xml.isWhitespace())
-        {
+        else if (m_xml.isCharacters() && ! m_xml.isWhitespace()) {
 
             if (currentTag == "title")
                 xmlTitle += m_xml.text().toString().trimmed();
@@ -554,8 +496,7 @@ bool FvUpdater::xmlParseFeed()
 
         }
 
-        if (m_xml.error() && m_xml.error() != QXmlStreamReader::PrematureEndOfDocumentError)
-        {
+        if (m_xml.error() && m_xml.error() != QXmlStreamReader::PrematureEndOfDocumentError) {
 
             showErrorDialog (tr ("Feed parsing failed: %1 %2.").arg (QString::number (m_xml.lineNumber()), m_xml.errorString()), false);
             return false;
@@ -579,8 +520,7 @@ bool FvUpdater::searchDownloadedFeedForUpdates (QString xmlTitle,
         QString xmlEnclosureVersion,
         QString xmlEnclosurePlatform,
         unsigned long xmlEnclosureLength,
-        QString xmlEnclosureType)
-{
+        QString xmlEnclosureType) {
     qDebug() << "Title:" << xmlTitle;
     qDebug() << "Link:" << xmlLink;
     qDebug() << "Release notes link:" << xmlReleaseNotesLink;
@@ -592,10 +532,8 @@ bool FvUpdater::searchDownloadedFeedForUpdates (QString xmlTitle,
     qDebug() << "Enclosure type:" << xmlEnclosureType;
 
     // Validate
-    if (xmlReleaseNotesLink.isEmpty())
-    {
-        if (xmlLink.isEmpty())
-        {
+    if (xmlReleaseNotesLink.isEmpty()) {
+        if (xmlLink.isEmpty()) {
             showErrorDialog (tr ("Feed error: \"release notes\" link is empty"), false);
             return false;
         }
@@ -607,21 +545,18 @@ bool FvUpdater::searchDownloadedFeedForUpdates (QString xmlTitle,
     else
         xmlLink = xmlReleaseNotesLink;
 
-    if (! (xmlLink.startsWith ("http://") || xmlLink.startsWith ("https://")))
-    {
+    if (! (xmlLink.startsWith ("http://") || xmlLink.startsWith ("https://"))) {
         showErrorDialog (tr ("Feed error: invalid \"release notes\" link"), false);
         return false;
     }
 
-    if (xmlEnclosureUrl.isEmpty() || xmlEnclosureVersion.isEmpty() || xmlEnclosurePlatform.isEmpty())
-    {
+    if (xmlEnclosureUrl.isEmpty() || xmlEnclosureVersion.isEmpty() || xmlEnclosurePlatform.isEmpty()) {
         showErrorDialog (tr ("Feed error: invalid \"enclosure\" with the download link"), false);
         return false;
     }
 
     // Relevant version?
-    if (FVIgnoredVersions::VersionIsIgnored (xmlEnclosureVersion))
-    {
+    if (FVIgnoredVersions::VersionIsIgnored (xmlEnclosureVersion)) {
         qDebug() << "Version '" << xmlEnclosureVersion << "' is ignored, too old or something like that.";
 
         showNoUpdateFound();
@@ -635,8 +570,7 @@ bool FvUpdater::searchDownloadedFeedForUpdates (QString xmlTitle,
     // to the user.
     //
 
-    if (m_proposedUpdate)
-    {
+    if (m_proposedUpdate) {
         delete m_proposedUpdate;
         m_proposedUpdate = 0;
     }
@@ -658,10 +592,8 @@ bool FvUpdater::searchDownloadedFeedForUpdates (QString xmlTitle,
 }
 
 
-void FvUpdater::showErrorDialog (QString message, bool showEvenInSilentMode)
-{
-    if (! (m_silentAsMuchAsItCouldGet && !showEvenInSilentMode))
-    {
+void FvUpdater::showErrorDialog (QString message, bool showEvenInSilentMode) {
+    if (! (m_silentAsMuchAsItCouldGet && !showEvenInSilentMode)) {
         QMessageBox dlFailedMsgBox;
         dlFailedMsgBox.setIcon (QMessageBox::Critical);
         dlFailedMsgBox.setText (tr ("Error"));
@@ -670,10 +602,8 @@ void FvUpdater::showErrorDialog (QString message, bool showEvenInSilentMode)
     }
 }
 
-void FvUpdater::showInformationDialog (QString message, bool showEvenInSilentMode)
-{
-    if (! (m_silentAsMuchAsItCouldGet && !showEvenInSilentMode))
-    {
+void FvUpdater::showInformationDialog (QString message, bool showEvenInSilentMode) {
+    if (! (m_silentAsMuchAsItCouldGet && !showEvenInSilentMode)) {
         QMessageBox dlInformationMsgBox;
         dlInformationMsgBox.setIcon (QMessageBox::Information);
         dlInformationMsgBox.setText ("<b>" + tr ("Information") + "</b>");

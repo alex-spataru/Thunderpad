@@ -19,22 +19,20 @@
 //  USA
 //
 
-#ifndef SearchDialog_H
-#define SearchDialog_H
+#ifndef SEARCH_DIALOG_H
+#define SEARCH_DIALOG_H
 
-#include <QLabel>
+class Editor;
+class Window;
+class QLabel;
+class QCheckBox;
+class QLineEdit;
+class QPushButton;
+class QGridLayout;
+
 #include <QDialog>
-#include <QCheckBox>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QGridLayout>
-#include <QMessageBox>
 
-#include "editor.h"
-#include "window.h"
-
-class SearchDialog : public QDialog
-{
+class SearchDialog : public QDialog {
         Q_OBJECT
 
     public:

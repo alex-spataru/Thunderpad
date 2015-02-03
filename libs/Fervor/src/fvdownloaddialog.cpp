@@ -24,8 +24,7 @@
 
 FvDownloadDialog::FvDownloadDialog (QWidget *parent)
     : QWidget (parent)
-    , ui (new Ui::FvDownloadDialog)
-{
+    , ui (new Ui::FvDownloadDialog) {
 
     // Setup the UI
     ui->setupUi (this);
@@ -53,17 +52,14 @@ FvDownloadDialog::FvDownloadDialog (QWidget *parent)
              SLOT (ignoreSslErrors (QNetworkReply *, QList<QSslError>)));
 }
 
-FvDownloadDialog::~FvDownloadDialog (void)
-{
+FvDownloadDialog::~FvDownloadDialog (void) {
     delete ui;
 }
 
-void FvDownloadDialog::beginDownload ()
-{
+void FvDownloadDialog::beginDownload () {
     FvAvailableUpdate *proposedUpdate = FvUpdater::sharedUpdater()->GetProposedUpdate();
 
-    if (! proposedUpdate)
-    {
+    if (! proposedUpdate) {
         qDebug() << "Cannot get download URL!";
         return;
     }
@@ -92,8 +88,7 @@ void FvDownloadDialog::beginDownload ()
     showNormal();
 }
 
-void FvDownloadDialog::installUpdate (void)
-{
+void FvDownloadDialog::installUpdate (void) {
     QMessageBox msg;
     msg.setIcon (QMessageBox::Question);
     msg.setText ("<b>" +
@@ -103,24 +98,20 @@ void FvDownloadDialog::installUpdate (void)
     msg.setInformativeText (tr ("Do you want to quit %1 now?").arg (qApp->applicationName()));
     msg.setStandardButtons (QMessageBox::Yes | QMessageBox::No);
 
-    if (msg.exec() == QMessageBox::Yes)
-    {
+    if (msg.exec() == QMessageBox::Yes) {
         openDownload();
         qApp->closeAllWindows();
     }
 
-    else
-    {
+    else {
         ui->openButton->setEnabled (true);
         ui->openButton->setVisible (true);
         ui->timeLabel->setText (tr ("Click the \"Open\" button to apply the update"));
     }
 }
 
-void FvDownloadDialog::openDownload (void)
-{
-    if (!m_path.isEmpty())
-    {
+void FvDownloadDialog::openDownload (void) {
+    if (!m_path.isEmpty()) {
         QString url = m_path;
 
         if (url.startsWith ("/"))
@@ -133,18 +124,15 @@ void FvDownloadDialog::openDownload (void)
     }
 }
 
-void FvDownloadDialog::cancelDownload (void)
-{
-    if (!m_reply->isFinished())
-    {
+void FvDownloadDialog::cancelDownload (void) {
+    if (!m_reply->isFinished()) {
         QMessageBox _message;
         _message.setWindowTitle (tr ("Updater"));
         _message.setIcon (QMessageBox::Question);
         _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No);
         _message.setText (tr ("Are you sure you want to cancel the download?"));
 
-        if (_message.exec() == QMessageBox::Yes)
-        {
+        if (_message.exec() == QMessageBox::Yes) {
             hide();
             m_reply->abort();
         }
@@ -154,13 +142,11 @@ void FvDownloadDialog::cancelDownload (void)
         hide();
 }
 
-void FvDownloadDialog::downloadFinished (void)
-{
+void FvDownloadDialog::downloadFinished (void) {
     QByteArray data = m_reply->readAll();
 
     // File is invalid, alert the user and cancel operation
-    if (data.isEmpty())
-    {
+    if (data.isEmpty()) {
         QMessageBox::warning (this, tr ("Software Updater"),
                               tr ("Downloaded data is empty!"));
 
@@ -172,14 +158,12 @@ void FvDownloadDialog::downloadFinished (void)
     ui->downloadLabel->setText (tr ("Download complete!"));
     ui->timeLabel->setText (tr ("The installer will open in a separate window..."));
 
-    if (!data.isEmpty())
-    {
+    if (!data.isEmpty()) {
         QStringList list = m_reply->url().toString().split ("/");
         QFile file (QDir::tempPath() + "/" + list.at (list.count() - 1));
         QMutex _mutex;
 
-        if (file.open (QIODevice::WriteOnly))
-        {
+        if (file.open (QIODevice::WriteOnly)) {
             _mutex.lock();
             file.write (data);
             m_path = file.fileName();
@@ -191,11 +175,9 @@ void FvDownloadDialog::downloadFinished (void)
     }
 }
 
-void FvDownloadDialog::updateProgress (qint64 received, qint64 total)
-{
+void FvDownloadDialog::updateProgress (qint64 received, qint64 total) {
     // We know the size of the download, so we can calculate the progress....
-    if (total > 0 && received > 0)
-    {
+    if (total > 0 && received > 0) {
         ui->progressBar->setMinimum (0);
         ui->progressBar->setMaximum (100);
 
@@ -211,14 +193,12 @@ void FvDownloadDialog::updateProgress (qint64 received, qint64 total)
         if (_total < 1024)
             _total_string = tr ("%1 bytes").arg (_total);
 
-        else if (_total < 1024 * 1024)
-        {
+        else if (_total < 1024 * 1024) {
             _total = roundNumber (_total / 1024);
             _total_string = tr ("%1 KB").arg (_total);
         }
 
-        else
-        {
+        else {
             _total = roundNumber (_total / (1024 * 1024));
             _total_string = tr ("%1 MB").arg (_total);
         }
@@ -226,14 +206,12 @@ void FvDownloadDialog::updateProgress (qint64 received, qint64 total)
         if (_received < 1024)
             _received_string = tr ("%1 bytes").arg (_received);
 
-        else if (received < 1024 * 1024)
-        {
+        else if (received < 1024 * 1024) {
             _received = roundNumber (_received / 1024);
             _received_string = tr ("%1 KB").arg (_received);
         }
 
-        else
-        {
+        else {
             _received = roundNumber (_received / (1024 * 1024));
             _received_string = tr ("%1 MB").arg (_received);
         }
@@ -242,19 +220,16 @@ void FvDownloadDialog::updateProgress (qint64 received, qint64 total)
 
         uint _diff = QDateTime::currentDateTime().toTime_t() - m_start_time;
 
-        if (_diff > 0)
-        {
+        if (_diff > 0) {
             QString _time_string;
             float _time_remaining = total / (received / _diff);
 
-            if (_time_remaining > 7200)
-            {
+            if (_time_remaining > 7200) {
                 _time_remaining /= 3600;
                 _time_string = tr ("About %1 hours").arg (int (_time_remaining + 0.5));
             }
 
-            else if (_time_remaining > 60)
-            {
+            else if (_time_remaining > 60) {
                 _time_remaining /= 60;
                 _time_string = tr ("About %1 minutes").arg (int (_time_remaining + 0.5));
             }
@@ -268,8 +243,7 @@ void FvDownloadDialog::updateProgress (qint64 received, qint64 total)
 
     // We do not know the size of the download, so we avoid scaring the shit out
     // of the user
-    else
-    {
+    else {
         ui->progressBar->setValue (-1);
         ui->progressBar->setMinimum (0);
         ui->progressBar->setMaximum (0);
@@ -279,8 +253,7 @@ void FvDownloadDialog::updateProgress (qint64 received, qint64 total)
 }
 
 void FvDownloadDialog::ignoreSslErrors (QNetworkReply *reply,
-                                        const QList<QSslError>& error)
-{
+                                        const QList<QSslError>& error) {
 #ifndef Q_OS_IOS
     reply->ignoreSslErrors (error);
 #else
@@ -289,7 +262,6 @@ void FvDownloadDialog::ignoreSslErrors (QNetworkReply *reply,
 #endif
 }
 
-float FvDownloadDialog::roundNumber (const float& input)
-{
+float FvDownloadDialog::roundNumber (const float& input) {
     return roundf (input * 100) / 100;
 }
