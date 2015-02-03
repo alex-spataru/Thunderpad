@@ -171,15 +171,12 @@ void Window::openFile (const QString &file_name)
     // Open the file in another window
     //
     else
-    {
-        std::auto_ptr<Window> _window(new Window(file_name));
-        configureWindow (_window);
-    }
+        configureWindow (new Window(file_name));
 }
 
 void Window::newFile (void)
 {
-    configureWindow (std::auto_ptr<Window>(new Window("")));
+    configureWindow (new Window(""));
 }
 
 void Window::open (void)
@@ -370,10 +367,9 @@ void Window::saveWindowState (void)
     }
 }
 
-void Window::configureWindow (std::auto_ptr<Window>w)
+void Window::configureWindow (Window *window)
 {
     Q_ASSERT (window != NULL);
-    Window *window = w.release();
 
     //
     // Allow the other window to ask the application to check for updates

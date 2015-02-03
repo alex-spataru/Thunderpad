@@ -21,7 +21,6 @@
 
 #ifndef WINDOW_H
 #define WINDOW_H
-
 #include <QSettings>
 #include <QCloseEvent>
 #include <QMainWindow>
@@ -61,8 +60,8 @@ class Window : public QMainWindow
         QSettings *settings (void) const;
         SearchDialog *searchDialog (void) const;
 
+        void configureWindow (Window *window);
         void openFile (const QString &file_name);
-        void configureWindow (std::auto_ptr<Window> w);
 
     signals:
         void updateSettings (void);
