@@ -40,6 +40,7 @@ SearchDialog::SearchDialog (Window *parent) : QDialog (parent)
 {
     QIcon _blank;
     setWindowIcon (_blank);
+    setAttribute(Qt::WA_DeleteOnClose);
 
     //
     // Configure the window

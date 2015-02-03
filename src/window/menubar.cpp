@@ -30,7 +30,6 @@
 
 MenuBar::MenuBar (Window *parent) : QMenuBar (parent)
 {
-    setAttribute (Qt::WA_DeleteOnClose);
     m_settings = new QSettings (APP_COMPANY, APP_NAME);
 
     createActions();

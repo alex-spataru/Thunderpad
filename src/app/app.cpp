@@ -62,9 +62,8 @@ Application::Application (int &argc, char **argv) : QtSingleApplication (argc, a
 
 int Application::start (const QString &arguments)
 {
-    m_window = new Window();
+    m_window = new Window(arguments);
     m_settings = new QSettings (APP_COMPANY, APP_NAME);
-    m_window->openFile (arguments);
 
     connect (m_window, SIGNAL (checkForUpdates()), this, SLOT (checkForUpdates()));
     connect (this, SIGNAL (messageReceived (QString)), this, SLOT (onMessageReceived (QString)));

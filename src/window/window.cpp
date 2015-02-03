@@ -51,7 +51,7 @@ MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE."
 #define CONTRIBUTE_LINK "http://thunderpad.sf.net/contribute"
 #define REPORT_ISSUES_LINK "http://github.com/alex-97/thunderpad/issues"
 
-Window::Window (void)
+Window::Window (const QString &file)
 {
     //
     // Allow other instances of Window
@@ -60,16 +60,9 @@ Window::Window (void)
     setObjectName ("window");
 
     //
-    // The application crashes on Unix if
-    // WA_DeleteOnClose attribute is defined
-    //
-    if (WINDOWS)
-        setAttribute (Qt::WA_DeleteOnClose);
-
-    //
     // Create the core components
     //
-    m_editor = new Editor (this);
+    m_editor = new Editor();
     m_toolbar = new ToolBar (this);
     m_statusbar = new StatusBar (this);
     m_search_dialog = new SearchDialog (this);
@@ -103,9 +96,25 @@ Window::Window (void)
     // Set window geometry
     //
     setMinimumSize (420, 420);
-    resize (m_settings->value ("size", QSize (640, 420)).toSize());
-    move (m_settings->value ("position", QPoint (200, 200)).toPoint());
-    m_settings->value ("maximized", false).toBool() ? showMaximized() : showNormal();
+    resize (settings()->value ("size", QSize (640, 420)).toSize());
+    move (settings()->value ("position", QPoint (200, 200)).toPoint());
+    settings()->value ("maximized", false).toBool() ? showMaximized() : showNormal();
+
+    //
+    // Read file
+    //
+    if (!file.isEmpty())
+        editor()->readFile(file);
+}
+
+Window::~Window (void)
+{
+    delete m_menu;
+    delete m_editor;
+    delete m_toolbar;
+    delete m_settings;
+    delete m_statusbar;
+    delete m_search_dialog;
 }
 
 Editor *Window::editor (void) const
@@ -118,6 +127,21 @@ ToolBar *Window::toolbar (void) const
     return m_toolbar;
 }
 
+MenuBar *Window::menubar (void) const
+{
+    return m_menu;
+}
+
+QSettings *Window::settings (void) const
+{
+    return m_settings;
+}
+
+SearchDialog *Window::searchDialog (void) const
+{
+    return m_search_dialog;
+}
+
 void Window::moveEvent (QMoveEvent *event)
 {
     saveWindowState();
@@ -126,7 +150,7 @@ void Window::moveEvent (QMoveEvent *event)
 
 void Window::closeEvent (QCloseEvent *event)
 {
-    m_editor->maybeSave() ? event->accept() : event->ignore();
+    editor()->maybeSave() ? event->accept() : event->ignore();
 }
 
 void Window::resizeEvent (QResizeEvent *event)
@@ -140,24 +164,22 @@ void Window::openFile (const QString &file_name)
     //
     // Open the file in the same window
     //
-    if (m_editor->titleIsShit() && !m_editor->isModified())
-        m_editor->readFile (file_name);
+    if (editor()->titleIsShit() && !editor()->isModified())
+        editor()->readFile (file_name);
 
     //
     // Open the file in another window
     //
     else
     {
-        Window *_window = new Window();
+        std::auto_ptr<Window> _window(new Window(file_name));
         configureWindow (_window);
-        _window->editor()->readFile (file_name);
     }
 }
 
 void Window::newFile (void)
 {
-    Window *_window = new Window();
-    configureWindow (_window);
+    configureWindow (std::auto_ptr<Window>(new Window("")));
 }
 
 void Window::open (void)
@@ -174,68 +196,68 @@ void Window::open (void)
 
 void Window::setReadOnly (bool ro)
 {
-    m_editor->setReadOnly (ro);
-    m_toolbar->setReadOnly (ro);
+    editor()->setReadOnly (ro);
+    toolbar()->setReadOnly (ro);
 
     emit readOnlyChanged (ro);
 }
 
 void Window::setWordWrap (bool ww)
 {
-    m_settings->setValue ("wordwrap-enabled", ww);
+    settings()->setValue ("wordwrap-enabled", ww);
     syncSettings();
 }
 
 void Window::setToolbarText (bool tt)
 {
-    m_settings->setValue ("toolbar-text", tt);
+    settings()->setValue ("toolbar-text", tt);
     syncSettings();
 }
 
 void Window::setToolbarEnabled (bool tb)
 {
-    m_settings->setValue ("toolbar-enabled", tb);
+    settings()->setValue ("toolbar-enabled", tb);
     syncSettings();
 }
 
 void Window::setStatusBarEnabled (bool sb)
 {
-    m_settings->setValue ("statusbar-enabled", sb);
+    settings()->setValue ("statusbar-enabled", sb);
     syncSettings();
 }
 
 void Window::setHCLineEnabled (bool hc)
 {
-    m_settings->setValue ("hc-line-enabled", hc);
+    settings()->setValue ("hc-line-enabled", hc);
     syncSettings();
 }
 
 void Window::setUseLargeIcons (bool li)
 {
-    m_settings->setValue ("large-icons", li);
+    settings()->setValue ("large-icons", li);
     syncSettings();
 }
 
 void Window::setLineNumbersEnabled (bool ln)
 {
-    m_settings->setValue ("line-numbers-enabled", ln);
+    settings()->setValue ("line-numbers-enabled", ln);
     syncSettings();
 }
 
 void Window::setColorscheme (const QString &colorscheme)
 {
-    m_settings->setValue ("color-scheme", colorscheme);
+    settings()->setValue ("color-scheme", colorscheme);
     syncSettings();
 }
 
 void Window::showFindReplaceDialog (void)
 {
-    m_search_dialog->show();
+    searchDialog()->show();
 }
 
 void Window::setIconTheme (const QString &theme)
 {
-    m_settings->setValue ("icon-theme", theme);
+    settings()->setValue ("icon-theme", theme);
     syncSettings();
 }
 
@@ -306,11 +328,11 @@ void Window::updateTitle (void)
     //
     // Configure the behavior of the 'smart' save actions
     //
-    bool _save_enabled = ! (!m_editor->titleIsShit() &&
-                            !m_editor->isModified());
+    bool _save_enabled = ! (!editor()->titleIsShit() &&
+                            !editor()->isModified());
 
-    m_menu->setSaveEnabled (_save_enabled);
-    m_toolbar->setSaveEnabled (_save_enabled);
+    menubar()->setSaveEnabled (_save_enabled);
+    toolbar()->setSaveEnabled (_save_enabled);
 }
 
 void Window::syncSettings (void)
@@ -321,7 +343,7 @@ void Window::syncSettings (void)
 
 void Window::saveWindowState (void)
 {
-    m_settings->setValue ("maximized", isMaximized());
+    settings()->setValue ("maximized", isMaximized());
 
     //
     // Mac OS X does not register a window as maximized,
@@ -343,14 +365,15 @@ void Window::saveWindowState (void)
     //
     if (!isMaximized() && !_mac_os_maximized)
     {
-        m_settings->setValue ("size", size());
-        m_settings->setValue ("position", pos());
+        settings()->setValue ("size", size());
+        settings()->setValue ("position", pos());
     }
 }
 
-void Window::configureWindow (Window *window)
+void Window::configureWindow (std::auto_ptr<Window>w)
 {
     Q_ASSERT (window != NULL);
+    Window *window = w.release();
 
     //
     // Allow the other window to ask the application to check for updates

@@ -57,8 +57,6 @@
 
 ToolBar::ToolBar (Window *parent) : QToolBar (parent)
 {
-    setAttribute (Qt::WA_DeleteOnClose);
-
     setMovable (false);
 
     //

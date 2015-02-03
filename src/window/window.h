@@ -52,13 +52,17 @@ class Window : public QMainWindow
         Q_OBJECT
 
     public:
-        Window (void);
+        Window (const QString &file);
+        ~Window (void);
 
         Editor *editor (void) const;
         ToolBar *toolbar (void) const;
+        MenuBar *menubar (void) const;
+        QSettings *settings (void) const;
+        SearchDialog *searchDialog (void) const;
 
-        void configureWindow (Window *window);
         void openFile (const QString &file_name);
+        void configureWindow (std::auto_ptr<Window> w);
 
     signals:
         void updateSettings (void);
