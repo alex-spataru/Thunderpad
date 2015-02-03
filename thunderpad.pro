@@ -5,26 +5,31 @@
 #  Please check the license.txt file for more information.
 #
 
-TEMPLATE   = app
-TARGET     = Thunderpad
-VERSION    = 0.9.3
+TEMPLATE = app
 
-# Assembly info
+# General application information
+VERSION = 0.9.3
+TARGET  = Thunderpad
+
+# Assembly info used in C++
 DEFINES +=  APP_NAME=\\\"$$TARGET\\\"
 DEFINES +=  APP_VERSION=\\\"$$VERSION\\\"
 DEFINES += "APP_COMPANY=\"\\\"Alex Spataru\\\"\""
 
+# Use UTF-8 in the source code and translation files
+# This prevents getting nasty text renderings when using
+# "non-standard" characters.
 CODECFORTR  = UTF-8
 CODECFORSRC = UTF-8
 
-CONFIG += qscintilla2
-
+# Extra Qt modules
 QT += gui
 QT += xml
 QT += network
 QT += widgets
 QT += printsupport
 
+# 3rd-party libraries
 include($$PWD/libs/Fervor/Fervor.pri)
 include($$PWD/libs/QtSingleApplication/QtSingleApplication.pri)
 
@@ -36,10 +41,12 @@ INCLUDEPATH += \
     $$PWD/src/shared \
     $$PWD/src/window
 
+# Add application icon and other shit in Windows
 win32* {
     RC_FILE = $$PWD/data/windows/thunderpad.rc
 }
 
+# Add application icon and app configuration for OS X
 macx* {
     ICON    = $$PWD/data/mac/icon.icns
     RC_FILE = $$PWD/data/mac/icon.icns
@@ -47,6 +54,8 @@ macx* {
     QMAKE_POST_LINK = install_name_tool -change libqscintilla2.11.dylib $$[QT_INSTALL_LIBS]/libqscintilla2.11.dylib $(TARGET)
 }
 
+# Make the "make install" command useful in Linux and other
+# operating systems
 unix:!macx {
     target.path    = /usr/bin
     TARGET         = thunderpad
@@ -56,7 +65,10 @@ unix:!macx {
     LIBS          += -lqscintilla2
 }
 
+# Import icons and other goodies to the application
 RESOURCES += $$PWD/res/res.qrc
+
+CONFIG += qscintilla2
 
 HEADERS += \
     $$PWD/src/app/app.h \
@@ -76,7 +88,7 @@ HEADERS += \
     $$PWD/src/editor/lexers/qscilexerlisp.h \
     $$PWD/src/editor/lexers/qscilexernsis.h \
     $$PWD/src/editor/lexers/qscilexerplaintext.h
-
+    
 SOURCES += \
     $$PWD/src/app/app.cpp \
     $$PWD/src/dialogs/searchdialog.cpp \
