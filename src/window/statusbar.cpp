@@ -31,10 +31,14 @@
 
 /*!
  * \class StatusBar
- *
  * The \c StatusBar class is in charge of creating and configuring
  * a new QStatusBar widget to be used with the \c Window class.
  */
+
+ /*!
+  * \internal
+  * Initializes and configures the status bar
+  */
 
 StatusBar::StatusBar (Window *parent) : QStatusBar (parent) {
     m_settings = new QSettings (APP_COMPANY, APP_NAME);
@@ -42,6 +46,12 @@ StatusBar::StatusBar (Window *parent) : QStatusBar (parent) {
 
     initialize (parent);
 }
+
+/*!
+ * \internal
+ * Creates the statusbar widgets and connects them to the events and signals
+ * of the text editor.
+ */
 
 void StatusBar::initialize (Window *window) {
     Q_ASSERT (window != NULL);
@@ -63,9 +73,19 @@ void StatusBar::initialize (Window *window) {
     updateStatusLabel();
 }
 
+/*!
+ * \internal
+ * Hides or shows the statusbar based on the current settings of the application
+ */
+
 void StatusBar::updateSettings (void) {
     m_settings->value ("statusbar-enabled", SETTINGS_STATUSBAR_ENABLED).toBool() ? show() : hide();
 }
+
+/*!
+ * \internal
+ * Updates the text of the statusbar widgets
+ */
 
 void StatusBar::updateStatusLabel (void) {
     m_size_label->setText ("  " + fileSize() + "  ");
@@ -73,15 +93,30 @@ void StatusBar::updateStatusLabel (void) {
     m_words_label->setText ("  " + wordCount() + "  ");
 }
 
+/*!
+ * \internal
+ * Returns the lenght of the text editor in bytes, KB and MB
+ */
+
 QString StatusBar::fileSize (void) {
     return tr ("Size:") + " " +
            m_text_edit->calculateSize();
 }
 
+/*!
+ * \internal
+ * Returns the number of words in the text editor
+ */
+
 QString StatusBar::wordCount (void) {
     return tr ("Words:") + " " +
            QString::number (m_text_edit->wordCount());
 }
+
+/*!
+* \internal
+* Returns the number of lines of the text editor document
+*/
 
 QString StatusBar::lineCount (void) {
     return tr ("Lines:") + " " +

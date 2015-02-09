@@ -30,27 +30,27 @@ QT += widgets
 QT += printsupport
 
 # 3rd-party libraries
-include($$PWD/libs/Fervor/Fervor.pri)
-include($$PWD/libs/QtSingleApplication/QtSingleApplication.pri)
+include(libs/Fervor/Fervor.pri)
+include(libs/QtSingleApplication/QtSingleApplication.pri)
 
 INCLUDEPATH += \
-    $$PWD/src/app \
-    $$PWD/src/dialogs \
-    $$PWD/src/editor \
-    $$PWD/src/editor/lexers \
-    $$PWD/src/shared \
-    $$PWD/src/window
+    src/app \
+    src/dialogs \
+    src/editor \
+    src/editor/lexers \
+    src/shared \
+    src/window
 
 # Add application icon and other shit in Windows
 win32* {
-    RC_FILE = $$PWD/data/windows/thunderpad.rc
+    RC_FILE = data/windows/thunderpad.rc
 }
 
 # Add application icon and app configuration for OS X
 macx* {
-    ICON    = $$PWD/data/mac/icon.icns
-    RC_FILE = $$PWD/data/mac/icon.icns
-    QMAKE_INFO_PLIST = $$PWD/data/mac/info.plist
+    ICON    = data/mac/icon.icns
+    RC_FILE = data/mac/icon.icns
+    QMAKE_INFO_PLIST = data/mac/info.plist
     QMAKE_POST_LINK = install_name_tool -change libqscintilla2.11.dylib $$[QT_INSTALL_LIBS]/libqscintilla2.11.dylib $(TARGET)
 }
 
@@ -60,49 +60,49 @@ unix:!macx {
     target.path    = /usr/bin
     TARGET         = thunderpad
     desktop.path   = /usr/share/applications
-    desktop.files += $$PWD/data/linux/thunderpad.desktop
+    desktop.files += data/linux/thunderpad.desktop
     INSTALLS      += target desktop
     LIBS          += -lqscintilla2
 }
 
 # Import icons and other goodies to the application
-RESOURCES += $$PWD/res/res.qrc
+RESOURCES += res/res.qrc
 
 CONFIG += qscintilla2
 
 HEADERS += \
-    $$PWD/src/app/app.h \
-    $$PWD/src/dialogs/searchdialog.h \
-    $$PWD/src/editor/editor.h \
-    $$PWD/src/window/menubar.h \
-    $$PWD/src/window/toolbar.h \
-    $$PWD/src/window/window.h \
-    $$PWD/src/window/statusbar.h \
-    $$PWD/src/shared/platform.h \
-    $$PWD/src/editor/theme.h \
-    $$PWD/src/shared/defaults.h \
-    $$PWD/src/editor/lexer_database.h \
-    $$PWD/src/editor/lexers/qscilexerada.h \
-    $$PWD/src/editor/lexers/qscilexerasm.h \
-    $$PWD/src/editor/lexers/qscilexerhaskell.h \
-    $$PWD/src/editor/lexers/qscilexerlisp.h \
-    $$PWD/src/editor/lexers/qscilexernsis.h \
-    $$PWD/src/editor/lexers/qscilexerplaintext.h
+    src/app/app.h \
+    src/dialogs/searchdialog.h \
+    src/editor/editor.h \
+    src/window/menubar.h \
+    src/window/toolbar.h \
+    src/window/window.h \
+    src/window/statusbar.h \
+    src/shared/platform.h \
+    src/editor/theme.h \
+    src/shared/defaults.h \
+    src/editor/lexer_database.h \
+    src/editor/lexers/qscilexerada.h \
+    src/editor/lexers/qscilexerasm.h \
+    src/editor/lexers/qscilexerhaskell.h \
+    src/editor/lexers/qscilexerlisp.h \
+    src/editor/lexers/qscilexernsis.h \
+    src/editor/lexers/qscilexerplaintext.h
     
 SOURCES += \
-    $$PWD/src/app/app.cpp \
-    $$PWD/src/dialogs/searchdialog.cpp \
-    $$PWD/src/editor/editor.cpp \
-    $$PWD/src/window/menubar.cpp \
-    $$PWD/src/window/toolbar.cpp \
-    $$PWD/src/window/window.cpp \
-    $$PWD/src/main.cpp \
-    $$PWD/src/window/statusbar.cpp \
-    $$PWD/src/editor/theme.cpp \
-    $$PWD/src/editor/lexer_database.cpp \
-    $$PWD/src/editor/lexers/qscilexerada.cpp \
-    $$PWD/src/editor/lexers/qscilexerasm.cpp \
-    $$PWD/src/editor/lexers/qscilexerhaskell.cpp \
-    $$PWD/src/editor/lexers/qscilexerlisp.cpp \
-    $$PWD/src/editor/lexers/qscilexernsis.cpp \
-    $$PWD/src/editor/lexers/qscilexerplaintext.cpp
+    src/app/app.cpp \
+    src/dialogs/searchdialog.cpp \
+    src/editor/editor.cpp \
+    src/window/menubar.cpp \
+    src/window/toolbar.cpp \
+    src/window/window.cpp \
+    src/main.cpp \
+    src/window/statusbar.cpp \
+    src/editor/theme.cpp \
+    src/editor/lexer_database.cpp \
+    src/editor/lexers/qscilexerada.cpp \
+    src/editor/lexers/qscilexerasm.cpp \
+    src/editor/lexers/qscilexerhaskell.cpp \
+    src/editor/lexers/qscilexerlisp.cpp \
+    src/editor/lexers/qscilexernsis.cpp \
+    src/editor/lexers/qscilexerplaintext.cpp

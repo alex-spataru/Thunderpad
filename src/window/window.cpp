@@ -389,10 +389,10 @@ void Window::configureWindow (Window *window) {
         // the desktop
         //
         {
-            if (_x + width() >= desktop->width() - 100)
+            if (_x + width() >= desktop->width() - 50)
                 _x = 45;
 
-            if (_y + height() >= desktop->height() - 100)
+            if (_y + height() >= desktop->height() - 50)
                 _y = 75;
         }
 

@@ -19,9 +19,11 @@
 //  USA
 //
 
+#include <math.h>
+#include <string.h>
+
 #include <QUrl>
 #include <QIcon>
-#include <math.h>
 #include <QMutex>
 #include <QSettings>
 #include <QMessageBox>
