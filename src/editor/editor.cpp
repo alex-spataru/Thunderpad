@@ -45,6 +45,11 @@
 #define KILOBYTE 1024
 #define MEGABYTE 1048576
 
+/*!
+ * \internal
+ * Initializes and configures the editor
+ */
+
 Editor::Editor (QWidget *parent) : QsciScintilla (parent) {
     setAttribute (Qt::WA_DeleteOnClose);
 
@@ -65,22 +70,28 @@ Editor::Editor (QWidget *parent) : QsciScintilla (parent) {
     connect (this, SIGNAL (settingsChanged()), this, SLOT (updateSettings()));
 }
 
+/*!
+ * Asks the user if he/she wants to save the current document.
+ *
+ * Returns \c {true} when:
+ *
+ * \list
+ * \o The document is already saved
+ * \o The user saves the document successfully
+ * \o When the user does not want to save the document
+ * \endlist
+ *
+ * Returns \c {false} when, the user wants to continue working
+ * on the document by clicking the "Cancel" button
+ */
+
 bool Editor::maybeSave (void) {
-    //
-    // We don't need to save the document if it isn't modified
-    //
     if (!isModified())
         return true;
 
-    //
-    // The document was already saved in the hard disk, however, it has unsaved changes
-    //
     if (!titleIsShit() && isModified())
         return save();
 
-    //
-    // The document was never saved in the hard disk, show a "Save as..." dialog
-    //
     else if (isModified()) {
         QMessageBox _message;
         _message.setParent (this);
@@ -114,37 +125,41 @@ bool Editor::maybeSave (void) {
     return false;
 }
 
+/*!
+ * Returns the number of words in the document
+ */
+
 int Editor::wordCount (void) {
     return text().split
            (QRegExp ("(\\s|\\n|\\r)+"),
             QString::SkipEmptyParts).count();
 }
 
+/*!
+ * Returns \c {true} when the document title is empty
+ */
+
 bool Editor::titleIsShit (void) {
     return documentTitle().isEmpty();
 }
+
+/*!
+ * Returns a \c {QString} with the document lenght in
+ * bytes, kilobytes or megabytes
+ */
 
 QString Editor::calculateSize (void) {
     QString _units;
     float _length = length();
 
-    //
-    // File is less than one KB
-    //
     if (_length < KILOBYTE)
         _units = " " + tr ("bytes");
 
-    //
-    // File is one KB or greater, but smaller than one MB
-    //
     else if (_length < MEGABYTE) {
         _length /= KILOBYTE;
         _units = " " + tr ("KB");
     }
 
-    //
-    // File is one MB or greater
-    //
     else {
         _length /= MEGABYTE;
         _units = " " + tr ("MB");
@@ -153,9 +168,17 @@ QString Editor::calculateSize (void) {
     return QString::number (floorf (_length * 100 + 0.5) / 100) + _units;
 }
 
+/*!
+ * Returns the document title
+ */
+
 QString Editor::documentTitle (void) const {
     return m_document_title;
 }
+
+/*!
+ * Saves the current document as a PDF file
+ */
 
 void Editor::exportPdf (void) {
     QString _path = QFileDialog::getSaveFileName (this,
@@ -194,12 +217,25 @@ void Editor::exportPdf (void) {
     }
 }
 
+/*!
+ * Sets the current zoom rate to 0
+ */
+
 void Editor::resetZoom (void) {
     zoomTo (0);
 }
 
+/*!
+ * Shows a message box with information about the
+ * current document
+ */
+
 void Editor::documentInfo (void) {
 }
+
+/*!
+ * Re-loads the editor widget with the saved settings
+ */
 
 void Editor::updateSettings (void) {
     //
@@ -241,26 +277,51 @@ void Editor::updateSettings (void) {
     updateLexer();
 }
 
+/*!
+ * Saves the current document directly or shows a SaveAs dialog based
+ * on the document title.
+ */
+
 bool Editor::save (void) {
     return titleIsShit() ? saveAs() : writeFile (documentTitle());
 }
+
+/*!
+ * Prompts the user to save the current document using a File Dialog
+ */
 
 bool Editor::saveAs (void) {
     return writeFile (QFileDialog::getSaveFileName (this, tr ("Save as") + "...",
                       QDir::homePath()));
 }
 
+/*!
+ * Prompts the user and navigates to the given line number
+ */
+
 void Editor::goToLine (void) {
     // Todo
 }
+
+/*!
+ * Sorts the current selection by alphabetical order
+ */
 
 void Editor::sortSelection (void) {
     // Todo
 }
 
+/*!
+ * Inserts the system date and time in the current cursor
+ */
+
 void Editor::insertDateTime (void) {
     // Todo
 }
+
+/*!
+ * Sends the document to the system printer
+ */
 
 void Editor::print (void) {
     QsciPrinter printer;
@@ -271,6 +332,10 @@ void Editor::print (void) {
         printer.printRange (this, 0);
     }
 }
+
+/*!
+ * Prompts the user for a font to use in the text editor widget
+ */
 
 void Editor::selectFonts (void) {
     QFontDialog _dialog;
@@ -293,9 +358,18 @@ void Editor::selectFonts (void) {
     }
 }
 
+/*!
+ * Enables or disables word wrapping based on the value
+ * of \a {ww}
+ */
+
 void Editor::setWordWrap (bool ww) {
     setWrapMode (ww ? QsciScintilla::WrapWord : QsciScintilla::WrapNone);
 }
+
+/*!
+ * Loads the given \a {file} in the text editor
+ */
 
 void Editor::readFile (const QString &file) {
     qApp->setOverrideCursor (Qt::WaitCursor);
@@ -324,6 +398,10 @@ void Editor::readFile (const QString &file) {
 
     qApp->restoreOverrideCursor();
 }
+
+/*!
+ * Writes the contents of the document in the given \a {file}.
+ */
 
 bool Editor::writeFile (const QString &file) {
     if (!file.isEmpty()) {
@@ -368,6 +446,11 @@ bool Editor::writeFile (const QString &file) {
     return false;
 }
 
+/*!
+ * Changes the lexer of the text editor based on its
+ * document title.
+ */
+
 void Editor::updateLexer (void) {
     QsciLexer *_lexer = m_lexer_db->getLexer (documentTitle(), m_theme);
 
@@ -379,6 +462,14 @@ void Editor::updateLexer (void) {
     setLexer (_lexer);
 }
 
+/*!
+ * If line numbers are enabled, then the function will change the width of
+ * the widget when the line count of the document is changed.
+ *
+ * If the line numbers are disabled, then the function will ensure that
+ * the margin width is set to 0.
+ */
+
 void Editor::updateLineNumbers (void) {
     if (m_line_numbers)
         setMarginWidth (0, QString ("00%1").arg (lines()));
@@ -387,9 +478,17 @@ void Editor::updateLineNumbers (void) {
         setMarginWidth (0, 0);
 }
 
+/*!
+ * Adds or removes a marker when the user clicks on a line number
+ */
+
 void Editor::onMarginClicked (void) {
 
 }
+
+/*!
+ * Reconfigures the text editor when a new file is loaded
+ */
 
 void Editor::configureDocument (const QString &file) {
     m_document_title = file;
