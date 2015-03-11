@@ -22,6 +22,10 @@
 #ifndef THEME_H
 #define THEME_H
 
+#ifdef __APPLE__
+extern "C++" {
+#endif
+
 class QColor;
 
 #include <QObject>
@@ -69,4 +73,8 @@ class Theme : public QObject {
         void useFallbackColors (void);
 };
 
+#endif
+
+#ifdef __APPLE__
+}
 #endif

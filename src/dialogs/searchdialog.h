@@ -22,6 +22,10 @@
 #ifndef SEARCH_DIALOG_H
 #define SEARCH_DIALOG_H
 
+#ifdef __APPLE__
+extern "C++" {
+#endif
+
 class Editor;
 class Window;
 class QLabel;
@@ -63,3 +67,8 @@ class SearchDialog : public QDialog {
 };
 
 #endif
+
+#ifdef __APPLE__
+}
+#endif
+

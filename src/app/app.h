@@ -8,6 +8,10 @@
 #ifndef APP_H
 #define APP_H
 
+#ifdef __APPLE__
+extern "C++" {
+#endif
+
 class Window;
 class QSettings;
 
@@ -33,8 +37,12 @@ class Application : public QtSingleApplication {
         bool event (QEvent *_event);
 
     private:
-        Window *m_window;
-        QSettings *m_settings;
+        Window *m_window;      
+        QSettings *settings (void) const;
 };
 
+#endif
+
+#ifdef __APPLE__
+}
 #endif

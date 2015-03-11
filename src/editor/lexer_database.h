@@ -22,6 +22,10 @@
 #ifndef LEXERDATABASE_H
 #define LEXERDATABASE_H
 
+#ifdef __APPLE__
+extern "C++" {
+#endif
+
 class Theme;
 class QsciLexer;
 
@@ -40,4 +44,8 @@ class LexerDatabase : public QObject {
         QsciLexer *_guessByName (const QString &file);
 };
 
+#endif
+
+#ifdef __APPLE__
+}
 #endif

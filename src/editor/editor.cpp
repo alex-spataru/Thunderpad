@@ -53,9 +53,6 @@
 Editor::Editor (QWidget *parent) : QsciScintilla (parent) {
     setAttribute (Qt::WA_DeleteOnClose);
 
-    m_theme = new Theme (this);
-    m_lexer_db = new LexerDatabase();
-    m_settings = new QSettings (APP_COMPANY, APP_NAME);
 
     setUtf8 (true);
     setIndentationWidth (4);
@@ -241,30 +238,30 @@ void Editor::updateSettings (void) {
     //
     // Load the saved font
     //
-    m_font.setBold (m_settings->value ("font-bold", false).toBool());
-    m_font.setItalic (m_settings->value ("font-italic", false).toBool());
-    m_font.setUnderline (m_settings->value ("font-underline", false).toBool());
-    m_font.setPointSize (m_settings->value ("font-size", DEFAULT_FONT_SIZE).toInt());
-    m_font.setFamily (m_settings->value ("font-family", DEFAULT_FONT_FAMILY).toString());
+    m_font.setBold (settings()->value ("font-bold", false).toBool());
+    m_font.setItalic (settings()->value ("font-italic", false).toBool());
+    m_font.setUnderline (settings()->value ("font-underline", false).toBool());
+    m_font.setPointSize (settings()->value ("font-size", DEFAULT_FONT_SIZE).toInt());
+    m_font.setFamily (settings()->value ("font-family", DEFAULT_FONT_FAMILY).toString());
 
     //
     // Enable/disable word wrapping based on the saved settings
     //
-    setWordWrap (m_settings->value ("wordwrap-enabled", SETTINGS_WORD_WRAP_ENABLED).toBool());
+    setWordWrap (settings()->value ("wordwrap-enabled", SETTINGS_WORD_WRAP_ENABLED).toBool());
 
     //
     // Update the colors of the text editor
     //
-    m_theme->readTheme (m_settings->value ("color-scheme", DEFAULT_THEME).toString());
-    setMarginsBackgroundColor (m_theme->lineNumbersBackground());
-    setMarginsForegroundColor (m_theme->lineNumbersForeground());
-    setCaretLineBackgroundColor (m_theme->currentLineBackground());
+    theme()->readTheme (settings()->value ("color-scheme", DEFAULT_THEME).toString());
+    setMarginsBackgroundColor (theme()->lineNumbersBackground());
+    setMarginsForegroundColor (theme()->lineNumbersForeground());
+    setCaretLineBackgroundColor (theme()->currentLineBackground());
 
     //
     // Update caret line & line numbers
     //
-    setCaretLineVisible (m_settings->value ("hc-line-enabled", SETTINGS_CARET_LINE).toBool());
-    m_line_numbers = m_settings->value ("line-numbers-enabled", SETTINGS_LINE_NUMBERS).toBool();
+    setCaretLineVisible (settings()->value ("hc-line-enabled", SETTINGS_CARET_LINE).toBool());
+    m_line_numbers = settings()->value ("line-numbers-enabled", SETTINGS_LINE_NUMBERS).toBool();
 
     //
     // Enable/Disable line numbers
@@ -348,11 +345,11 @@ void Editor::selectFonts (void) {
         // Fonts cannot be saved directly, so we need to save
         // each of the possible values of the font.
         //
-        m_settings->setValue ("font-bold", m_font.bold());
-        m_settings->setValue ("font-italic", m_font.italic());
-        m_settings->setValue ("font-family", m_font.family());
-        m_settings->setValue ("font-size", m_font.pointSize());
-        m_settings->setValue ("font-underline", m_font.underline());
+        settings()->setValue ("font-bold", m_font.bold());
+        settings()->setValue ("font-italic", m_font.italic());
+        settings()->setValue ("font-family", m_font.family());
+        settings()->setValue ("font-size", m_font.pointSize());
+        settings()->setValue ("font-underline", m_font.underline());
 
         emit settingsChanged();
     }
@@ -452,7 +449,7 @@ bool Editor::writeFile (const QString &file) {
  */
 
 void Editor::updateLexer (void) {
-    QsciLexer *_lexer = m_lexer_db->getLexer (documentTitle(), m_theme);
+    QsciLexer *_lexer = lexerDatabase()->getLexer (documentTitle(), theme());
 
     _lexer->setFont (m_font, -1);
     _lexer->setDefaultFont (m_font);
@@ -496,4 +493,28 @@ void Editor::configureDocument (const QString &file) {
     updateLexer();
     setModified (0);
     emit updateTitle();
+}
+
+/*!
+ * Allows the class to access the application settings
+ */
+
+QSettings *Editor::settings (void) const {
+    return new QSettings (APP_COMPANY, APP_NAME);
+}
+
+/*!
+ * Allows the editor to change its theme based on current settings
+ */
+
+Theme *Editor::theme (void) const {
+    return new Theme (this);
+}
+
+/*!
+ * Allows the editor to change its lexer automatically
+ */
+
+LexerDatabase *Editor::lexerDatabase (void) const {
+    return new LexerDatabase();
 }

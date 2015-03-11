@@ -83,7 +83,6 @@ Window::Window (const QString &file) {
     m_statusbar = new StatusBar (this);
     m_search_dialog = new SearchDialog (this);
     m_menu = new MenuBar (this);
-    m_settings = new QSettings (APP_COMPANY, APP_NAME);
 
     //
     // Change the title of the window when a new file is loaded
@@ -127,7 +126,7 @@ Window::~Window (void) {
     delete m_menu;
     delete m_editor;
     delete m_toolbar;
-    delete m_settings;
+    delete settings();
     delete m_statusbar;
     delete m_search_dialog;
 }
@@ -142,10 +141,6 @@ ToolBar *Window::toolbar (void) const {
 
 MenuBar *Window::menubar (void) const {
     return m_menu;
-}
-
-QSettings *Window::settings (void) const {
-    return m_settings;
 }
 
 SearchDialog *Window::searchDialog (void) const {
@@ -407,3 +402,12 @@ QString Window::shortFileName (const QString &file) {
     Q_ASSERT (!file.isEmpty());
     return QFileInfo (file).fileName();
 }
+
+/*!
+ * Allows the class to access the application settings
+ */
+
+QSettings *Window::settings (void) const {
+    return new QSettings (APP_COMPANY, APP_NAME);
+}
+

@@ -1,6 +1,10 @@
 #ifndef QSCILEXERHASKELL_H
 #define QSCILEXERHASKELL_H
 
+#ifdef __APPLE__
+extern "C++" {
+#endif
+
 #include <Qsci/qscilexer.h>
 
 // located in SciLexer.h
@@ -53,4 +57,8 @@ class QsciLexerHaskell : public QsciLexer {
         QColor defaultColor (int style) const;
 };
 
+#endif
+
+#ifdef __APPLE__
+}
 #endif

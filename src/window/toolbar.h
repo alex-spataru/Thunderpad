@@ -22,6 +22,10 @@
 #ifndef TOOLBAR_H
 #define TOOLBAR_H
 
+#ifdef __APPLE__
+extern "C++" {
+#endif
+
 class Window;
 class QAction;
 class QSettings;
@@ -84,7 +88,12 @@ class ToolBar : public QToolBar {
 
         bool m_large_icons;
         bool m_toolbar_text;
-        QSettings *m_settings;
+
+        QSettings *settings (void) const;
 };
 
+#endif
+
+#ifdef __APPLE__
+}
 #endif

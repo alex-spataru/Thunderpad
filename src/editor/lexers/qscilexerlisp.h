@@ -1,6 +1,10 @@
 #ifndef QSCILEXERLISP_H
 #define QSCILEXERLISP_H
 
+#ifdef __APPLE__
+extern "C++" {
+#endif
+
 #include <Qsci/qscilexer.h>
 
 // located in SciLexer.h
@@ -49,3 +53,7 @@ class QsciLexerLisp : public QsciLexer {
 };
 
 #endif // QSCILEXERLISP_H
+
+#ifdef __APPLE__
+}
+#endif

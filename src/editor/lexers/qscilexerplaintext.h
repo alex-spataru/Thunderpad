@@ -22,6 +22,10 @@
 #ifndef QSCILEXER_PLAIN_TEXT_H
 #define QSCILEXER_PLAIN_TEXT_H
 
+#ifdef __APPLE__
+extern "C++" {
+#endif
+
 #include "editor.h"
 #include <Qsci/qscilexer.h>
 
@@ -43,4 +47,8 @@ class QsciLexerPlainText : public QsciLexer {
         }
 };
 
+#endif
+
+#ifdef __APPLE__
+}
 #endif

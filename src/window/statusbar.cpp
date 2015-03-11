@@ -41,9 +41,7 @@
   */
 
 StatusBar::StatusBar (Window *parent) : QStatusBar (parent) {
-    m_settings = new QSettings (APP_COMPANY, APP_NAME);
     updateSettings();
-
     initialize (parent);
 }
 
@@ -79,7 +77,7 @@ void StatusBar::initialize (Window *window) {
  */
 
 void StatusBar::updateSettings (void) {
-    m_settings->value ("statusbar-enabled", SETTINGS_STATUSBAR_ENABLED).toBool() ? show() : hide();
+    settings()->value ("statusbar-enabled", SETTINGS_STATUSBAR_ENABLED).toBool() ? show() : hide();
 }
 
 /*!
@@ -122,3 +120,12 @@ QString StatusBar::lineCount (void) {
     return tr ("Lines:") + " " +
            QString::number (m_text_edit->lines());
 }
+
+/*!
+ * Allows the class to access the application settings
+ */
+
+QSettings *StatusBar::settings (void) const {
+    return new QSettings (APP_COMPANY, APP_NAME);
+}
+

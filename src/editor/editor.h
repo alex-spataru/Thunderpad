@@ -22,6 +22,10 @@
 #ifndef EDITOR_H
 #define EDITOR_H
 
+#ifdef __APPLE__
+extern "C++" {
+#endif
+
 class Theme;
 class QSettings;
 class LexerDatabase;
@@ -67,13 +71,17 @@ class Editor : public QsciScintilla {
         void configureDocument (const QString &file);
 
     private:
-        Theme *m_theme;
-        QSettings *m_settings;
-        LexerDatabase *m_lexer_db;
+        Theme *theme (void) const;
+        QSettings *settings (void) const;
+	LexerDatabase *lexerDatabase (void) const;
 
         QFont m_font;
         bool m_line_numbers;
         QString m_document_title;
 };
 
+#endif
+
+#ifdef __APPLE__
+}
 #endif

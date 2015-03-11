@@ -1,6 +1,10 @@
 #ifndef QSCILEXERASM_H
 #define QSCILEXERASM_H
 
+#ifdef __APPLE__
+extern "C++" {
+#endif
+
 #include <Qsci/qscilexer.h>
 
 #define SCE_ASM_DEFAULT 0
@@ -62,3 +66,7 @@ class QsciLexerASM : public QsciLexer {
 };
 
 #endif // QSCILEXERASM_H
+
+#ifdef __APPLE__
+}
+#endif

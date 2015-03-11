@@ -64,7 +64,6 @@ Application::Application (int &argc, char **argv) : QtSingleApplication (argc, a
 
 int Application::start (const QString &arguments) {
     m_window = new Window (arguments);
-    m_settings = new QSettings (APP_COMPANY, APP_NAME);
 
     connect (m_window, SIGNAL (checkForUpdates()), this, SLOT (checkForUpdates()));
     connect (this, SIGNAL (messageReceived (QString)), this, SLOT (onMessageReceived (QString)));
@@ -93,7 +92,7 @@ void Application::checkForUpdates (void) {
 void Application::setupUpdater (void) {
     FvUpdater::sharedUpdater()->SetFeedURL ("http://thunderpad.sourceforge.net/updater/appcast.xml");
 
-    if (m_settings->value ("check-for-updates", SETTINGS_AUTO_CHECK_UPDATES).toBool())
+    if (settings()->value ("check-for-updates", SETTINGS_AUTO_CHECK_UPDATES).toBool())
         FvUpdater::sharedUpdater()->CheckForUpdates (true);
 }
 
@@ -113,7 +112,7 @@ void Application::showWelcomeMessages (void) {
     //
     // Its the first launch, welcome the user to the application
     //
-    if (m_settings->value ("first-launch", true).toBool()) {
+    if (settings()->value ("first-launch", true).toBool()) {
         _message.setStandardButtons (QMessageBox::Close);
         _message.setText ("<b>" + tr ("Thank you for downloading Thunderpad!") +
                           "</b>           ");
@@ -127,15 +126,15 @@ void Application::showWelcomeMessages (void) {
 
         _message.exec();
 
-        m_settings->setValue ("first-launch", false);
-        m_settings->setValue ("second-launch", true);
+        settings()->setValue ("first-launch", false);
+        settings()->setValue ("second-launch", true);
     }
 
     //
     // Its the second launch, ask the user if he/she wants to allow the application
     // to check for updates automatically
     //
-    else if (m_settings->value ("second-launch", false).toBool()) {
+    else if (settings()->value ("second-launch", false).toBool()) {
         _message.setStandardButtons (QMessageBox::Yes | QMessageBox::No);
         _message.setDefaultButton (QMessageBox::Yes);
         _message.setText (
@@ -143,8 +142,8 @@ void Application::showWelcomeMessages (void) {
         _message.setInformativeText (tr ("You can always check for updates from the "
                                          "Help menu"));
 
-        m_settings->setValue ("second-launch", false);
-        m_settings->setValue ("check-for-updates", _message.exec() == QMessageBox::Yes);
+        settings()->setValue ("second-launch", false);
+        settings()->setValue ("check-for-updates", _message.exec() == QMessageBox::Yes);
     }
 }
 
@@ -174,4 +173,12 @@ bool Application::event (QEvent *_event) {
         return QApplication::event (_event);
 
     return true;
+}
+
+/*!
+ * Allows the class to access the application settings
+ */
+
+QSettings *Application::settings (void) const {
+    return new QSettings (APP_COMPANY, APP_NAME);
 }

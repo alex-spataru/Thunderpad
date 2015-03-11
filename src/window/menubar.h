@@ -22,6 +22,10 @@
 #ifndef MENUBAR_H
 #define MENUBAR_H
 
+#ifdef __APPLE__
+extern "C++" {
+#endif
+
 class QMenu;
 class Window;
 class QAction;
@@ -50,7 +54,7 @@ class MenuBar : public QMenuBar {
         void initialize (Window *window);
 
     private:
-        QSettings *m_settings;
+        QSettings *settings (void) const;
 
         QMenu *m_file;
         QMenu *m_edit;
@@ -117,4 +121,8 @@ class MenuBar : public QMenuBar {
         QAction *h_official_website;
 };
 
+#endif
+
+#ifdef __APPLE__
+}
 #endif

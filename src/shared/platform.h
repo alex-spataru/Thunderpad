@@ -19,6 +19,10 @@
 //  USA
 //
 
+#ifdef __APPLE__
+extern "C++" {
+#endif
+
 #ifndef PLATFORM_H
 #define PLATFORM_H
 
@@ -41,4 +45,8 @@
 #define MAC_OS_X true
 #endif
 
+#endif
+
+#ifdef __APPLE__
+}
 #endif

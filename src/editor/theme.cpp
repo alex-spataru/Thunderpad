@@ -224,3 +224,4 @@ QColor Theme::comments (void) const {
 QColor Theme::functions (void) const {
     return QColor (m_functions);
 }
+

@@ -22,6 +22,10 @@
 #ifndef STATUSBAR_H
 #define STATUSBAR_H
 
+#ifdef __APPLE__
+extern "C++" {
+#endif
+
 class Editor;
 class QLabel;
 class Window;
@@ -46,12 +50,17 @@ class StatusBar : public QStatusBar {
         QLabel *m_size_label;
         QLabel *m_words_label;
         QLabel *m_lines_label;
-        QSettings *m_settings;
         Editor *m_text_edit;
+
+        QSettings *settings (void) const;
 
         QString fileSize (void);
         QString wordCount (void);
         QString lineCount (void);
 };
 
+#endif
+
+#ifdef __APPLE__
+}
 #endif

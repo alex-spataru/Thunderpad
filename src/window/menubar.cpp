@@ -49,8 +49,6 @@
  */
 
 MenuBar::MenuBar (Window *parent) : QMenuBar (parent) {
-    m_settings = new QSettings (APP_COMPANY, APP_NAME);
-
     createActions();
     configureActions();
     createMenubar();
@@ -160,13 +158,13 @@ void MenuBar::initialize (Window *window) {
  */
 
 void MenuBar::updateSettings (void) {
-    v_toolbar->setChecked (m_settings->value ("toolbar-enabled", SETTINGS_TOOLBAR_ENABLED).toBool());
-    v_toolbar_text->setChecked (m_settings->value ("toolbar-text", SETTINGS_TOOLBAR_TEXT).toBool());
-    v_statusbar->setChecked (m_settings->value ("statusbar-enabled", SETTINGS_STATUSBAR_ENABLED).toBool());
-    format_word_wrap->setChecked (m_settings->value ("wordwrap-enabled", SETTINGS_WORD_WRAP_ENABLED).toBool());
-    v_large_toolbar_icons->setChecked (m_settings->value ("large-icons", SETTINGS_LARGE_ICONS).toBool());
-    v_line_numbers->setChecked (m_settings->value ("line-numbers-enabled", SETTINGS_LINE_NUMBERS).toBool());
-    v_highlight_current_line->setChecked (m_settings->value ("hc-line-enabled", SETTINGS_CARET_LINE).toBool());
+    v_toolbar->setChecked (settings()->value ("toolbar-enabled", SETTINGS_TOOLBAR_ENABLED).toBool());
+    v_toolbar_text->setChecked (settings()->value ("toolbar-text", SETTINGS_TOOLBAR_TEXT).toBool());
+    v_statusbar->setChecked (settings()->value ("statusbar-enabled", SETTINGS_STATUSBAR_ENABLED).toBool());
+    format_word_wrap->setChecked (settings()->value ("wordwrap-enabled", SETTINGS_WORD_WRAP_ENABLED).toBool());
+    v_large_toolbar_icons->setChecked (settings()->value ("large-icons", SETTINGS_LARGE_ICONS).toBool());
+    v_line_numbers->setChecked (settings()->value ("line-numbers-enabled", SETTINGS_LINE_NUMBERS).toBool());
+    v_highlight_current_line->setChecked (settings()->value ("hc-line-enabled", SETTINGS_CARET_LINE).toBool());
 }
 
 /*!
@@ -427,7 +425,7 @@ void MenuBar::createMenubar (void) {
         //
         // Check the icon if necessary
         //
-        if (m_settings->value ("icon-theme", SETTINGS_ICON_THEME).toString() == _action->text())
+        if (settings()->value ("icon-theme", SETTINGS_ICON_THEME).toString() == _action->text())
             _action->setChecked (true);
     }
 
@@ -486,3 +484,12 @@ void MenuBar::setReadOnly (bool ro) {
     //
     e_read_only->setChecked (ro);
 }
+
+/*!
+ * Allows the class to access the application settings
+ */
+
+QSettings *MenuBar::settings (void) const {
+    return new QSettings (APP_COMPANY, APP_NAME);
+}
+

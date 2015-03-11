@@ -87,9 +87,8 @@ ToolBar::ToolBar (Window *parent) : QToolBar (parent) {
     //
     // Load the settings
     //
-    m_settings = new QSettings (APP_COMPANY, APP_NAME);
-    m_large_icons = m_settings->value ("large-icons", SETTINGS_LARGE_ICONS).toBool();
-    m_toolbar_text = m_settings->value ("toolbar-text", SETTINGS_TOOLBAR_TEXT).toBool();
+    m_large_icons = settings()->value ("large-icons", SETTINGS_LARGE_ICONS).toBool();
+    m_toolbar_text = settings()->value ("toolbar-text", SETTINGS_TOOLBAR_TEXT).toBool();
     setToolbarText (m_toolbar_text);
 
     //
@@ -124,6 +123,11 @@ ToolBar::ToolBar (Window *parent) : QToolBar (parent) {
     initialize (parent);
 }
 
+/*!
+ * Enables/Disables actions used to change the contents of the
+ * text editor based on the value of \a {ro}.
+ */
+
 void ToolBar::setReadOnly (bool ro) {
     m_readonly->setChecked (ro);
     m_readonly->setEnabled (ro);
@@ -136,9 +140,19 @@ void ToolBar::setReadOnly (bool ro) {
     m_paste->setEnabled (!ro);
 }
 
+/*!
+ * Enables or disables the save button based on the value of
+ * \a {enabled}
+ */
+
 void ToolBar::setSaveEnabled (bool enabled) {
     m_save->setEnabled (enabled);
 }
+
+/*!
+ * Hides or shows text under toolbar icons based on the value
+ * of \a {enabled}
+ */
 
 void ToolBar::setToolbarText (bool enabled) {
     QSize _icon_size;
@@ -184,6 +198,10 @@ void ToolBar::setToolbarText (bool enabled) {
     show();
 }
 
+/*! 
+ * Configures the toolbar and adds it to the \a {window}
+ */
+
 void ToolBar::initialize (Window *window) {
     Q_ASSERT (window != NULL);
 
@@ -213,8 +231,8 @@ void ToolBar::initialize (Window *window) {
 }
 
 void ToolBar::updateSettings (void) {
-    bool _new_value = m_settings->value ("toolbar-text", SETTINGS_TOOLBAR_TEXT).toBool();
-    bool _new_sizes = m_settings->value ("large-icons", SETTINGS_LARGE_ICONS).toBool();
+    bool _new_value = settings()->value ("toolbar-text", SETTINGS_TOOLBAR_TEXT).toBool();
+    bool _new_sizes = settings()->value ("large-icons", SETTINGS_LARGE_ICONS).toBool();
 
     //
     // Resize and redraw the toolbar if neccessary
@@ -229,13 +247,13 @@ void ToolBar::updateSettings (void) {
     //
     // Hide/show the toolbar
     //
-    setVisible (m_settings->value ("toolbar-enabled", SETTINGS_TOOLBAR_ENABLED).toBool());
-    setEnabled (m_settings->value ("toolbar-enabled", SETTINGS_TOOLBAR_ENABLED).toBool());
+    setVisible (settings()->value ("toolbar-enabled", SETTINGS_TOOLBAR_ENABLED).toBool());
+    setEnabled (settings()->value ("toolbar-enabled", SETTINGS_TOOLBAR_ENABLED).toBool());
 
     //
     // Set icon theme
     //
-    update_theme (m_settings->value ("icon-theme", SETTINGS_ICON_THEME).toString());
+    update_theme (settings()->value ("icon-theme", SETTINGS_ICON_THEME).toString());
 }
 
 void ToolBar::update_theme (const QString &theme) {
@@ -265,3 +283,12 @@ void ToolBar::update_theme (const QString &theme) {
     m_readonly->setIcon (QIcon (path + "read-only.png"));
     m_find_replace->setIcon (QIcon (path + "search.png"));
 }
+
+/*!
+ * Allows the class to access the application settings
+ */
+
+QSettings *ToolBar::settings (void) const {
+    return new QSettings (APP_COMPANY, APP_NAME);
+}
+

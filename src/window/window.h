@@ -22,6 +22,10 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#ifdef __APPLE__
+extern "C++" {
+#endif
+
 class Editor;
 class ToolBar;
 class MenuBar;
@@ -94,9 +98,12 @@ class Window : public QMainWindow {
         MenuBar *m_menu;
         Editor *m_editor;
         ToolBar *m_toolbar;
-        QSettings *m_settings;
         StatusBar *m_statusbar;
         SearchDialog *m_search_dialog;
 };
 
+#endif
+
+#ifdef __APPLE__
+}
 #endif

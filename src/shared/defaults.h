@@ -22,6 +22,10 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
+#ifdef __APPLE__
+extern "C++" {
+#endif
+
 #include "platform.h"
 
 //
@@ -35,7 +39,7 @@
 #define DEFAULT_THEME "Light"
 #define SETTINGS_CARET_LINE true
 #define SETTINGS_CODE_FOLDING true
-#define SETTINGS_LINE_NUMBERS true
+#define SETTINGS_LINE_NUMBERS false
 #define SETTINGS_INDENTATION_WIDTH 4
 #define SETTINGS_BRACE_MATCHING true
 #define SETTINGS_WORD_WRAP_ENABLED true
@@ -77,4 +81,8 @@
 //
 #define SETTINGS_AUTO_CHECK_UPDATES false
 
+#endif
+
+#ifdef __APPLE__
+}
 #endif
