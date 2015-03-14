@@ -71,11 +71,12 @@ class Editor : public QsciScintilla {
         void configureDocument (const QString &file);
 
     private:
-        Theme *theme (void) const;
+        Theme *theme (void);
         QSettings *settings (void) const;
-	LexerDatabase *lexerDatabase (void) const;
+        LexerDatabase *lexerDatabase (void) const;
 
         QFont m_font;
+        Theme *m_theme;
         bool m_line_numbers;
         QString m_document_title;
 };

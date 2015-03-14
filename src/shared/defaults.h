@@ -64,6 +64,7 @@ extern "C++" {
 //
 #if WINDOWS
 #include <QSysInfo>
+
 #undef DEFAULT_FONT_FAMILY
 #define DEFAULT_FONT_FAMILY QSysInfo::windowsVersion() >= 0x0080 ? "Consolas" : "Courier New"
 #endif

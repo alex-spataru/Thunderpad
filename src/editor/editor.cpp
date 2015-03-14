@@ -53,6 +53,7 @@
 Editor::Editor (QWidget *parent) : QsciScintilla (parent) {
     setAttribute (Qt::WA_DeleteOnClose);
 
+    m_theme = new Theme (this);
 
     setUtf8 (true);
     setIndentationWidth (4);
@@ -507,8 +508,8 @@ QSettings *Editor::settings (void) const {
  * Allows the editor to change its theme based on current settings
  */
 
-Theme *Editor::theme (void) const {
-    return new Theme (this);
+Theme *Editor::theme (void) {
+    return m_theme;
 }
 
 /*!
