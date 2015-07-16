@@ -1,7 +1,11 @@
 ## Thunderpad
 
 [![Build Status](https://travis-ci.org/alex-spataru/Thunderpad.svg)](https://travis-ci.org/alex-spataru/Thunderpad)
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/alex-spataru/thunderpad/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
 [![OpenHub](https://www.openhub.net/p/thunderpad/widgets/project_thin_badge.gif)](http://openhub.net/p/thunderpad)
+
  
 Thunderpad is a simple and lightweight text editor designed for general-purpose usage and casual programming. 
  
